@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, lsGet, lsSet } from "@/lib/api";
 import { useRecipes } from "@/components/useRecipes";
 import { useApp } from "@/components/Providers";
 import { suggest } from "@/lib/suggest";
@@ -51,7 +51,7 @@ function MenuCard({ menu, recipes, setMenus, onShop }) {
     const inMenu = menu.items.map((i) => i.recipeId).filter(Boolean);
     const chosen = menu.items.filter((i) => i.recipeId && i.id !== item.id).map((i) => recipes.find((r) => r.id === i.recipeId)).filter(Boolean);
     const mode = menu.kind === "middag" ? courseMode(item.course) : MODE[menu.kind];
-    const pick = suggest(recipes, { mode, exclude: inMenu, chosen });
+    const pick = suggest(recipes, { mode, exclude: inMenu, chosen, kcal: menu.kcal });
     if (!pick) { toast("Inga fler förslag. Välj ett recept själv."); return; }
     patchItem(item, { recipeId: pick.id });
   };
@@ -66,7 +66,7 @@ function MenuCard({ menu, recipes, setMenus, onShop }) {
   return (
     <section className="menu">
       <header className="mhead">
-        <div><span className="kind">{KIND[menu.kind]}</span><h2>{menu.title}</h2></div>
+        <div><span className="kind">{KIND[menu.kind]}{menu.kcal ? ` · ${menu.kcal.min}–${menu.kcal.max} kcal per portion` : ""}</span><h2>{menu.title}</h2></div>
         <div className="stepper" role="group" aria-label="Antal personer">
           <button type="button" aria-label="Färre" onClick={() => api(`/api/menus/${menu.id}`, { method: "PATCH", json: { servings: Math.max(1, menu.servings - 1) } }).then((d) => setMenus(d.menus))}>−</button>
           <span>{menu.servings} pers</span>
@@ -80,7 +80,7 @@ function MenuCard({ menu, recipes, setMenus, onShop }) {
             {it.recipeId ? (
               <Link href={`/recept/${it.recipeId}`} className="mdish">
                 <span className="thumb">{it.image && <img src={it.image} alt="" referrerPolicy="no-referrer" />}</span>
-                <span><b>{it.title}</b><small>{it.kitchen} · {mins(it.minutes)}</small></span>
+                <span><b>{it.title}</b><small>{it.kitchen} · {mins(it.minutes)}{it.kcal ? <> · <span className={menu.kcal && (it.kcal < menu.kcal.min || it.kcal > menu.kcal.max) ? "kout" : menu.kcal ? "kin" : ""}>{it.kcal} kcal</span></> : null}</small></span>
               </Link>
             ) : <span className="mdish muted">Ingen rätt vald</span>}
             <span className="mact">
@@ -150,16 +150,40 @@ function StaplesPanel({ menu, onDone, onCancel }) {
 export default function Menus() {
   const router = useRouter();
   const { toast } = useApp();
-  const { recipes } = useRecipes();
+  const { recipes, reload } = useRecipes();
   const [menus, setMenus] = useState(null);
   const [busy, setBusy] = useState("");
   const [shopFor, setShopFor] = useState(null);
   useEffect(() => { api("/api/menus").then((d) => setMenus(d.menus)).catch((e) => toast(e.message)); }, [toast]);
 
+  const [useKcal, setUseKcal] = useState(false);
+  const [kmin, setKmin] = useState(600);
+  const [kmax, setKmax] = useState(700);
+  const [progress, setProgress] = useState("");
+  useEffect(() => { const k = lsGet("rb-kcal", null); if (k) { setUseKcal(!!k.on); setKmin(k.min); setKmax(k.max); } }, []);
+  useEffect(() => { lsSet("rb-kcal", { on: useKcal, min: kmin, max: kmax }); }, [useKcal, kmin, kmax]);
+
   const create = async (kind) => {
     setBusy(kind);
-    try { const d = await api("/api/menus", { method: "POST", json: { kind } }); setMenus(d.menus); window.scrollTo(0, 0); }
-    catch (e) { toast(e.message); } finally { setBusy(""); }
+    try {
+      if (useKcal) {
+        // Räkna fram kalorier för huvudrätter som saknar dem, så att urvalet blir rätt.
+        const missing = (recipes || []).filter((r) => !r.kcal && !r.allergens?.hits?.length && (r.type || "Huvudrätt").toLowerCase().includes(kind === "middag" ? "" : "huvudrätt")).slice(0, 10);
+        for (let i = 0; i < missing.length; i++) {
+          setProgress(`Räknar kalorier för ${missing[i].title} (${i + 1} av ${missing.length}) …`);
+          try { await api(`/api/recipes/${missing[i].id}/nutrition`, { method: "POST" }); } catch {}
+        }
+        setProgress("");
+      }
+      const d = await api("/api/menus", { method: "POST", json: { kind, ...(useKcal ? { kcalMin: kmin, kcalMax: kmax } : {}) } });
+      setMenus(d.menus); reload(); window.scrollTo(0, 0);
+      const m = d.menus.find((x) => x.id === d.id);
+      if (useKcal && m) {
+        const out = m.items.filter((i) => i.recipeId && (!i.kcal || i.kcal < kmin || i.kcal > kmax)).length;
+        if (out) toast(`${out} rätter ligger utanför ${kmin}–${kmax} kcal. Lägg in fler recept så blir urvalet större.`);
+      }
+    }
+    catch (e) { toast(e.message); } finally { setBusy(""); setProgress(""); }
   };
   const list = useMemo(() => (recipes || []).filter((r) => !r.allergens?.hits?.length), [recipes]);
 
@@ -171,6 +195,18 @@ export default function Menus() {
       <div className="hero"><h1>Matsedel</h1>
         <p className="muted" style={{ margin: 0 }}>Appen föreslår rätter ni inte ätit på ett tag, med variation i kök och råvaror. Byt det ni inte är sugna på och skapa inköpslistan med ett tryck.</p>
       </div>
+      <div className="kcalopt">
+        <label className="arow"><input type="checkbox" checked={useKcal} onChange={(e) => setUseKcal(e.target.checked)} /> <b>Kalorier per portion</b></label>
+        {useKcal && (
+          <span className="arow">
+            <input className="tin knum" type="number" inputMode="numeric" value={kmin} onChange={(e) => setKmin(Number(e.target.value) || 0)} aria-label="Minst kcal" />
+            <span>–</span>
+            <input className="tin knum" type="number" inputMode="numeric" value={kmax} onChange={(e) => setKmax(Number(e.target.value) || 0)} aria-label="Högst kcal" />
+            <span className="muted">kcal</span>
+          </span>
+        )}
+      </div>
+      {progress && <p className="hint"><span className="spinner" />{progress}</p>}
       <div className="arow" style={{ marginBottom: "1.5rem" }}>
         <button className="btn" type="button" disabled={!!busy} onClick={() => create("vecka")}>{busy === "vecka" ? "Skapar …" : "Ny veckomeny, mån–tor"}</button>
         <button className="btn ghost" type="button" disabled={!!busy} onClick={() => create("helg")}>{busy === "helg" ? "Skapar …" : "Ny helgmeny"}</button>

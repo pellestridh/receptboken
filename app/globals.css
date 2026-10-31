@@ -303,3 +303,8 @@ textarea.tin { resize: vertical; }
 .ok-tag { background: color-mix(in srgb, var(--c-spinach) 16%, var(--paper)) !important; color: var(--c-spinach) !important; }
 .warnbadge { justify-self: start; background: #C0392B; color: #fff; border-radius: 999px; padding: .1rem .65rem; font-size: .8rem; font-weight: 700; }
 @media (prefers-color-scheme: dark) { .alert.danger b { color: #FF8A7A; } .alert.danger { border-color: #FF8A7A; } }
+.kcalopt { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: .65rem .9rem; margin-bottom: .9rem; }
+.kcalopt input[type="checkbox"] { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); }
+.knum { width: 5.5rem; padding: .4rem .6rem; }
+.kin { color: var(--c-spinach); font-weight: 700; }
+.kout { color: #C0392B; font-weight: 700; }

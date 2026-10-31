@@ -123,6 +123,11 @@ statements.push(
   )`
 );
 
+statements.push(
+  `alter table menus add column if not exists kcal_min int`,
+  `alter table menus add column if not exists kcal_max int`
+);
+
 for (const s of statements) await sql(s);
 
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
