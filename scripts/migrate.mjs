@@ -90,6 +90,18 @@ statements.push(
     position int not null default 0
   )`,
   `create index if not exists menu_items_menu on menu_items(menu_id)`,
+  `create table if not exists drink_feedback (
+    id text primary key,
+    recipe_id text,
+    recipe_title text,
+    kind text not null,
+    suggested text,
+    verdict text not null,
+    your_choice text,
+    reason text,
+    author text,
+    created_at timestamptz not null default now()
+  )`,
   `create table if not exists staples (
     id text primary key,
     name text not null,

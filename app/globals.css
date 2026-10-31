@@ -264,3 +264,17 @@ textarea.tin { resize: vertical; }
 .wday.today { border: 2px solid var(--accent); }
 .tabs { min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
+
+/* drinks */
+.drinks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 820px) { .drinks { grid-template-columns: minmax(0, 1fr); } }
+.drink { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; display: grid; gap: .35rem; align-content: start; }
+.drink:first-child { border: 2px solid var(--rc); }
+.drink.own { background: color-mix(in srgb, var(--rc) 8%, var(--paper)); }
+.drink .dk { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.drink b { font-family: var(--display); font-weight: 400; font-size: 1.25rem; color: var(--rc); line-height: 1.15; }
+.drink p { margin: 0; font-size: .95rem; }
+.drink .ex { color: var(--muted); font-size: .9rem; }
+.drink .ex a { color: var(--rc); }
+.thumbs { display: flex; gap: .4rem; margin-top: .3rem; }
+.dform { display: grid; gap: .45rem; margin-top: .3rem; }

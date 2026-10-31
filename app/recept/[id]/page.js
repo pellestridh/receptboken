@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRecipes } from "@/components/useRecipes";
 import RecipeBody from "@/components/RecipeBody";
 import RecipeImage from "@/components/RecipeImage";
+import Drinks from "@/components/Drinks";
 import { useApp } from "@/components/Providers";
 import { api, getName } from "@/lib/api";
 import { accentVar, dateSv, mins } from "@/lib/format";
@@ -97,6 +98,8 @@ export default function RecipePage({ params }) {
       </header>
 
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
+
+      <Drinks id={id} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
 
       {pairs.length > 0 && (
         <section className="rsec"><h2>Passar ihop med</h2>
