@@ -4,36 +4,64 @@ import { api, getName } from "@/lib/api";
 import { useApp } from "@/components/Providers";
 
 const LABEL = { wine: "Vin", beer: "Öl", nonAlcoholic: "Alkoholfritt" };
-const sbLink = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
+const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
+// Gamla eller tomma förslag görs om automatiskt.
+const usable = (d) => d && d.v === 2 && d.wine?.name && d.beer?.name;
 
-function DrinkCard({ kind, d, onFeedback, busy }) {
-  const [open, setOpen] = useState(false);
-  const [choice, setChoice] = useState("");
-  const [reason, setReason] = useState("");
-  if (!d) return null;
+function Product({ name, kind }) {
+  if (kind === "nonAlcoholic") return <>{name}</>;
+  return <a href={sb(name)} target="_blank" rel="noopener noreferrer">{name}</a>;
+}
+
+function DrinkCard({ kind, d, own = [], busy, onAction }) {
+  const [mode, setMode] = useState(null); // "swap" | "add"
+  const [text, setText] = useState("");
+  const [note, setNote] = useState("");
+  const close = () => { setMode(null); setText(""); setNote(""); };
+
   return (
-    <div className={"drink" + (d.own ? " own" : "")}>
-      <span className="dk">{LABEL[kind]}{d.own ? " · ert val" : d.liked ? " · gillat" : ""}</span>
-      <b>{d.style}</b>
-      <p>{d.why}</p>
-      {d.examples?.length > 0 && kind !== "nonAlcoholic" && (
-        <p className="ex">Till exempel {d.examples.map((e, i) => <span key={i}>{i > 0 && " eller "}<a href={sbLink(e)} target="_blank" rel="noopener noreferrer">{e}</a></span>)}</p>
-      )}
-      {busy ? <span className="muted"><span className="spinner" />Tänker om …</span> : open ? (
-        <form className="dform" onSubmit={(e) => { e.preventDefault(); onFeedback(kind, "down", choice, reason); setOpen(false); }}>
-          <input className="tin" value={choice} onChange={(e) => setChoice(e.target.value)} placeholder="Vad hade du valt? (valfritt)" />
-          <input className="tin" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Varför? (valfritt)" />
-          <div className="arow">
-            <button className="btn" type="submit">{choice.trim() ? "Spara mitt val" : "Ge ett nytt förslag"}</button>
-            <button className="link" type="button" onClick={() => setOpen(false)}>Avbryt</button>
-          </div>
-        </form>
-      ) : (
-        <div className="thumbs">
-          <button type="button" className="chip" aria-pressed={!!d.liked} onClick={() => onFeedback(kind, "up")}>Bra val</button>
-          <button type="button" className="chip" onClick={() => setOpen(true)}>Inte rätt</button>
+    <div className="drink">
+      <span className="dk">{LABEL[kind]}{d?.liked ? " · gillat" : ""}</span>
+
+      {own.map((o, i) => (
+        <div className="own-pick" key={i}>
+          <span className="ownbadge">Ert val{o.author ? ` · ${o.author}` : ""}</span>
+          <b><Product name={o.name} kind={kind} /></b>
+          {o.note && <p>{o.note}</p>}
+          <button className="link" type="button" onClick={() => onAction({ action: "removeOwn", kind, index: i })}>Ta bort</button>
+        </div>
+      ))}
+
+      {d && (
+        <div className="sugg">
+          <b><Product name={d.name} kind={kind} /></b>
+          {d.style && d.style !== d.name && <span className="style">{d.style}</span>}
+          {d.why && <p>{d.why}</p>}
+          {d.alternatives?.length > 0 && (
+            <p className="ex">Eller {d.alternatives.map((a, i) => <span key={i}>{i > 0 && ", "}<Product name={a.name} kind={kind} /></span>)}</p>
+          )}
         </div>
       )}
+
+      {busy ? <span className="muted"><span className="spinner" />Tänker om …</span>
+        : mode === "swap" ? (
+          <form className="dform" onSubmit={(e) => { e.preventDefault(); onAction({ action: "feedback", kind, verdict: "down", reason: text }); close(); }}>
+            <input className="tin" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Vad var fel? (valfritt, hjälper nästa förslag)" />
+            <div className="arow"><button className="btn" type="submit">Ge ett nytt förslag</button><button className="link" type="button" onClick={close}>Avbryt</button></div>
+          </form>
+        ) : mode === "add" ? (
+          <form className="dform" onSubmit={(e) => { e.preventDefault(); if (text.trim()) { onAction({ action: "add", kind, name: text, note }); close(); } }}>
+            <input className="tin" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder={kind === "beer" ? "Till exempel Orval" : kind === "wine" ? "Till exempel Domaine Weinbach Riesling" : "Till exempel Äppelmust från Kiviks"} />
+            <input className="tin" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Varför den passar (valfritt)" />
+            <div className="arow"><button className="btn" type="submit" disabled={!text.trim()}>Lägg till</button><button className="link" type="button" onClick={close}>Avbryt</button></div>
+          </form>
+        ) : (
+          <div className="thumbs">
+            {d && <button type="button" className="chip" aria-pressed={!!d.liked} onClick={() => onAction({ action: "feedback", kind, verdict: "up" })}>Bra val</button>}
+            {d && <button type="button" className="chip" onClick={() => setMode("swap")}>Byt förslag</button>}
+            <button type="button" className="chip" onClick={() => setMode("add")}>Lägg till eget</button>
+          </div>
+        )}
     </div>
   );
 }
@@ -42,33 +70,40 @@ export default function Drinks({ id, drinks: initial, onChange }) {
   const { toast } = useApp();
   const [drinks, setDrinks] = useState(initial || null);
   const [busy, setBusy] = useState(null);
+  const [err, setErr] = useState("");
   const started = useRef(false);
 
   useEffect(() => { setDrinks(initial || null); }, [initial]);
-  useEffect(() => {
-    if (initial || started.current) return;
-    started.current = true;
-    setBusy("all");
+  const generate = () => {
+    setBusy("all"); setErr("");
     api(`/api/recipes/${id}/drinks`, { method: "POST", json: { action: "generate" } })
       .then((d) => { setDrinks(d.drinks); onChange?.(d.drinks); })
-      .catch(() => {})
+      .catch((e) => setErr(e.message))
       .finally(() => setBusy(null));
+  };
+  useEffect(() => {
+    if (usable(initial) || started.current) return;
+    started.current = true;
+    generate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, initial]);
 
-  async function feedback(kind, verdict, yourChoice, reason) {
-    setBusy(kind);
+  async function act(json) {
+    setBusy(json.kind);
     try {
-      const d = await api(`/api/recipes/${id}/drinks`, { method: "POST", json: { action: "feedback", kind, verdict, yourChoice, reason, author: getName() } });
+      const d = await api(`/api/recipes/${id}/drinks`, { method: "POST", json: { ...json, author: getName() } });
       setDrinks(d.drinks); onChange?.(d.drinks);
-      if (verdict === "up") toast("Noterat. Förslagen lär sig av det.");
+      if (json.verdict === "up") toast("Noterat. Förslagen lär sig av det.");
+      if (json.action === "add") toast("Tillagt. Det används som exempel för nya recept.");
     } catch (e) { toast(e.message); } finally { setBusy(null); }
   }
 
-  if (!drinks) {
+  if (!usable(drinks)) {
     return (
       <section className="rsec"><h2>Att dricka till</h2>
-        <div className="empty">{busy ? <><span className="spinner" />Claude föreslår drycker …</> : "Dryckesförslagen kunde inte hämtas just nu."}</div>
+        <div className="empty">
+          {busy ? <><span className="spinner" />Claude väljer vin, öl och alkoholfritt …</> : <>{err || "Dryckesförslagen kunde inte hämtas just nu."} <button className="link" type="button" onClick={generate}>Försök igen</button></>}
+        </div>
       </section>
     );
   }
@@ -76,9 +111,9 @@ export default function Drinks({ id, drinks: initial, onChange }) {
   return (
     <section className="rsec"><h2>Att dricka till</h2>
       <div className="drinks">
-        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} busy={busy === k} onFeedback={feedback} />)}
+        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} own={drinks.own?.[k] || []} busy={busy === k} onAction={act} />)}
       </div>
-      <p className="hint">Tryck Bra val eller Inte rätt. Dina val sparas och styr förslagen till nya recept.</p>
+      <p className="hint">Namnen länkar till Systembolagets sökning. Era egna val och omdömen används när Claude föreslår drycker till nya recept.</p>
     </section>
   );
 }

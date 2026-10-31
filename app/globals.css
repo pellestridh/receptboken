@@ -308,3 +308,9 @@ textarea.tin { resize: vertical; }
 .knum { width: 5.5rem; padding: .4rem .6rem; }
 .kin { color: var(--c-spinach); font-weight: 700; }
 .kout { color: #C0392B; font-weight: 700; }
+.drink .sugg, .drink .own-pick { display: grid; gap: .25rem; }
+.drink .own-pick { background: color-mix(in srgb, var(--rc) 9%, var(--paper)); border-radius: 10px; padding: .55rem .7rem; justify-items: start; }
+.drink .style { color: var(--muted); font-size: .9rem; }
+.drink b a { color: var(--rc); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--rc) 40%, transparent); }
+.ownbadge { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--rc); }
+.thumbs { flex-wrap: wrap; }
