@@ -505,3 +505,13 @@ textarea.tin { resize: vertical; }
 
 @media (min-width: 761px) { .rail:not(.small) { grid-auto-columns: calc((100% - 2rem) / 3); } }
 @media (max-width: 600px) { .section-h { flex-direction: column; align-items: start; gap: .1rem; margin-top: 1.6rem; } .section-h .muted { font-size: .9rem; } }
+
+.boxswitch { display: grid; gap: .3rem; justify-items: start; }
+.boxswitch .flabel { width: auto; padding-left: .6rem; }
+.boxseg.small button { padding: .3rem .8rem; font-size: .9rem; }
+.grouping { display: flex; align-items: center; gap: .75rem; }
+.kjump { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.kjump .chip { text-decoration: none; }
+.kgroup { scroll-margin-top: calc(env(safe-area-inset-top) + 4.5rem); margin-bottom: 1.6rem; }
+.kgroup h3 { font-size: 1.35rem; margin-bottom: .6rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
+@media (max-width: 600px) { .boxswitch { width: 100%; } .boxswitch .boxseg { width: 100%; } .grouping { width: 100%; justify-content: space-between; } }

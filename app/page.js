@@ -8,7 +8,7 @@ import { daysSince, mins } from "@/lib/format";
 import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
-import { drawers as makeDrawers, seasonal, MONTHS } from "@/lib/box";
+import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
 
 function seeded(seed) {
   let s = seed;
@@ -38,6 +38,8 @@ export default function Home() {
   const [settings] = useSettings();
   const [showFilters, setShowFilters] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [group, setGroup] = useState("none");
+  useEffect(() => { setGroup(lsGet("rb-group", "none")); }, []);
 
   useEffect(() => {
     setF(lsGet("rb-filter", {})); setSort(lsGet("rb-sort", "az"));
@@ -182,15 +184,34 @@ export default function Home() {
         </div>
       ))}
 
-      <div className="section-h"><h2>{filtering ? "Träffar" : "Alla recept"}</h2><span className="muted">{shown.length}{shown.length < all.length ? ` av ${all.length}` : ""}</span></div>
+      <div className="section-h"><h2>{filtering ? "Träffar" : "Alla recept"}</h2>
+        <div className="grouping"><span className="muted">{shown.length}{shown.length < all.length ? ` av ${all.length}` : ""}</span>
+          <div className="boxseg small" role="tablist" aria-label="Visa">
+            {[["none", "Alla"], ["kitchen", "Per kök"]].map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={group === v} onClick={() => { setGroup(v); lsSet("rb-group", v); }}>{l}</button>)}
+          </div>
+        </div>
+      </div>
       {error && <div className="empty">{error}</div>}
       {!recipes && !error && <div className="empty">Hämtar recepten …</div>}
       {recipes && !all.length && <div className="empty">Inga recept än. <Link href="/nytt">Lägg till det första</Link>.</div>}
       {recipes && all.length > 0 && !shown.length && (
         <div className="empty">Inget recept matchar. <button className="link" type="button" onClick={() => { setQ(""); setF({}); lsSet("rb-filter", {}); }}>Rensa filtren</button></div>
       )}
-      <div className="grid">{(filtering || showAll ? shown : shown.slice(0, 8)).map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>
-      {!filtering && !showAll && shown.length > 8 && <div className="more"><button className="btn ghost" type="button" onClick={() => setShowAll(true)}>Visa alla {shown.length} recept</button></div>}
+      {group === "kitchen" ? (() => {
+        const g = {};
+        for (const r of shown) (g[kitchenName(r.kitchen) || "Övrigt"] ||= []).push(r);
+        const keys = Object.keys(g).sort((a, b) => g[b].length - g[a].length || a.localeCompare(b, "sv"));
+        return (<>
+          <nav className="kjump">{keys.map((k) => <a key={k} className="chip" href={`#kok-${k}`}>{k} <span className="muted">{g[k].length}</span></a>)}</nav>
+          {keys.map((k) => (
+            <section key={k} id={`kok-${k}`} className="kgroup">
+              <h3>{k}<span className="muted"> {g[k].length}</span></h3>
+              <div className="grid">{g[k].map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>
+            </section>
+          ))}
+        </>);
+      })() : <div className="grid">{(filtering || showAll ? shown : shown.slice(0, 8)).map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>}
+      {group !== "kitchen" && !filtering && !showAll && shown.length > 8 && <div className="more"><button className="btn ghost" type="button" onClick={() => setShowAll(true)}>Visa alla {shown.length} recept</button></div>}
       <p className="hint" style={{ marginTop: "2rem" }}><Link href="/installningar">Inställningar</Link> · <Link href="/genvag">Dela från Safari</Link></p>
     </>
   );

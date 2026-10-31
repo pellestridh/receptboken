@@ -127,11 +127,12 @@ export default function Box({ drawers }) {
           <h2>Receptlådan</h2>
           <p className="hint">{drawer.hint}</p>
         </div>
+        <div className="boxswitch"><span className="flabel">Dela in efter</span>
         <div className="boxseg" role="tablist">
           {drawers.map((d) => (
             <button key={d.key} type="button" role="tab" aria-selected={d.key === drawer.key} onClick={() => { setTab(d.key); lsSet("rb-drawer", d.key); }}>{d.name}</button>
           ))}
-        </div>
+        </div></div>
       </div>
       <div className="dividers">
         {drawer.cards.map((c, n) => <Divider key={c.key} card={c} n={n} onOpen={() => { const s = { drawer: drawer.key, key: c.key, idx: 0 }; setOpen(s); save(s); }} />)}
