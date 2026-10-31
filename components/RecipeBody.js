@@ -18,7 +18,7 @@ export default function RecipeBody({ recipe, factor = 1, interactive = false, id
   const [tab, setTab] = useState("ing");
 
   return (
-    <>
+    <div className="rbody">
       <div className="seg" role="tablist">
         <button type="button" role="tab" aria-selected={tab === "ing"} onClick={() => setTab("ing")}>Ingredienser</button>
         <button type="button" role="tab" aria-selected={tab === "steps"} onClick={() => { setTab("steps"); window.scrollTo({ top: Math.max(0, (document.querySelector(".seg")?.getBoundingClientRect().top || 0) + window.scrollY - 80) }); }}>Gör så här</button>
@@ -84,6 +84,6 @@ export default function RecipeBody({ recipe, factor = 1, interactive = false, id
           {interactive && <p style={{ marginTop: "1rem" }}><button className="link" type="button" onClick={reset}>Rensa alla bockar</button></p>}
         </section>
       </div>
-    </>
+    </div>
   );
 }

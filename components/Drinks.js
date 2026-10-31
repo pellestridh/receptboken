@@ -6,7 +6,7 @@ import { useApp } from "@/components/Providers";
 const LABEL = { wine: "Vin", beer: "Öl", nonAlcoholic: "Alkoholfritt" };
 const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
 // Gamla eller tomma förslag görs om automatiskt.
-const usable = (d) => d && d.v === 2 && d.wine?.name && d.beer?.name;
+const usable = (d) => d && d.v === 2 && d.wine?.name && d.beer?.name && !/<\/?parameter/.test(JSON.stringify(d));
 
 function Product({ name, kind }) {
   if (kind === "nonAlcoholic") return <>{name}</>;
