@@ -1,0 +1,1350 @@
+{
+ "recipes": [
+  {
+   "accent": "dijon",
+   "base": "Kyckling",
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "kycklingfilé",
+       "note": "lår eller bröst",
+       "q": 1,
+       "unit": "kg"
+      },
+      {
+       "name": "gula lökar",
+       "note": "hackade",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "röda paprikor",
+       "note": "strimlade",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "olja",
+       "pantry": true,
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "torrt vitt vin",
+       "note": "oekat",
+       "q": 1.5,
+       "unit": "dl"
+      },
+      {
+       "name": "grädde",
+       "q": 3,
+       "unit": "dl"
+      },
+      {
+       "name": "torkad timjan",
+       "note": "eller 4 färska kvistar",
+       "pantry": true,
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "salt",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "svartpeppar",
+       "pantry": true,
+       "q": 0.5,
+       "unit": "tsk"
+      }
+     ],
+     "name": "Grytan"
+    },
+    {
+     "items": [
+      {
+       "name": "dijonsenap",
+       "note": "hälften i grytan och hälften på slutet",
+       "q": 0.5,
+       "unit": "dl"
+      },
+      {
+       "name": "svensk senap",
+       "note": "till exempel Slotts",
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "ljus redning (Maizena)",
+       "pantry": true,
+       "q": 1,
+       "q2": 2,
+       "unit": "msk"
+      }
+     ],
+     "name": "Senap och redning"
+    },
+    {
+     "items": [
+      {
+       "name": "potatis",
+       "q": 1,
+       "unit": "kg"
+      },
+      {
+       "name": "morötter",
+       "q": 500,
+       "unit": "g"
+      },
+      {
+       "name": "rödlökar",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "olja",
+       "pantry": true,
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "salt",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      }
+     ],
+     "name": "Ugnsgrönsaker"
+    }
+   ],
+   "kitchen": "Franskt",
+   "lede": "Krämig gryta med dijon, vitt vin och timjan. Kan stå färdig på spisen och bara värmas när gästerna kommer.",
+   "minutes": 50,
+   "order": 3,
+   "pairsWith": [],
+   "servings": 6,
+   "servingsUnit": "portioner",
+   "short": "Krämig gryta med dijon, vitt vin och timjan, med ugnsrostade grönsaker.",
+   "source": {
+    "name": "Matmalin",
+    "url": "https://www.matmalin.se/recept-pa-snabb-fransk-kycklinggryta-med-dijon/"
+   },
+   "steps": [
+    {
+     "items": [
+      "Sätt ugnen på 225 grader.",
+      "Dela potatis och morötter i jämnstora bitar, ungefär 3 cm. Klyfta rödlöken och lägg den åt sidan.",
+      "Blanda potatis och morötter med olja och salt på en stor plåt. Bred ut i ett lager, de ska inte ligga på varandra.",
+      {
+       "label": "Ugnsgrönsaker",
+       "t": "Rosta i 35–40 minuter.",
+       "timer": 2400
+      },
+      {
+       "label": "Rödlöken in",
+       "t": "Lägg i rödlöken efter 20 minuter, annars bränns den.",
+       "timer": 1200
+      }
+     ],
+     "sub": "De tar längst tid, så börja här",
+     "title": "Grönsakerna i ugnen"
+    },
+    {
+     "items": [
+      "Strimla kycklingen i bitar, ungefär 2 cm breda.",
+      "Torka av bitarna med hushållspapper. Torr yta ger bättre stekyta.",
+      "Hacka den gula löken och strimla paprikan."
+     ],
+     "title": "Förbered kycklingen"
+    },
+    {
+     "items": [
+      "Hetta upp 1 msk olja i en stor gryta på hög värme.",
+      {
+       "label": "Kycklingomgång",
+       "t": "Bryn kycklingen i två eller tre omgångar, ca 2 minuter per omgång. Rör inte för mycket, låt bitarna ligga still och få färg.",
+       "timer": 120
+      },
+      "Lyft upp kycklingen på en tallrik efter varje omgång. Den ska inte bli genomstekt här."
+     ],
+     "sub": "I omgångar, inte allt på en gång",
+     "title": "Bryn kycklingen"
+    },
+    {
+     "items": [
+      "Tillsätt resten av oljan i grytan. Stek löken på hög värme tills den fått fin färg, 3–4 minuter.",
+      {
+       "label": "Paprikan",
+       "t": "Tillsätt paprikan och stek ytterligare 5 minuter.",
+       "timer": 300
+      },
+      "Salta och peppra."
+     ],
+     "title": "Lök och paprika"
+    },
+    {
+     "items": [
+      "Häll i vinet och skrapa loss det brynta från botten med en slev. Där sitter mycket av smaken.",
+      {
+       "label": "Vinet",
+       "t": "Låt vinet koka in till ungefär hälften, 2–3 minuter.",
+       "timer": 150
+      },
+      "Tillsätt grädde och timjan. Lägg tillbaka kycklingen tillsammans med saften som samlats på tallriken.",
+      {
+       "label": "Grytan puttrar",
+       "t": "Låt puttra på medelvärme i ca 10 minuter.",
+       "timer": 600
+      }
+     ],
+     "title": "Vin och grädde"
+    },
+    {
+     "items": [
+      "Rör ner den svenska senapen och hälften av dijonsenapen.",
+      "Vispa ut redningen i några matskedar kallt vatten och rör ner den lite i taget. Låt koka upp så att den binder.",
+      "Dra grytan från värmen och rör ner resten av dijonsenapen. Den behåller sin skärpa bäst om den inte kokar.",
+      "Smaka av med salt och peppar."
+     ],
+     "title": "Senapen och såsen"
+    },
+    {
+     "items": [
+      "Servera grytan med de ugnsrostade grönsakerna."
+     ],
+     "title": "Servera"
+    }
+   ],
+   "tags": [
+    "Kan lagas i förväg",
+    "Bra för gäster"
+   ],
+   "tips": [
+    "Kycklinglårfilé blir i princip aldrig torr, hur länge grytan än får stå. Bröstfilé är magrare men tål mindre kokning.",
+    "Grytan kan lagas helt klar i förväg och värmas försiktigt precis före servering. Vänta i så fall med den sista dijonsenapen tills den är varm igen.",
+    "Börja med 1 msk redning. Såsen tjocknar en del av sig själv när vinet och grädden kokat in, och för mycket redning gör den klistrig.",
+    "Vinet ska vara torrt och oekat. En smörig chardonnay eller ett ljust franskt rosévin passar både i grytan och i glaset.",
+    "Ris, pasta eller potatismos fungerar lika bra som tillbehör."
+   ],
+   "title": "Fransk kycklinggryta",
+   "type": "Huvudrätt",
+   "id": "fransk-kycklinggryta"
+  },
+  {
+   "accent": "ember",
+   "base": "Nötkött",
+   "changes": [
+    "Ugnen sänkt från 200 till 150 grader och tiden ökad från 1–1½ till 2–2½ timme. Högrev är en senig styckdetalj som behöver lång, låg värme för att bli mör.",
+    "Köttet skärs i större bitar och bryns i omgångar, så att det får färg istället för att koka.",
+    "Vinet kokas in innan tomaterna tillsätts, vilket ger rundare smak.",
+    "Saffranet får dra i varmt vatten först, så att färgen och smaken sprids jämnt.",
+    "Potatisen startar när grytan har en halvtimme kvar, så blir båda klara samtidigt.",
+    "Fänkålsblasten används till servering."
+   ],
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "högrev",
+       "q": 800,
+       "unit": "g"
+      },
+      {
+       "name": "gula lökar",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "morot",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "fänkål",
+       "note": "spara blasten",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "vitlöksklyftor",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "röd chili",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "tomatpuré",
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "torrt vitt vin",
+       "q": 5,
+       "unit": "dl"
+      },
+      {
+       "name": "saffran",
+       "note": "0,5 g",
+       "q": 1,
+       "unit": "frp"
+      },
+      {
+       "name": "lagerblad",
+       "pantry": true,
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "krossade tomater",
+       "note": "à 400 g",
+       "q": 2,
+       "unit": "burkar"
+      },
+      {
+       "name": "vatten",
+       "q": 2,
+       "shop": false,
+       "unit": "dl"
+      },
+      {
+       "name": "olja",
+       "pantry": true,
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "amt": "efter smak",
+       "name": "salt och svartpeppar",
+       "pantry": true,
+       "q": null,
+       "unit": ""
+      }
+     ],
+     "name": "Högrevsgryta"
+    },
+    {
+     "items": [
+      {
+       "name": "fast potatis",
+       "note": "gärna små, skrubbade",
+       "q": 600,
+       "unit": "g"
+      },
+      {
+       "name": "färskost",
+       "q": 1,
+       "unit": "dl"
+      },
+      {
+       "name": "olivolja",
+       "pantry": true,
+       "q": 0.5,
+       "unit": "dl"
+      },
+      {
+       "name": "citron",
+       "note": "rivet skal",
+       "q": 0.5,
+       "unit": ""
+      },
+      {
+       "name": "färsk persilja",
+       "note": "hackad, plus till servering",
+       "q": 1,
+       "unit": "dl"
+      },
+      {
+       "name": "färsk gräslök",
+       "note": "skuren, plus till servering",
+       "q": 1,
+       "unit": "dl"
+      },
+      {
+       "amt": "efter smak",
+       "name": "salt och peppar",
+       "pantry": true,
+       "q": null,
+       "shop": false,
+       "unit": ""
+      }
+     ],
+     "name": "Stompad örtpotatis"
+    }
+   ],
+   "kitchen": "Svenskt",
+   "lede": "Mör högrev långkokt i tomat, vitt vin, fänkål och saffran. Serveras med grovt stompad potatis med färskost, citron och örter.",
+   "minutes": 180,
+   "order": 6,
+   "pairsWith": [],
+   "servings": 4,
+   "servingsUnit": "portioner",
+   "short": "Långkokt högrev med tomat, vitt vin, fänkål och saffran, med grovmosad örtpotatis.",
+   "source": {
+    "name": "Köket.se, Tom Sjöstedt",
+    "url": "https://www.koket.se/hogrevsgryta-med-stompad-ortpotatis"
+   },
+   "steps": [
+    {
+     "items": [
+      "Sätt ugnen på 150 grader.",
+      "Ta fram köttet en halvtimme innan och torka det torrt. Skär det i stora bitar, ca 4–5 cm. Mindre bitar torkar ut under långkoket.",
+      "Skala och skär lök, morot och fänkål i bitar. Skiva vitlök och chili. Kärna ur chilin om du vill ha det mildare.",
+      "Lägg saffranet i 2 msk varmt vatten så att det drar ut färg och smak."
+     ],
+     "title": "Förbered"
+    },
+    {
+     "items": [
+      {
+       "label": "Bryningsomgång",
+       "t": "Hetta upp olja i en gjutjärnsgryta. Bryn köttet hårt i två eller tre omgångar tills det fått en mörk yta runt om, ca 3–4 min per omgång.",
+       "timer": 210
+      },
+      "Salta och peppra och lyft upp köttet på en tallrik."
+     ],
+     "sub": "I omgångar",
+     "title": "Bryn köttet"
+    },
+    {
+     "items": [
+      {
+       "label": "Grönsakerna",
+       "t": "Sänk värmen till medel. Fräs lök, morot, fänkål, vitlök och chili i samma gryta tills de fått lite färg, 5–6 min. Skrapa upp det brynta från botten.",
+       "timer": 330
+      },
+      {
+       "label": "Tomatpurén",
+       "t": "Rör ner tomatpurén och fräs under omrörning 1–2 min, tills den mörknat lite.",
+       "timer": 90
+      }
+     ],
+     "title": "Grönsaker och tomatpuré"
+    },
+    {
+     "items": [
+      {
+       "label": "Vinet kokar in",
+       "t": "Häll i vinet och låt det koka in till ungefär hälften, ca 5 min. Då försvinner den skarpa alkoholsmaken.",
+       "timer": 300
+      },
+      "Lägg tillbaka köttet med köttsaften. Tillsätt saffran med blötläggningsvattnet, lagerblad, krossade tomater och vatten.",
+      "Koka upp och smaka av med salt."
+     ],
+     "title": "Vin och tomat"
+    },
+    {
+     "items": [
+      {
+       "label": "Grytan i ugnen",
+       "t": "Lägg på locket och ställ in grytan i ugnen.",
+       "timer": 7200
+      },
+      "Känn efter med en gaffel. Köttet är klart när det går att dela utan motstånd. Låt det annars gå 30 min till.",
+      "Ta av locket den sista halvtimmen om såsen är för tunn."
+     ],
+     "sub": "2–2½ timme",
+     "title": "Långkok i ugnen"
+    },
+    {
+     "items": [
+      {
+       "label": "Potatisen",
+       "t": "Koka potatisen i saltat vatten tills den är helt mjuk, ca 20 min.",
+       "timer": 1200
+      },
+      "Häll av och låt potatisen ånga av i kastrullen i någon minut.",
+      "Stompa potatisen grovt med en gaffel eller potatisstöt medan den är varm. Vänd ner färskost, olivolja, citronskal, persilja och gräslök. Smaka av med salt och peppar."
+     ],
+     "sub": "Börja när grytan har ca 30 min kvar",
+     "title": "Stompad örtpotatis"
+    },
+    {
+     "items": [
+      "Plocka bort lagerbladen och smaka av grytan med salt och peppar.",
+      "Servera grytan med den stompade potatisen. Toppa med persilja, gräslök och hackad fänkålsblast."
+     ],
+     "title": "Servera"
+    }
+   ],
+   "tags": [
+    "Långkok",
+    "Kan lagas i förväg"
+   ],
+   "tips": [
+    "Högrev blir godare dagen efter. Grytan kan lagas helt klar i förväg och värmas långsamt på spisen.",
+    "Blir såsen syrlig av tomaterna, rör ner en nypa socker eller en klick smör på slutet.",
+    "Fast potatis håller formen bäst när den stompas. Mjölig potatis blir mer som mos.",
+    "Rester av grytan blir en bra pastasås. Riv eller dra isär köttbitarna med två gafflar.",
+    "Ett torrt vitt vin går bra i grytan. Ett lätt rött som Côtes du Rhône passar till maten."
+   ],
+   "title": "Högrevsgryta med stompad örtpotatis",
+   "type": "Huvudrätt",
+   "id": "hogrevsgryta-med-stompad-ortpotatis"
+  },
+  {
+   "accent": "ember",
+   "base": "Kyckling",
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "kycklingstekar",
+       "note": "benfria lår med skinn",
+       "q": 4,
+       "unit": ""
+      },
+      {
+       "name": "japansk soja",
+       "q": 3,
+       "unit": "msk"
+      },
+      {
+       "name": "sesamolja",
+       "pantry": true,
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "flytande honung",
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "vitlöksklyfta",
+       "note": "finriven",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "amt": "efter smak",
+       "name": "svartpeppar",
+       "pantry": true,
+       "q": null,
+       "unit": ""
+      }
+     ],
+     "name": "Kyckling och marinad"
+    },
+    {
+     "items": [
+      {
+       "name": "majonnäs",
+       "note": "gärna japansk, t.ex. Kewpie",
+       "q": 2,
+       "unit": "dl"
+      },
+      {
+       "name": "misopasta",
+       "note": "ljus miso ger mildast smak",
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "vitlöksklyfta",
+       "note": "finriven",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "flytande honung",
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "risvinäger",
+       "q": 2,
+       "unit": "tsk"
+      }
+     ],
+     "name": "Misomajonnäs"
+    },
+    {
+     "items": [
+      {
+       "name": "rödlök",
+       "note": "tunt skivad",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "gurka",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "hjärtsallad",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "rostade sesamfrön",
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "japansk soja",
+       "q": 3,
+       "unit": "msk"
+      },
+      {
+       "name": "risvinäger",
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "sesamolja",
+       "pantry": true,
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "flytande honung",
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "vitlöksklyfta",
+       "note": "finriven",
+       "q": 1,
+       "unit": ""
+      }
+     ],
+     "name": "Sallad och dressing"
+    },
+    {
+     "items": [
+      {
+       "name": "sushiris",
+       "note": "ca 4 portioner",
+       "q": 3,
+       "unit": "dl"
+      }
+     ],
+     "name": "Till servering"
+    }
+   ],
+   "kitchen": "Japanskt",
+   "lede": "Soja- och honungsmarinerade kycklinglår med krispigt skinn, krämig misomajonnäs, frisk sallad med sesamdressing och sushiris.",
+   "minutes": 45,
+   "order": 5,
+   "pairsWith": [],
+   "servings": 4,
+   "servingsUnit": "portioner",
+   "short": "Soja- och honungsmarinerade kycklinglår med krispigt skinn, misomajonnäs och frisk sallad.",
+   "source": {
+    "name": "Köket.se, Jennie Walldén",
+    "url": "https://www.koket.se/grillad-kyckling-med-misomajonnas"
+   },
+   "steps": [
+    {
+     "items": [
+      "Rör ihop soja, sesamolja, riven vitlök och honung.",
+      {
+       "label": "Marinaden",
+       "t": "Vänd kycklingen i marinaden och låt den stå medan du gör resten, minst 20 min. Gärna upp till 4 timmar i kylen.",
+       "timer": 1200
+      }
+     ],
+     "title": "Marinera kycklingen"
+    },
+    {
+     "items": [
+      "Skölj riset i kallt vatten och gnid det mellan händerna tills vattnet är nästan klart.",
+      {
+       "label": "Riset",
+       "t": "Koka med 3,3 dl vatten under lock på svag värme i ca 12 min.",
+       "timer": 720
+      },
+      {
+       "label": "Riset vilar",
+       "t": "Dra från värmen och låt stå med locket på i 10 min.",
+       "timer": 600
+      }
+     ],
+     "sub": "Medan kycklingen marineras",
+     "title": "Koka riset"
+    },
+    {
+     "items": [
+      "Rör ihop majonnäs, misopasta, vitlök, honung och risvinäger till en slät sås.",
+      "Smaka av och ställ kallt. Smakerna blir rundare efter en stund i kylen."
+     ],
+     "title": "Misomajonnäs"
+    },
+    {
+     "items": [
+      {
+       "label": "Rödlöken",
+       "t": "Lägg den skivade rödlöken i iskallt vatten i ca 10 min, så blir den mildare och krispigare. Låt rinna av ordentligt.",
+       "timer": 600
+      },
+      "Dela salladen i blad och skär gurkan i munsbitar. Krossa gärna gurkan lätt med knivbladet först, så fastnar dressingen bättre.",
+      "Vispa ihop dressingen i en stor skål.",
+      "Vänta med att vända ner sallad, gurka och lök tills precis före servering. Strö över sesamfrön."
+     ],
+     "title": "Sallad och dressing"
+    },
+    {
+     "items": [
+      "Ta upp kycklingen ur marinaden, låt den rinna av och torka skinnsidan lätt. Peppra. Salta inte, sojan räcker.",
+      {
+       "label": "Kyckling, skinnsidan",
+       "t": "Grill: lägg kycklingen med skinnsidan ned på medelvärme, inte direkt över högsta glöden, i 6–8 min tills skinnet är krispigt.",
+       "timer": 420
+      },
+      {
+       "label": "Kyckling, andra sidan",
+       "t": "Vänd och grilla 4–6 min till.",
+       "timer": 300
+      },
+      "Stekpanna: lägg kycklingen med skinnsidan ned i en kall panna utan fett och sätt på medelvärme. Stek 10–12 min tills skinnet är gyllene och fettet smält ut, vänd sedan och stek 4–5 min.",
+      "Kycklingen är klar vid 75–80 °C i kärnan. Låt vila några minuter och skär i skivor."
+     ],
+     "sub": "Börja med skinnsidan",
+     "title": "Grilla eller stek kycklingen"
+    },
+    {
+     "items": [
+      "Vänd salladen i dressingen.",
+      "Servera kycklingen med misomajonnäs, sallad och sushiris."
+     ],
+     "title": "Servera"
+    }
+   ],
+   "tags": [
+    "Grill eller stekpanna",
+    "Lår 80 °C i kärnan"
+   ],
+   "tips": [
+    "Honungen i marinaden bränns lätt. Håll medelvärme och torka av överflödig marinad innan kycklingen läggs på.",
+    "Lårfilé tål att tillagas till 80 °C och blir saftigare än bröst. Bröstfilé tas upp vid 70 °C.",
+    "Vill du ha glaze: koka upp den använda marinaden med en skvätt vatten i 1–2 min och pensla över kycklingen på slutet. Den måste koka, eftersom den varit i kontakt med rå kyckling.",
+    "Misomajonnäsen håller några dagar i kylen och passar till grillad lax, pommes eller i en smörgås.",
+    "Dressingen och marinaden har nästan samma ingredienser. Rör ihop båda samtidigt så går det snabbare.",
+    "Rostade sesamfrön kan du göra själv i torr panna på ett par minuter."
+   ],
+   "title": "Kyckling med misomajonnäs",
+   "type": "Huvudrätt",
+   "id": "kyckling-misomajonnas"
+  },
+  {
+   "accent": "crust",
+   "base": "Vegetariskt",
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "vetemjöl",
+       "note": "plus lite till utbakning",
+       "pantry": true,
+       "q": 4,
+       "unit": "dl"
+      },
+      {
+       "name": "bakpulver",
+       "pantry": true,
+       "q": 1.5,
+       "unit": "tsk"
+      },
+      {
+       "name": "salt",
+       "pantry": true,
+       "q": 0.5,
+       "unit": "tsk"
+      },
+      {
+       "name": "grekisk eller turkisk yoghurt",
+       "q": 1.5,
+       "unit": "dl"
+      },
+      {
+       "name": "ljummet vatten",
+       "q": 0.5,
+       "shop": false,
+       "unit": "dl"
+      }
+     ],
+     "name": "Degen"
+    },
+    {
+     "items": [
+      {
+       "name": "smör eller ghee",
+       "note": "smält",
+       "q": 2,
+       "q2": 3,
+       "unit": "msk"
+      }
+     ],
+     "name": "Till pensling"
+    },
+    {
+     "items": [
+      {
+       "name": "vitlöksklyfta",
+       "note": "finriven i smöret",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "färsk koriander",
+       "note": "hackad",
+       "q": 1,
+       "unit": "näve"
+      },
+      {
+       "name": "flingsalt",
+       "pantry": true,
+       "q": 1,
+       "unit": "nypa"
+      }
+     ],
+     "name": "Valfritt"
+    }
+   ],
+   "kitchen": "Indiskt",
+   "lede": "Mjuka yoghurtbröd i stekpannan, med bakpulver istället för jäst. Klara medan grytan puttrar.",
+   "minutes": 25,
+   "order": 2,
+   "pairsWith": [
+    "palak-paneer"
+   ],
+   "servings": 4,
+   "servingsUnit": "bröd",
+   "short": "Mjuka yoghurtbröd i stekpannan, utan jästid.",
+   "source": {
+    "name": "Eget recept"
+   },
+   "steps": [
+    {
+     "items": [
+      "Rör ihop vetemjöl, bakpulver och salt i en skål.",
+      "Tillsätt yoghurten och rör om.",
+      "Tillsätt vattnet lite i taget och knåda ihop till en smidig, ganska mjuk deg, ca 2 minuter.",
+      {
+       "label": "Degvila",
+       "t": "Täck skålen och låt degen vila 10 minuter om du hinner. Då blir den lättare att kavla.",
+       "timer": 600
+      }
+     ],
+     "title": "Blanda degen"
+    },
+    {
+     "items": [
+      "Dela degen i lika stora delar och rulla till bollar.",
+      "Platta till bollarna och kavla ut dem på lätt mjölat bord till ovala bröd, 3–5 mm tjocka.",
+      "Smält smöret nu, med vitlök om du vill, så att det står klart."
+     ],
+     "title": "Dela och kavla"
+    },
+    {
+     "items": [
+      "Hetta upp en torr stekpanna, gärna gjutjärn, på hög värme.",
+      {
+       "label": "Naan, sida 1",
+       "t": "Lägg i ett bröd. Efter 1–2 minuter bildas stora bubblor och undersidan får mörka fläckar.",
+       "timer": 90
+      },
+      {
+       "label": "Naan, sida 2",
+       "t": "Vänd och grädda ca 1 minut på andra sidan.",
+       "timer": 60
+      }
+     ],
+     "sub": "Ett bröd i taget",
+     "title": "Grädda"
+    },
+    {
+     "items": [
+      "Pensla brödet med smält smör direkt när det kommer ur pannan. Strö över koriander och flingsalt om du vill.",
+      "Slå in bröden i en ren kökshandduk, så håller de sig mjuka fram till servering."
+     ],
+     "title": "Pensla och håll varmt"
+    }
+   ],
+   "tags": [
+    "Ingen jästid"
+   ],
+   "tips": [
+    "Degen ska vara mjuk och lite kladdig. Mjöla händerna hellre än att knåda in mer mjöl, annars blir bröden kompakta.",
+    "Är pannan inte riktigt het blir bröden bleka och sega. Vänta tills den är ordentligt varm.",
+    "Blir fläckarna svarta för fort, sänk värmen en aning mellan bröden.",
+    "Rester värms bäst några sekunder i torr panna eller inslagna i folie i ugnen."
+   ],
+   "title": "Snabba naanbröd",
+   "type": "Tillbehör och bröd",
+   "id": "naan"
+  },
+  {
+   "accent": "spinach",
+   "base": "Vegetariskt",
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "färsk spenat",
+       "q": 400,
+       "unit": "g"
+      },
+      {
+       "name": "grön chili",
+       "note": "urkärnad för mildare smak",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "paneer",
+       "note": "mixas ner för krämighet",
+       "q": 30,
+       "unit": "g"
+      },
+      {
+       "name": "vispgrädde",
+       "note": "tas från grytans grädde",
+       "q": 2,
+       "shop": false,
+       "unit": "msk"
+      }
+     ],
+     "name": "Spenatbasen"
+    },
+    {
+     "items": [
+      {
+       "name": "paneer",
+       "note": "i centimetertärningar",
+       "q": 200,
+       "q2": 250,
+       "unit": "g"
+      },
+      {
+       "name": "gul lök",
+       "note": "finhackad",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "ingefära",
+       "note": "finriven",
+       "q": 1,
+       "unit": "tumstor bit"
+      },
+      {
+       "name": "vitlöksklyftor",
+       "note": "finrivna",
+       "q": 3,
+       "q2": 4,
+       "unit": ""
+      },
+      {
+       "name": "medelstora tomater",
+       "note": "finhackade, eller 1 dl krossade",
+       "q": 2,
+       "unit": ""
+      },
+      {
+       "name": "olja eller ghee",
+       "pantry": true,
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "vispgrädde",
+       "note": "40 %",
+       "q": 1,
+       "unit": "dl"
+      },
+      {
+       "name": "majsstärkelse (Maizena)",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "smör",
+       "note": "kallt",
+       "q": 1,
+       "unit": "klick"
+      },
+      {
+       "amt": "efter smak",
+       "name": "salt",
+       "pantry": true,
+       "q": null,
+       "unit": ""
+      }
+     ],
+     "name": "Grytan"
+    },
+    {
+     "items": [
+      {
+       "name": "spiskummin",
+       "note": "gärna hel",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "gurkmeja",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "korianderpulver",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "chilipulver",
+       "pantry": true,
+       "q": 0.5,
+       "unit": "tsk"
+      },
+      {
+       "name": "garam masala",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      },
+      {
+       "name": "kasuri methi",
+       "note": "torkad bockhornsklöver",
+       "pantry": true,
+       "q": 1,
+       "unit": "tsk"
+      }
+     ],
+     "name": "Kryddor"
+    }
+   ],
+   "kitchen": "Indiskt",
+   "lede": "Krämig spenatgryta med stekt paneer, ingefära och bockhornsklöver. Nötfri, klargrön och restaurangfyllig.",
+   "minutes": 40,
+   "order": 1,
+   "pairsWith": [
+    "naan"
+   ],
+   "servings": 4,
+   "servingsUnit": "portioner",
+   "short": "Krämig spenatgryta med stekt paneer och bockhornsklöver.",
+   "source": {
+    "name": "Eget recept"
+   },
+   "steps": [
+    {
+     "items": [
+      {
+       "label": "Spenaten",
+       "t": "Koka upp en stor kastrull vatten. Lägg i spenaten och låt den sjuda högst 1 minut, tills den precis sjunkit ihop.",
+       "timer": 60
+      },
+      "Häll av i durkslag och spola genast med iskallt vatten, så behåller den den klargröna färgen.",
+      "Krama ur spenaten ordentligt med händerna till en kompakt boll.",
+      "Mixa spenaten med grön chili, 30 g paneer och 2 msk av grädden till en tjock puré. Vill du ha synliga blad som på restaurang: kör i korta pulsar istället för slätt."
+     ],
+     "sub": "För färg och konsistens",
+     "title": "Spenatpurén"
+    },
+    {
+     "items": [
+      "Hetta upp 1 msk olja i en djup panna på medelhög värme.",
+      "Stek paneertärningarna några minuter tills de är gyllene runt om.",
+      "Lägg osten i en skål med varmt, lätt saltat vatten medan du fortsätter. Då håller den sig mjuk."
+     ],
+     "title": "Stek osten"
+    },
+    {
+     "items": [
+      "Tillsätt resten av oljan eller gheen i samma panna. Fräs spiskummin 10–20 sekunder tills det doftar.",
+      {
+       "label": "Löken",
+       "t": "Rör ner löken och en nypa salt. Stek 5–6 minuter på medelvärme tills den är mjuk, glansig och lätt gyllene.",
+       "timer": 330
+      },
+      "Tillsätt ingefära och vitlök och fräs under omrörning i ca 1 minut, utan att det tar färg.",
+      "Tillsätt tomaterna, gurkmeja, korianderpulver och chilipulver.",
+      {
+       "label": "Kryddbasen",
+       "t": "Låt sjuda under omrörning i ca 5 minuter, tills det blir en tjock pasta där oljan börjar släppa i kanterna.",
+       "timer": 300
+      }
+     ],
+     "sub": "Bhuna masala",
+     "title": "Kryddbasen"
+    },
+    {
+     "items": [
+      "Rör ner spenatpurén i kryddbasen.",
+      {
+       "label": "Spenatgrytan",
+       "t": "Låt sjuda utan lock på låg till medelvärme i 3–4 minuter. Koka inte längre, då blir spenaten grå.",
+       "timer": 210
+      },
+      "Vispa ut majsstärkelsen i resten av grädden så att den blir klumpfri.",
+      "Sänk värmen och rör ner gräddblandningen och garam masala.",
+      {
+       "label": "Grädden",
+       "t": "Smula kasuri methi mellan handflatorna direkt ner i grytan. Låt sjuda 2 minuter till så att såsen blir sammetslen.",
+       "timer": 120
+      },
+      "Smaka av med salt."
+     ],
+     "title": "Koka ihop grytan"
+    },
+    {
+     "items": [
+      "Låt osten rinna av och vänd ner den i såsen. Värm i 1–2 minuter.",
+      "Dra pannan från värmen och rör ner smörklicken för glans och fyllighet.",
+      "Servera rykande het med basmatiris och naan."
+     ],
+     "title": "Slutfinish"
+    }
+   ],
+   "tags": [
+    "Mild–medel"
+   ],
+   "tips": [
+    "Halloumi fungerar istället för paneer, men är saltare. Vänta med saltet till slutet.",
+    "Blir grytan för tjock kan du späda med några matskedar varmt vatten.",
+    "En skvätt citron precis före servering lyfter smakerna.",
+    "Grytan håller sig 2–3 dagar i kylen men tappar lite av den gröna färgen."
+   ],
+   "title": "Palak paneer",
+   "type": "Huvudrätt",
+   "id": "palak-paneer"
+  },
+  {
+   "accent": "sea",
+   "base": "Fisk",
+   "groups": [
+    {
+     "items": [
+      {
+       "name": "mjölig potatis",
+       "q": 500,
+       "unit": "g"
+      },
+      {
+       "name": "smör",
+       "note": "kallt i tärningar",
+       "q": 50,
+       "unit": "g"
+      },
+      {
+       "name": "mjölk",
+       "note": "eller hälften grädde",
+       "q": 1,
+       "q2": 1.5,
+       "unit": "dl"
+      },
+      {
+       "amt": "efter smak",
+       "name": "salt, vitpeppar",
+       "note": "ev. en nypa muskot",
+       "pantry": true,
+       "q": null,
+       "unit": ""
+      }
+     ],
+     "name": "Potatispuré"
+    },
+    {
+     "items": [
+      {
+       "name": "torskrygg",
+       "note": "i två jämntjocka bitar",
+       "q": 450,
+       "unit": "g"
+      },
+      {
+       "name": "salt",
+       "pantry": true,
+       "q": 0.5,
+       "unit": "tsk"
+      },
+      {
+       "name": "vetemjöl",
+       "pantry": true,
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "rapsolja",
+       "pantry": true,
+       "q": 1,
+       "unit": "msk"
+      },
+      {
+       "name": "smör",
+       "q": 15,
+       "unit": "g"
+      }
+     ],
+     "name": "Torsk"
+    },
+    {
+     "items": [
+      {
+       "name": "smör",
+       "q": 75,
+       "unit": "g"
+      },
+      {
+       "name": "kapris",
+       "note": "sköljd och torkad",
+       "q": 2,
+       "unit": "msk"
+      },
+      {
+       "name": "citron",
+       "q": 1,
+       "unit": ""
+      },
+      {
+       "name": "bladpersilja",
+       "q": 0.5,
+       "unit": "kruka"
+      },
+      {
+       "name": "vitt bröd",
+       "note": "till krutonger, valfritt",
+       "q": 1,
+       "unit": "skiva"
+      },
+      {
+       "name": "smör",
+       "note": "till krutongerna",
+       "q": 10,
+       "unit": "g"
+      }
+     ],
+     "name": "Grenoble-smör"
+    },
+    {
+     "items": [
+      {
+       "name": "kokta rödbetor",
+       "q": 1,
+       "unit": "frp"
+      }
+     ],
+     "name": "Till servering"
+    }
+   ],
+   "kitchen": "Franskt",
+   "lede": "Smörstekt torskrygg på len potatispuré med brynt smör, krispig kapris, citronfiléer och persilja. Rödbetor vid sidan.",
+   "minutes": 50,
+   "order": 4,
+   "pairsWith": [],
+   "servings": 2,
+   "servingsUnit": "portioner",
+   "short": "Smörstekt torskrygg på potatispuré med brynt smör, kapris och citron.",
+   "steps": [
+    {
+     "items": [
+      "Skala potatisen och skär den i lika stora bitar.",
+      {
+       "label": "Potatisen",
+       "t": "Lägg den i kallt, saltat vatten och koka tills den är helt mjuk, ca 20 min. Kallt vatten gör att bitarna blir jämnt kokta rakt igenom.",
+       "timer": 1200
+      }
+     ],
+     "sub": "20 min",
+     "title": "Koka potatisen"
+    },
+    {
+     "items": [
+      {
+       "label": "Rimning",
+       "t": "Strö saltet jämnt över torskbitarna och låt dem stå i kylen ca 15 min.",
+       "timer": 900
+      },
+      "Torka av dem riktigt torrt med hushållspapper. Fuktig fisk får ingen yta."
+     ],
+     "sub": "15 min",
+     "title": "Rimma torsken"
+    },
+    {
+     "items": [
+      "Riv det gula skalet från citronen.",
+      "Skär bort resten av skalet och vita hinnan med en vass kniv. Skär ut klyftorna mellan hinnorna och tärna dem. Pressa saften ur det som blir kvar.",
+      "Skölj kaprisen, torka den på papper och hacka persiljan.",
+      "Krutonger (valfritt): skär brödet i små tärningar och stek dem gyllene i 10 g smör. Lägg åt sidan."
+     ],
+     "sub": "Medan det står",
+     "title": "Förbered såsen"
+    },
+    {
+     "items": [
+      "Häll av potatisen och låt den ånga av i kastrullen på svag värme i 1–2 min.",
+      "Pressa den genom potatispress eller mosa för hand. Använd inte stavmixer, det gör purén klistrig.",
+      "Rör ner det kalla smöret först, sedan den varma mjölken lite i taget tills purén är len.",
+      "Smaka av med salt, vitpeppar och ev. muskot. Håll varm under lock."
+     ],
+     "title": "Gör purén"
+    },
+    {
+     "items": [
+      "Vänd torsken lätt i mjölet och knacka av överskottet.",
+      {
+       "label": "Torsken, sida 1",
+       "t": "Hetta upp oljan på medelhög värme. Lägg i fisken med den finaste sidan nedåt och stek orörd 3–4 min tills den är gyllene.",
+       "timer": 210
+      },
+      {
+       "label": "Torsken, ösning",
+       "t": "Vänd, sänk värmen och lägg i smöret. Ös fisken med det skummande smöret i 2–3 min.",
+       "timer": 150
+      },
+      "Ta upp när kärnan är ca 50 °C, eller när fisken precis börjar flaka sig. Låt vila på ett varmt fat."
+     ],
+     "sub": "6–8 min",
+     "title": "Stek torsken"
+    },
+    {
+     "items": [
+      "Smält smöret i en ljus kastrull på medelvärme. Det skummar, tystnar och blir sedan gyllenbrunt och nötdoftande.",
+      "När det börjar bli brunt: lägg i kaprisen och låt den fräsa 30 sek så att den blir krispig.",
+      "Dra kastrullen från värmen och rör ner citronskal, en skvätt citronsaft, citrontärningarna och persiljan. Saften stoppar bryningen. Smaka av med salt."
+     ],
+     "sub": "4–5 min",
+     "title": "Bryn smöret"
+    },
+    {
+     "items": [
+      "Bred ut purén på varma tallrikar och lägg torsken ovanpå.",
+      "Skeda Grenoble-smöret över fisken och strö över krutongerna precis före servering.",
+      "Lägg rödbetorna vid sidan av."
+     ],
+     "title": "Servera"
+    }
+   ],
+   "tags": [
+    "Torsk 50 °C i kärnan"
+   ],
+   "tips": [
+    "Fisken startar i olja och får smöret först i slutet. Smör ensamt bränns innan torsken hunnit få färg.",
+    "Citronfiléerna och krutongerna hör till den franska grundversionen och ger både syra och krisp. Utan dem räcker skal och saft gott.",
+    "Gör Grenoble-smöret allra sist. Det tappar sin nötiga doft och kaprisen blir mjuk om det får stå.",
+    "Persilja är klassiskt. Dill går också, men då blir smaken mer svensk än fransk.",
+    "Rödbetorna färgar purén. Lägg dem vid sidan eller i en egen liten skål.",
+    "Torskfilé går bra men är tunnare. Räkna med 1–2 min kortare stektid.",
+    "Ett torrt vitt vin passar fint, till exempel en Chablis eller en Muscadet."
+   ],
+   "title": "Torsk Grenoble",
+   "type": "Huvudrätt",
+   "id": "torsk-grenoble"
+  }
+ ],
+ "notes": [],
+ "shopping": []
+}

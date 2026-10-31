@@ -1,0 +1,25 @@
+"use client";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+
+export default function Nav() {
+  const path = usePathname();
+  const router = useRouter();
+  if (path === "/login") return null;
+  const at = (p) => (p === "/" ? path === "/" : path.startsWith(p));
+  return (
+    <nav className="nav">
+      <div className="wrap navrow">
+        {path !== "/" && (
+          <button type="button" className="hbtn" aria-label="Tillbaka" onClick={() => router.back()}>‹</button>
+        )}
+        <Link href="/" className="brand">Receptboken</Link>
+        <div className="tabs">
+          <Link href="/" className="tab" aria-current={at("/") || at("/recept") ? "page" : undefined}>Recept</Link>
+          <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}>Inköpslista</Link>
+          <Link href="/nytt" className="tab add-tab" aria-current={at("/nytt") ? "page" : undefined}>+ Nytt</Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
