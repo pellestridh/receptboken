@@ -5,6 +5,8 @@ import { useRecipes } from "@/components/useRecipes";
 import RecipeBody from "@/components/RecipeBody";
 import RecipeImage from "@/components/RecipeImage";
 import Drinks from "@/components/Drinks";
+import Nutrition from "@/components/Nutrition";
+import { useSettings } from "@/components/useSettings";
 import { useApp } from "@/components/Providers";
 import { api, getName } from "@/lib/api";
 import { accentVar, dateSv, mins } from "@/lib/format";
@@ -21,6 +23,7 @@ export default function RecipePage({ params }) {
   const [wake, setWake] = useState(null);
   const wantWake = useRef(false);
   const [order, setOrder] = useState([]);
+  const [settings] = useSettings();
 
   useEffect(() => {
     setData(null); setServ(null);
@@ -85,6 +88,7 @@ export default function RecipePage({ params }) {
         {r.lede && <p className="lede">{r.lede}</p>}
         <div className="tags">
           {[r.kitchen, r.type, r.base, mins(r.minutes), ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}
+          {r.nutrition?.kcal && r.nutrition.kcal <= settings.lightKcal && <span className="tag light-tag">Lätt</span>}
         </div>
         <div className="tools">
           <div className="stepper" role="group" aria-label="Antal">
@@ -99,6 +103,7 @@ export default function RecipePage({ params }) {
 
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
 
+      <Nutrition id={id} nutrition={r.nutrition} lightKcal={settings.lightKcal} onChange={(nu) => setData((x) => ({ ...x, recipe: { ...x.recipe, nutrition: nu } }))} />
       <Drinks id={id} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
 
       {pairs.length > 0 && (

@@ -102,6 +102,19 @@ statements.push(
     author text,
     created_at timestamptz not null default now()
   )`,
+  `create table if not exists foods (
+    nummer int primary key,
+    namn text not null
+  )`,
+  `create table if not exists food_nutrients (
+    nummer int primary key,
+    kcal double precision, protein double precision, carbs double precision, fat double precision,
+    fetched_at timestamptz not null default now()
+  )`,
+  `create table if not exists settings (
+    key text primary key,
+    value jsonb not null
+  )`,
   `create table if not exists staples (
     id text primary key,
     name text not null,

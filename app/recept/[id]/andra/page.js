@@ -18,8 +18,9 @@ export default function EditRecipe({ params }) {
   const [err, setErr] = useState("");
   const [saving, setSaving] = useState(false);
   const [armDelete, setArmDelete] = useState(false);
+  const [original, setOriginal] = useState(null);
 
-  useEffect(() => { api(`/api/recipes/${id}`).then((d) => setRecipe(d.recipe)).catch((e) => setErr(e.message)); }, [id]);
+  useEffect(() => { api(`/api/recipes/${id}`).then((d) => { setRecipe(d.recipe); setOriginal(d.recipe); }).catch((e) => setErr(e.message)); }, [id]);
 
   async function revise() {
     if (!ask.trim()) return;
@@ -32,7 +33,11 @@ export default function EditRecipe({ params }) {
   }
   async function save(r) {
     setSaving(true);
-    try { await api(`/api/recipes/${id}`, { method: "PATCH", json: { recipe: { ...r, pairsWith: recipe.pairsWith || [] } } }); toast("Sparat"); router.replace(`/recept/${id}`); }
+    try {
+      const out = { ...r, pairsWith: recipe.pairsWith || [] };
+      if (JSON.stringify(r.groups) !== JSON.stringify(original?.groups)) delete out.nutrition;
+      await api(`/api/recipes/${id}`, { method: "PATCH", json: { recipe: out } }); toast("Sparat"); router.replace(`/recept/${id}`);
+    }
     catch (e) { toast(e.message); setSaving(false); }
   }
   async function remove() {

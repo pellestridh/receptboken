@@ -4,14 +4,14 @@ import { accentVar, dateSv, mins } from "@/lib/format";
 
 const stars = (n) => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
 
-export function Card({ r }) {
+export function Card({ r, lightKcal = 500 }) {
   return (
     <Link href={`/recept/${r.id}`} className="card" style={{ "--rc": accentVar(r.accent) }}>
       <div className="img">{r.image && <img src={r.image} alt="" loading="lazy" referrerPolicy="no-referrer" />}</div>
       <div className="txt">
         <h3>{r.title}</h3>
         {r.short && <p>{r.short}</p>}
-        <div className="meta"><b>{r.kitchen}</b><span>{r.type}</span><span>{mins(r.minutes)}</span></div>
+        <div className="meta"><b>{r.kitchen}</b><span>{r.type}</span><span>{mins(r.minutes)}</span>{r.kcal ? <span>{r.kcal} kcal</span> : null}{r.kcal && r.kcal <= lightKcal ? <span className="light">Lätt</span> : null}</div>
         <div className="meta">
           {r.rating ? <span className="stars" aria-label={`${r.rating} av 5`}>{stars(r.rating)}</span> : <span>Inget betyg än</span>}
           {r.lastCooked && <span>Lagad {dateSv(r.lastCooked)}</span>}

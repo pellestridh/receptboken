@@ -278,3 +278,16 @@ textarea.tin { resize: vertical; }
 .drink .ex a { color: var(--rc); }
 .thumbs { display: flex; gap: .4rem; margin-top: .3rem; }
 .dform { display: grid; gap: .45rem; margin-top: .3rem; }
+
+/* nutrition */
+.nutri { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 1.1rem 1.2rem; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5rem; align-items: center; }
+@media (max-width: 560px) { .nutri { grid-template-columns: minmax(0, 1fr); gap: .9rem; } }
+.kcal { display: flex; align-items: baseline; gap: .4rem; flex-wrap: wrap; }
+.kcal b { font-family: var(--display); font-weight: 400; font-size: 2.6rem; line-height: 1; color: var(--rc); font-variant-numeric: tabular-nums; }
+.kcal span { color: var(--muted); }
+.light, .light-tag { font-style: normal; background: color-mix(in srgb, var(--c-spinach) 16%, var(--paper)); color: var(--c-spinach); border-radius: 999px; padding: .1rem .6rem; font-size: .8rem; font-weight: 700; }
+.macro { display: grid; gap: .6rem; min-width: 0; }
+.bar { display: flex; height: .85rem; border-radius: 999px; overflow: hidden; background: var(--line); }
+.bar span { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: .92rem; font-variant-numeric: tabular-nums; }
+.legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 3px; margin-right: .35rem; vertical-align: 0; }

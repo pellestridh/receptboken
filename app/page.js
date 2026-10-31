@@ -5,6 +5,7 @@ import { useRecipes, sortRecipes, filterRecipes, timeBucket } from "@/components
 import { Card, Pick } from "@/components/Card";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { daysSince, mins } from "@/lib/format";
+import { useSettings } from "@/components/useSettings";
 
 function seeded(seed) {
   let s = seed;
@@ -30,6 +31,7 @@ export default function Home() {
   const [q, setQ] = useState("");
   const [f, setF] = useState({});
   const [sort, setSort] = useState("az");
+  const [settings] = useSettings();
 
   useEffect(() => {
     setF(lsGet("rb-filter", {})); setSort(lsGet("rb-sort", "az"));
@@ -43,7 +45,7 @@ export default function Home() {
   }, []);
 
   const all = recipes || [];
-  const shown = useMemo(() => sortRecipes(filterRecipes(all, f, q), sort), [all, f, q, sort]);
+  const shown = useMemo(() => sortRecipes(filterRecipes(all, f, q).filter((r) => !f.light || (r.kcal && r.kcal <= settings.lightKcal)), sort), [all, f, q, sort, settings.lightKcal]);
   useEffect(() => { try { sessionStorage.setItem("rb-order", JSON.stringify(shown.map((r) => r.id))); } catch {} }, [shown]);
 
   const setFilter = (k, v) => { const n = { ...f, [k]: f[k] === v ? null : v }; setF(n); lsSet("rb-filter", n); };
@@ -108,6 +110,9 @@ export default function Home() {
           {facet("type", "Typ", uniq("type"))}
           {facet("base", "Bas", uniq("base"))}
           {facet("time", "Tid", times)}
+          <div className="frow"><span className="flabel">Lätt</span>
+            <button type="button" className="chip" aria-pressed={!!f.light} onClick={() => setFilter("light", true)}>Under {settings.lightKcal} kcal per portion</button>
+          </div>
           <div className="frow"><span className="flabel">Sortera</span>
             {[["az", "A–Ö"], ["new", "Nyast"], ["rating", "Bäst betyg"], ["cooked", "Senast lagad"], ["quick", "Snabbast"]].map(([v, l]) => (
               <button key={v} type="button" className="chip" aria-pressed={sort === v} onClick={() => setSorting(v)}>{l}</button>
@@ -121,7 +126,8 @@ export default function Home() {
       {recipes && all.length > 0 && !shown.length && (
         <div className="empty">Inget recept matchar. <button className="link" type="button" onClick={() => { setQ(""); setF({}); lsSet("rb-filter", {}); }}>Rensa filtren</button></div>
       )}
-      <div className="grid">{shown.map((r) => <Card key={r.id} r={r} />)}</div>
+      <div className="grid">{shown.map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>
+      <p className="hint" style={{ marginTop: "2rem" }}><Link href="/installningar">Inställningar</Link> · <Link href="/genvag">Dela från Safari</Link></p>
     </>
   );
 }
