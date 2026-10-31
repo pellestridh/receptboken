@@ -12,10 +12,32 @@ export default function Settings() {
   const [name, setN] = useState("");
   useEffect(() => { setKcal(String(settings.lightKcal)); }, [settings.lightKcal]);
   useEffect(() => { setN(getName()); }, []);
+  const [allergies, setAllergies] = useState([]);
+  const [who, setWho] = useState("");
+  const [what, setWhat] = useState("");
+  useEffect(() => { if (settings.allergies) setAllergies(settings.allergies); }, [settings.allergies]);
+  const saveAllergies = (list) => save({ allergies: list }).then(() => toast("Allergierna är sparade. Recepten kontrolleras om.")).catch((e) => toast(e.message));
 
   return (
     <div className="narrow">
       <div className="hero"><h1>Inställningar</h1></div>
+      <div className="panel">
+        <h2 style={{ fontSize: "1.4rem" }}>Allergier</h2>
+        <p className="hint">Claude använder aldrig det här i nya recept, recepten varnar om det finns med, och matsedeln föreslår inte rätter som innehåller det.</p>
+        <ul className="nlist">
+          {allergies.map((a, i) => (
+            <li key={i}>{a.who ? <b>{a.who}: </b> : null}{a.what}{" "}
+              <button className="link" type="button" onClick={() => { const l = allergies.filter((_, j) => j !== i); setAllergies(l); saveAllergies(l); }}>Ta bort</button>
+            </li>
+          ))}
+          {!allergies.length && <li className="muted">Inga allergier.</li>}
+        </ul>
+        <form className="arow" onSubmit={(e) => { e.preventDefault(); if (!what.trim()) return; const l = [...allergies, { who: who.trim(), what: what.trim() }]; setAllergies(l); setWhat(""); saveAllergies(l); }}>
+          <input className="tin" style={{ maxWidth: "10rem" }} value={who} onChange={(e) => setWho(e.target.value)} placeholder="Vem" />
+          <input className="tin" style={{ flex: 1 }} value={what} onChange={(e) => setWhat(e.target.value)} placeholder="Till exempel hasselnötter" />
+          <button className="btn ghost" type="submit">Lägg till</button>
+        </form>
+      </div>
       <div className="panel">
         <label className="fld"><span>Gräns för Lätt, kcal per portion</span>
           <input className="tin" type="number" inputMode="numeric" min="100" max="2000" value={kcal} onChange={(e) => setKcal(e.target.value)} />

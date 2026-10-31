@@ -19,7 +19,7 @@ export async function POST(req) {
     const { kind = "vecka", servings } = await body(req);
     if (!["vecka", "helg", "middag"].includes(kind)) throw new Error("Okänd menytyp.");
     const days = menuDays(kind);
-    const recipes = await listRecipes();
+    const recipes = (await listRecipes()).filter((r) => !r.allergens?.hits?.length);
     // Undvik rätter som redan ligger i menyer de senaste två veckorna
     const recent = await sql(`select distinct recipe_id from menu_items i join menus m on m.id = i.menu_id where m.created_at > now() - interval '14 days'`);
     const pool = recipes.filter((r) => !recent.some((x) => x.recipe_id === r.id));

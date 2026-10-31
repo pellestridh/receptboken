@@ -291,3 +291,15 @@ textarea.tin { resize: vertical; }
 .bar span { display: block; height: 100%; }
 .legend { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: .92rem; font-variant-numeric: tabular-nums; }
 .legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 3px; margin-right: .35rem; vertical-align: 0; }
+
+/* allergens */
+.allergy { display: grid; gap: .6rem; }
+.alert { border-radius: 12px; padding: .75rem 1rem; display: grid; gap: .15rem; }
+.alert b { font-size: 1.05rem; }
+.alert span { font-size: .92rem; }
+.alert.danger { background: color-mix(in srgb, #C0392B 14%, var(--paper)); border: 2px solid #C0392B; color: var(--ink); }
+.alert.danger b { color: #C0392B; }
+.alert.caution { background: color-mix(in srgb, var(--star) 16%, var(--paper)); border: 1px solid var(--star); }
+.ok-tag { background: color-mix(in srgb, var(--c-spinach) 16%, var(--paper)) !important; color: var(--c-spinach) !important; }
+.warnbadge { justify-self: start; background: #C0392B; color: #fff; border-radius: 999px; padding: .1rem .65rem; font-size: .8rem; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .alert.danger b { color: #FF8A7A; } .alert.danger { border-color: #FF8A7A; } }

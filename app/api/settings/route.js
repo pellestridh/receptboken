@@ -1,27 +1,27 @@
-import { db } from "@/lib/db";
 import { ok, fail, body } from "@/lib/http";
+import { readSettings, writeSetting } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
-const DEFAULTS = { lightKcal: 500 };
-
-async function read() {
-  const rows = await db()(`select key, value from settings`);
-  return { ...DEFAULTS, ...Object.fromEntries(rows.map((r) => [r.key, r.value])) };
-}
-
 export async function GET() {
-  try { return ok({ settings: await read() }); } catch (e) { return fail(e, 500); }
+  try { return ok({ settings: await readSettings() }); } catch (e) { return fail(e, 500); }
 }
 
+// { lightKcal? } | { allergies?: [{who, what}] }
 export async function POST(req) {
   try {
     const b = await body(req);
     if (b.lightKcal != null) {
-      const v = Math.max(100, Math.min(2000, Math.round(Number(b.lightKcal) || 500)));
-      await db()(`insert into settings (key, value) values ('lightKcal', $1::jsonb) on conflict (key) do update set value = excluded.value`, [JSON.stringify(v)]);
+      await writeSetting("lightKcal", Math.max(100, Math.min(2000, Math.round(Number(b.lightKcal) || 500))));
     }
-    return ok({ settings: await read() });
+    if (Array.isArray(b.allergies)) {
+      const list = b.allergies
+        .map((a) => ({ who: String(a.who || "").trim().slice(0, 40), what: String(a.what || "").trim().slice(0, 60) }))
+        .filter((a) => a.what)
+        .slice(0, 30);
+      await writeSetting("allergies", list);
+    }
+    return ok({ settings: await readSettings() });
   } catch (e) {
     return fail(e);
   }

@@ -161,7 +161,7 @@ export default function Menus() {
     try { const d = await api("/api/menus", { method: "POST", json: { kind } }); setMenus(d.menus); window.scrollTo(0, 0); }
     catch (e) { toast(e.message); } finally { setBusy(""); }
   };
-  const list = useMemo(() => recipes || [], [recipes]);
+  const list = useMemo(() => (recipes || []).filter((r) => !r.allergens?.hits?.length), [recipes]);
 
   if (shopFor) {
     return <StaplesPanel menu={shopFor} onCancel={() => setShopFor(null)} onDone={(n) => { toast(`${n} varor ligger i inköpslistan`); router.push("/inkop"); }} />;

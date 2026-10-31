@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRecipes, sortRecipes, filterRecipes, timeBucket } from "@/components/useRecipes";
 import { Card, Pick } from "@/components/Card";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { daysSince, mins } from "@/lib/format";
 import { useSettings } from "@/components/useSettings";
+import { allergyKey } from "@/components/Allergens";
 
 function seeded(seed) {
   let s = seed;
@@ -16,6 +17,7 @@ function tonight(list) {
   const d = new Date();
   const weekday = d.getDay() >= 1 && d.getDay() <= 4;
   const rnd = seeded(d.getFullYear() * 1000 + d.getMonth() * 40 + d.getDate());
+  list = list.filter((r) => !r.allergens?.hits?.length);
   let pool = list.filter((r) => (r.type || "Huvudrätt") === "Huvudrätt" && daysSince(r.lastCooked) > 10);
   if (weekday) { const quick = pool.filter((r) => (r.minutes || 0) <= 45); if (quick.length >= 3) pool = quick; }
   if (pool.length < 3) pool = list.filter((r) => (r.type || "Huvudrätt") === "Huvudrätt");
@@ -25,7 +27,7 @@ function tonight(list) {
 }
 
 export default function Home() {
-  const { recipes, error } = useRecipes();
+  const { recipes, error, reload } = useRecipes();
   const [drafts, setDrafts] = useState([]);
   const [menu, setMenu] = useState(null);
   const [q, setQ] = useState("");
@@ -45,7 +47,21 @@ export default function Home() {
   }, []);
 
   const all = recipes || [];
-  const shown = useMemo(() => sortRecipes(filterRecipes(all, f, q).filter((r) => !f.light || (r.kcal && r.kcal <= settings.lightKcal)), sort), [all, f, q, sort, settings.lightKcal]);
+  const filling = useRef(false);
+  useEffect(() => {
+    if (!recipes || !settings.allergies || filling.current) return;
+    const key = allergyKey(settings.allergies);
+    const todo = recipes.filter((r) => !r.allergens || r.allergens.key !== key).slice(0, 12);
+    if (!todo.length) return;
+    filling.current = true;
+    (async () => {
+      for (const r of todo) { try { await api(`/api/recipes/${r.id}/allergens`, { method: "POST" }); } catch {} }
+      reload();
+    })();
+  }, [recipes, settings.allergies, reload]);
+  const shown = useMemo(() => sortRecipes(filterRecipes(all, f, q)
+    .filter((r) => !f.light || (r.kcal && r.kcal <= settings.lightKcal))
+    .filter((r) => !f.diet || (f.diet === "Glutenfri" ? r.allergens?.gluten === "nej" : r.allergens?.lactose === "nej")), sort), [all, f, q, sort, settings.lightKcal]);
   useEffect(() => { try { sessionStorage.setItem("rb-order", JSON.stringify(shown.map((r) => r.id))); } catch {} }, [shown]);
 
   const setFilter = (k, v) => { const n = { ...f, [k]: f[k] === v ? null : v }; setF(n); lsSet("rb-filter", n); };
@@ -110,6 +126,9 @@ export default function Home() {
           {facet("type", "Typ", uniq("type"))}
           {facet("base", "Bas", uniq("base"))}
           {facet("time", "Tid", times)}
+          <div className="frow"><span className="flabel">Kost</span>
+            {["Glutenfri", "Laktosfri"].map((v) => <button key={v} type="button" className="chip" aria-pressed={f.diet === v} onClick={() => setFilter("diet", v)}>{v}</button>)}
+          </div>
           <div className="frow"><span className="flabel">Lätt</span>
             <button type="button" className="chip" aria-pressed={!!f.light} onClick={() => setFilter("light", true)}>Under {settings.lightKcal} kcal per portion</button>
           </div>

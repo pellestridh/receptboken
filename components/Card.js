@@ -10,8 +10,9 @@ export function Card({ r, lightKcal = 500 }) {
       <div className="img">{r.image && <img src={r.image} alt="" loading="lazy" referrerPolicy="no-referrer" />}</div>
       <div className="txt">
         <h3>{r.title}</h3>
+        {r.allergens?.hits?.length > 0 && <span className="warnbadge">Innehåller {r.allergens.hits.join(" och ")}</span>}
         {r.short && <p>{r.short}</p>}
-        <div className="meta"><b>{r.kitchen}</b><span>{r.type}</span><span>{mins(r.minutes)}</span>{r.kcal ? <span>{r.kcal} kcal</span> : null}{r.kcal && r.kcal <= lightKcal ? <span className="light">Lätt</span> : null}</div>
+        <div className="meta"><b>{r.kitchen}</b><span>{r.type}</span><span>{mins(r.minutes)}</span>{r.kcal ? <span>{r.kcal} kcal</span> : null}{r.kcal && r.kcal <= lightKcal ? <span className="light">Lätt</span> : null}{r.allergens?.gluten === "nej" ? <span className="light">Glutenfri</span> : null}{r.allergens?.lactose === "nej" ? <span className="light">Laktosfri</span> : null}</div>
         <div className="meta">
           {r.rating ? <span className="stars" aria-label={`${r.rating} av 5`}>{stars(r.rating)}</span> : <span>Inget betyg än</span>}
           {r.lastCooked && <span>Lagad {dateSv(r.lastCooked)}</span>}

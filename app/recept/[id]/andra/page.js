@@ -35,7 +35,7 @@ export default function EditRecipe({ params }) {
     setSaving(true);
     try {
       const out = { ...r, pairsWith: recipe.pairsWith || [] };
-      if (JSON.stringify(r.groups) !== JSON.stringify(original?.groups)) delete out.nutrition;
+      if (JSON.stringify(r.groups) !== JSON.stringify(original?.groups)) { delete out.nutrition; delete out.allergens; }
       await api(`/api/recipes/${id}`, { method: "PATCH", json: { recipe: out } }); toast("Sparat"); router.replace(`/recept/${id}`);
     }
     catch (e) { toast(e.message); setSaving(false); }

@@ -6,6 +6,7 @@ import RecipeBody from "@/components/RecipeBody";
 import RecipeImage from "@/components/RecipeImage";
 import Drinks from "@/components/Drinks";
 import Nutrition from "@/components/Nutrition";
+import Allergens from "@/components/Allergens";
 import { useSettings } from "@/components/useSettings";
 import { useApp } from "@/components/Providers";
 import { api, getName } from "@/lib/api";
@@ -90,6 +91,7 @@ export default function RecipePage({ params }) {
           {[r.kitchen, r.type, r.base, mins(r.minutes), ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}
           {r.nutrition?.kcal && r.nutrition.kcal <= settings.lightKcal && <span className="tag light-tag">Lätt</span>}
         </div>
+        <Allergens id={id} allergens={r.allergens} allergies={settings.allergies} onChange={(al) => setData((x) => ({ ...x, recipe: { ...x.recipe, allergens: al } }))} />
         <div className="tools">
           <div className="stepper" role="group" aria-label="Antal">
             <button type="button" aria-label="Färre" onClick={() => setServ(Math.max(1, servings - 1))}>−</button>
