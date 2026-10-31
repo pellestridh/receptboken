@@ -78,11 +78,6 @@ export default function RecipePage({ params }) {
 
   return (
     <article className="r" style={{ "--rc": accentVar(r.accent) }}>
-      <div className="rtop">
-        {prev && <Link className="chip" href={`/recept/${prev.id}`} aria-label={`Föregående: ${prev.title}`}>‹ Föregående</Link>}
-        {next && <Link className="chip" href={`/recept/${next.id}`} aria-label={`Nästa: ${next.title}`}>Nästa ›</Link>}
-        <Link className="chip" href={`/recept/${id}/andra`}>Ändra</Link>
-      </div>
       <RecipeImage id={id} image={r.image} hasSource={!!r.source?.url} onChange={(img) => setData((x) => ({ ...x, recipe: { ...x.recipe, image: img || undefined } }))} />
       <header className="rhead">
         <h1>{r.title}</h1>
@@ -90,23 +85,24 @@ export default function RecipePage({ params }) {
         <div className="tags">
           {[r.kitchen, r.type, r.base, mins(r.minutes), ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}
           {r.nutrition?.kcal && r.nutrition.kcal <= settings.lightKcal && <span className="tag light-tag">Lätt</span>}
+          <Allergens id={id} allergens={r.allergens} allergies={settings.allergies} onChange={(al) => setData((x) => ({ ...x, recipe: { ...x.recipe, allergens: al } }))} />
         </div>
-        <Allergens id={id} allergens={r.allergens} allergies={settings.allergies} onChange={(al) => setData((x) => ({ ...x, recipe: { ...x.recipe, allergens: al } }))} />
         <div className="tools">
           <div className="stepper" role="group" aria-label="Antal">
             <button type="button" aria-label="Färre" onClick={() => setServ(Math.max(1, servings - 1))}>−</button>
             <span>{servings} {r.servingsUnit || "portioner"}</span>
             <button type="button" aria-label="Fler" onClick={() => setServ(Math.min(30, servings + 1))}>+</button>
           </div>
-          <button className="btn" type="button" onClick={() => toShop(false)}>Lägg i inköpslistan</button>
-          <button className="btn ghost" type="button" aria-pressed={!!wake} onClick={toggleWake}>{wake ? "Skärmen hålls tänd" : "Håll skärmen tänd"}</button>
+          <button className="chip tool" type="button" onClick={() => toShop(false)}>+ Inköpslistan</button>
+          <button className="chip tool" type="button" aria-pressed={!!wake} onClick={toggleWake}>{wake ? "Skärmen tänd" : "Håll skärmen tänd"}</button>
+          <Link className="chip tool" href={`/recept/${id}/andra`}>Ändra</Link>
         </div>
       </header>
 
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
 
-      <Nutrition id={id} nutrition={r.nutrition} lightKcal={settings.lightKcal} onChange={(nu) => setData((x) => ({ ...x, recipe: { ...x.recipe, nutrition: nu } }))} />
       <Drinks id={id} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
+      <Nutrition id={id} nutrition={r.nutrition} lightKcal={settings.lightKcal} onChange={(nu) => setData((x) => ({ ...x, recipe: { ...x.recipe, nutrition: nu } }))} />
 
       {pairs.length > 0 && (
         <section className="rsec"><h2>Passar ihop med</h2>

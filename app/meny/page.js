@@ -84,8 +84,8 @@ function MenuCard({ menu, recipes, setMenus, onShop }) {
               </Link>
             ) : <span className="mdish muted">Ingen rätt vald</span>}
             <span className="mact">
-              <button type="button" className="chip" onClick={() => swap(it)}>Byt</button>
-              <button type="button" className="chip" onClick={() => setPicking(picking === it.id ? null : it.id)}>Välj</button>
+              <button type="button" className="chip ico" aria-label="Byt till ett annat förslag" title="Byt" onClick={() => swap(it)}>↻</button>
+              <button type="button" className="chip ico" aria-label="Välj recept själv" title="Välj" onClick={() => setPicking(picking === it.id ? null : it.id)}>⌕</button>
               <button type="button" className="link" aria-label="Ta bort rätten" onClick={() => api(`/api/menus/${menu.id}/items/${it.id}`, { method: "DELETE" }).then((d) => setMenus(d.menus))}>✕</button>
             </span>
             {picking === it.id && <Picker recipes={recipes} onClose={() => setPicking(null)} onPick={(r) => { setPicking(null); patchItem(it, { recipeId: r.id }); }} />}
@@ -193,7 +193,7 @@ export default function Menus() {
   return (
     <>
       <div className="hero"><h1>Matsedel</h1>
-        <p className="muted" style={{ margin: 0 }}>Appen föreslår rätter ni inte ätit på ett tag, med variation i kök och råvaror. Byt det ni inte är sugna på och skapa inköpslistan med ett tryck.</p>
+        <p className="muted" style={{ margin: 0 }}>Förslag på rätter ni inte ätit på ett tag. Byt det ni inte är sugna på.</p>
       </div>
       <div className="kcalopt">
         <label className="arow"><input type="checkbox" checked={useKcal} onChange={(e) => setUseKcal(e.target.checked)} /> <b>Kalorier per portion</b></label>
@@ -207,10 +207,10 @@ export default function Menus() {
         )}
       </div>
       {progress && <p className="hint"><span className="spinner" />{progress}</p>}
-      <div className="arow" style={{ marginBottom: "1.5rem" }}>
-        <button className="btn" type="button" disabled={!!busy} onClick={() => create("vecka")}>{busy === "vecka" ? "Skapar …" : "Ny veckomeny, mån–tor"}</button>
-        <button className="btn ghost" type="button" disabled={!!busy} onClick={() => create("helg")}>{busy === "helg" ? "Skapar …" : "Ny helgmeny"}</button>
-        <button className="btn ghost" type="button" disabled={!!busy} onClick={() => create("middag")}>{busy === "middag" ? "Skapar …" : "Ny trerätters"}</button>
+      <div className="createrow">
+        <button className="btn" type="button" disabled={!!busy} onClick={() => create("vecka")}>{busy === "vecka" ? "Skapar …" : "Veckomeny"}</button>
+        <button className="btn ghost" type="button" disabled={!!busy} onClick={() => create("helg")}>{busy === "helg" ? "Skapar …" : "Helg"}</button>
+        <button className="btn ghost" type="button" disabled={!!busy} onClick={() => create("middag")}>{busy === "middag" ? "Skapar …" : "Trerätters"}</button>
       </div>
       {!menus && <div className="empty">Hämtar matsedlarna …</div>}
       {menus && !menus.length && <div className="empty">Ingen matsedel än. Tryck på Ny veckomeny så föreslår appen fyra middagar.</div>}

@@ -15,10 +15,15 @@ export default function RecipeBody({ recipe, factor = 1, interactive = false, id
     setCk(n); lsSet(key, n);
   };
   const reset = () => { const n = { i: {}, s: {} }; setCk(n); lsSet(key, n); };
+  const [tab, setTab] = useState("ing");
 
   return (
     <>
-      <div className="rmain">
+      <div className="seg" role="tablist">
+        <button type="button" role="tab" aria-selected={tab === "ing"} onClick={() => setTab("ing")}>Ingredienser</button>
+        <button type="button" role="tab" aria-selected={tab === "steps"} onClick={() => { setTab("steps"); window.scrollTo({ top: Math.max(0, (document.querySelector(".seg")?.getBoundingClientRect().top || 0) + window.scrollY - 80) }); }}>Gör så här</button>
+      </div>
+      <div className="rmain" data-tab={tab}>
         <aside className="ingbox">
           <h2>Ingredienser</h2>
           {(recipe.groups || []).map((g, gi) => (

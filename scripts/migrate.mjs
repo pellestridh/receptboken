@@ -8,7 +8,14 @@ if (!url) {
   console.log("[migrate] Ingen DATABASE_URL, hoppar över migrering.");
   process.exit(0);
 }
-const sql = neon(url);
+let sql;
+if (url.startsWith("pglite")) {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const pg = new PGlite(url.split(":")[1] || "./.pglite");
+  sql = async (text, params = []) => (await pg.query(text, params)).rows;
+} else {
+  sql = neon(url);
+}
 
 const statements = [
   `create table if not exists recipes (
