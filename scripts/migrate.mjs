@@ -71,6 +71,33 @@ statements.push(`create table if not exists recipe_images (
     updated_at timestamptz not null default now()
   )`);
 
+statements.push(
+  `create table if not exists menus (
+    id text primary key,
+    kind text not null,
+    title text not null,
+    start_date date,
+    servings int not null default 2,
+    created_at timestamptz not null default now()
+  )`,
+  `create table if not exists menu_items (
+    id text primary key,
+    menu_id text not null,
+    recipe_id text,
+    day date,
+    course text,
+    servings int not null default 2,
+    position int not null default 0
+  )`,
+  `create index if not exists menu_items_menu on menu_items(menu_id)`,
+  `create table if not exists staples (
+    id text primary key,
+    name text not null,
+    selected boolean not null default true,
+    position int not null default 0
+  )`
+);
+
 for (const s of statements) await sql(s);
 
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);

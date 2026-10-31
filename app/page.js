@@ -26,6 +26,7 @@ function tonight(list) {
 export default function Home() {
   const { recipes, error } = useRecipes();
   const [drafts, setDrafts] = useState([]);
+  const [menu, setMenu] = useState(null);
   const [q, setQ] = useState("");
   const [f, setF] = useState({});
   const [sort, setSort] = useState("az");
@@ -33,6 +34,12 @@ export default function Home() {
   useEffect(() => {
     setF(lsGet("rb-filter", {})); setSort(lsGet("rb-sort", "az"));
     api("/api/drafts").then((d) => setDrafts(d.drafts)).catch(() => {});
+    api("/api/menus").then((d) => {
+      const today = new Date().toISOString().slice(0, 10);
+      const upcoming = d.menus.filter((m) => m.items.some((i) => i.recipeId && i.day && i.day >= today));
+      upcoming.sort((a, b) => String(a.startDate).localeCompare(String(b.startDate)));
+      setMenu(upcoming[0] || null);
+    }).catch(() => {});
   }, []);
 
   const all = recipes || [];
@@ -62,6 +69,24 @@ export default function Home() {
         </div>
       )}
 
+      {!filtering && menu && (
+        <>
+          <div className="section-h"><h2>På menyn</h2><Link href="/meny" className="muted">{menu.title} · ändra</Link></div>
+          <div className="weekmenu">
+            {menu.items.filter((i) => i.recipeId).map((i) => {
+              const today = i.day === new Date().toISOString().slice(0, 10);
+              const d = i.day ? new Date(i.day + "T12:00:00") : null;
+              const label = menu.kind === "middag" ? i.course : today ? "Idag" : d ? d.toLocaleDateString("sv-SE", { weekday: "long" }) : "";
+              return (
+                <Link key={i.id} href={`/recept/${i.recipeId}`} className={"wday" + (today ? " today" : "")} style={{ "--rc": `var(--c-${i.accent || "ember"})` }}>
+                  <div className="wimg">{i.image && <img src={i.image} alt="" loading="lazy" referrerPolicy="no-referrer" />}</div>
+                  <div className="wtxt"><span>{label}</span><b>{i.title}</b></div>
+                </Link>
+              );
+            })}
+          </div>
+        </>
+      )}
       {!filtering && picks.length > 0 && (
         <>
           <div className="section-h"><h2>{weekday ? "Ikväll?" : "Till helgen?"}</h2><span className="muted">{weekday ? "Snabba rätter ni inte ätit på ett tag" : "Något att ta god tid på"}</span></div>
