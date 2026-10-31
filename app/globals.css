@@ -216,3 +216,14 @@ textarea.tin { resize: vertical; }
 .dock .pill.ring { background: var(--star); color: #1C2421; animation: pulse 1s infinite; }
 .dock .toast { pointer-events: auto; background: var(--accent); color: var(--paper); border-radius: 10px; padding: .55rem 1rem; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* recipe image */
+.rhero .imgbtn { position: absolute; right: .75rem; bottom: .75rem; }
+.rhero .imgbtn .chip, .rhero .imgctl .chip { background: rgb(255 255 255 / .92); color: #1C2421; border-color: transparent; cursor: pointer; }
+.imgctl { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: flex-end; }
+.empty-img { aspect-ratio: auto; min-height: 9rem; display: grid; place-items: center; background: color-mix(in srgb, var(--rc) 16%, var(--paper)); border: 1px dashed color-mix(in srgb, var(--rc) 45%, var(--paper)); }
+.imgprompt { display: grid; gap: .35rem; justify-items: center; text-align: center; padding: 1.25rem; }
+.imgprompt b { font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--rc); }
+.imgprompt span { color: var(--muted); font-size: .92rem; }
+.imgprompt .imgctl { justify-content: center; margin-top: .3rem; }
+.imgprompt .imgctl .chip { background: var(--paper); color: var(--ink); border-color: var(--line); }

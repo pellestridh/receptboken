@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRecipes } from "@/components/useRecipes";
 import RecipeBody from "@/components/RecipeBody";
+import RecipeImage from "@/components/RecipeImage";
 import { useApp } from "@/components/Providers";
 import { api, getName } from "@/lib/api";
 import { accentVar, dateSv, mins } from "@/lib/format";
@@ -77,7 +78,7 @@ export default function RecipePage({ params }) {
         {next && <Link className="chip" href={`/recept/${next.id}`} aria-label={`Nästa: ${next.title}`}>Nästa ›</Link>}
         <Link className="chip" href={`/recept/${id}/andra`}>Ändra</Link>
       </div>
-      {r.image && <div className="rhero"><img src={r.image} alt="" referrerPolicy="no-referrer" /></div>}
+      <RecipeImage id={id} image={r.image} hasSource={!!r.source?.url} onChange={(img) => setData((x) => ({ ...x, recipe: { ...x.recipe, image: img || undefined } }))} />
       <header className="rhead">
         <h1>{r.title}</h1>
         {r.lede && <p className="lede">{r.lede}</p>}

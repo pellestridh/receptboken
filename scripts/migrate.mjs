@@ -64,6 +64,13 @@ const statements = [
   )`,
 ];
 
+statements.push(`create table if not exists recipe_images (
+    recipe_id text primary key,
+    mime text not null,
+    data text not null,
+    updated_at timestamptz not null default now()
+  )`);
+
 for (const s of statements) await sql(s);
 
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
@@ -79,4 +86,24 @@ if (count === 0) {
   }
   console.log(`[migrate] La in ${seed.recipes.length} recept.`);
 }
+// Hämtar bilder från källsidan för recept som har en länk men ingen bild.
+const missing = await sql(`select id, source_url, body from recipes where image_url is null and source_url is not null and deleted_at is null limit 50`);
+if (missing.length) {
+  const fetchImageFor = async (url) => {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000), headers: { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15" } });
+      if (!res.ok) return null;
+      const html = await res.text();
+      return html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1]
+        || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1] || null;
+    } catch { return null; }
+  };
+  for (const r of missing) {
+    const img = await fetchImageFor(r.source_url);
+    if (!img) { console.log(`[migrate] Ingen bild hittades för ${r.id}`); continue; }
+    await sql(`update recipes set image_url = $2, body = jsonb_set(body, '{image}', to_jsonb($2::text)) where id = $1`, [r.id, img]);
+    console.log(`[migrate] Bild till ${r.id}`);
+  }
+}
+
 console.log("[migrate] Klart.");
