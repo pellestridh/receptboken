@@ -7,6 +7,8 @@ import { api, lsGet, lsSet } from "@/lib/api";
 import { daysSince, mins } from "@/lib/format";
 import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
+import Box from "@/components/Box";
+import { drawers as makeDrawers, seasonal, MONTHS } from "@/lib/box";
 
 function seeded(seed) {
   let s = seed;
@@ -35,6 +37,7 @@ export default function Home() {
   const [sort, setSort] = useState("az");
   const [settings] = useSettings();
   const [showFilters, setShowFilters] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     setF(lsGet("rb-filter", {})); setSort(lsGet("rb-sort", "az"));
@@ -71,6 +74,17 @@ export default function Home() {
   const times = [...new Set(all.map(timeBucket))].sort();
   const { weekday, picks } = tonight(all);
   const longAgo = all.filter((r) => r.lastCooked && daysSince(r.lastCooked) >= 30).sort((a, b) => String(a.lastCooked).localeCompare(String(b.lastCooked))).slice(0, 3);
+  const box = useMemo(() => makeDrawers(all, { lightKcal: settings.lightKcal }), [all, settings.lightKcal]);
+  const month = new Date().getMonth();
+  const inSeason = useMemo(() => seasonal(all.filter((r) => !r.allergens?.hits?.length), month).slice(0, 6), [all, month]);
+  const seasonNow = [...new Set(inSeason.flatMap((x) => x.hits))].slice(0, 3);
+  const shownIds = new Set([...picks, ...longAgo].map((r) => r.id));
+  const inspo = [
+    { title: "Inte provat än", sub: "Sparade men aldrig lagade", list: all.filter((r) => !r.timesCooked && !shownIds.has(r.id) && (r.type || "Huvudrätt") === "Huvudrätt").sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))) },
+    { title: "Familjens favoriter", sub: "Fyra och fem stjärnor", list: all.filter((r) => (r.rating || 0) >= 4 && !shownIds.has(r.id)).sort((a, b) => b.rating - a.rating) },
+  ].filter((x) => x.list.length >= 2).map((x) => ({ ...x, list: x.list.slice(0, 6) }));
+  const now = new Date();
+  const dayName = now.toLocaleDateString("sv-SE", { weekday: "long", day: "numeric", month: "long" });
   const filtering = q || Object.values(f).some(Boolean);
   const activeFilters = Object.values(f).filter(Boolean).length;
 
@@ -114,6 +128,14 @@ export default function Home() {
         </div>
       )}
 
+      {!filtering && recipes && (
+        <div className="home-hero">
+          <span className="kicker">{dayName}</span>
+          <h1>{weekday ? "Vad blir det i kväll?" : "Helg. Tid för något gott."}</h1>
+          <p className="muted">{all.length} recept i lådan.{seasonNow.length ? ` I säsong just nu: ${seasonNow.join(", ")}.` : ""}</p>
+        </div>
+      )}
+
       {!filtering && menu && (
         <>
           <div className="section-h"><h2>På menyn</h2><Link href="/meny" className="muted">{menu.title} ›</Link></div>
@@ -134,8 +156,16 @@ export default function Home() {
       )}
       {!filtering && picks.length > 0 && (
         <>
-          <div className="section-h"><h2>{weekday ? "Ikväll?" : "Till helgen?"}</h2><span className="muted">{weekday ? "Snabbt och inte ätit på länge" : "Något att ta tid på"}</span></div>
+          <div className="section-h"><h2>{weekday ? "Förslag till i kväll" : "Förslag till helgen"}</h2><span className="muted">{weekday ? "Snabbt, och inte ätit på länge" : "Något att ta tid på"}</span></div>
           <div className="rail">{picks.map((r) => <Pick key={r.id} r={r} />)}</div>
+        </>
+      )}
+      {!filtering && recipes && all.length > 0 && <Box drawers={box} />}
+
+      {!filtering && inSeason.length > 0 && (
+        <>
+          <div className="section-h"><h2>I säsong i {MONTHS[month]}</h2><span className="muted">Råvarorna är som bäst nu</span></div>
+          <div className="rail">{inSeason.slice(0, 3).map(({ r, hits }) => <Pick key={r.id} r={r} note={hits.slice(0, 2).map((h) => h[0].toUpperCase() + h.slice(1)).join(" och ") + " · " + mins(r.minutes)} badge="Säsong" />)}</div>
         </>
       )}
       {!filtering && longAgo.length > 0 && (
@@ -145,6 +175,13 @@ export default function Home() {
         </>
       )}
 
+      {!filtering && inspo.map((x) => (
+        <div key={x.title}>
+          <div className="section-h"><h2>{x.title}</h2><span className="muted">{x.sub}</span></div>
+          <div className="rail">{x.list.slice(0, 3).map((r) => <Pick key={r.id} r={r} />)}</div>
+        </div>
+      ))}
+
       <div className="section-h"><h2>{filtering ? "Träffar" : "Alla recept"}</h2><span className="muted">{shown.length}{shown.length < all.length ? ` av ${all.length}` : ""}</span></div>
       {error && <div className="empty">{error}</div>}
       {!recipes && !error && <div className="empty">Hämtar recepten …</div>}
@@ -152,7 +189,8 @@ export default function Home() {
       {recipes && all.length > 0 && !shown.length && (
         <div className="empty">Inget recept matchar. <button className="link" type="button" onClick={() => { setQ(""); setF({}); lsSet("rb-filter", {}); }}>Rensa filtren</button></div>
       )}
-      <div className="grid">{shown.map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>
+      <div className="grid">{(filtering || showAll ? shown : shown.slice(0, 8)).map((r) => <Card key={r.id} r={r} lightKcal={settings.lightKcal} />)}</div>
+      {!filtering && !showAll && shown.length > 8 && <div className="more"><button className="btn ghost" type="button" onClick={() => setShowAll(true)}>Visa alla {shown.length} recept</button></div>}
       <p className="hint" style={{ marginTop: "2rem" }}><Link href="/installningar">Inställningar</Link> · <Link href="/genvag">Dela från Safari</Link></p>
     </>
   );

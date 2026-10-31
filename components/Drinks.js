@@ -2,11 +2,17 @@
 import { useEffect, useRef, useState } from "react";
 import { api, getName } from "@/lib/api";
 import { useApp } from "@/components/Providers";
+import { label } from "@/lib/drinkLabel";
+
+function Label({ kind, d, small }) {
+  const l = label(kind, d);
+  return <span className={"dlabel " + l.tone + (small ? " sm" : "")}><i className="sw" aria-hidden="true" />{l.text}</span>;
+}
 
 const LABEL = { wine: "Vin", beer: "Öl", nonAlcoholic: "Alkoholfritt" };
 const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
 // Gamla eller tomma förslag görs om automatiskt.
-const usable = (d) => d && d.v === 2 && d.wine?.name && d.beer?.name && !/<\/?parameter/.test(JSON.stringify(d));
+const usable = (d) => d && d.v >= 3 && d.wine?.name && d.beer?.name && !/<\/?parameter/.test(JSON.stringify(d));
 
 function Product({ name, kind }) {
   if (kind === "nonAlcoholic") return <>{name}</>;
@@ -21,12 +27,16 @@ function DrinkCard({ kind, d, own = [], busy, onAction }) {
 
   return (
     <div className="drink">
-      <span className="dk">{LABEL[kind]}{d?.liked ? " · gillat" : ""}</span>
+      <div className="dhead">
+        <span className="dk">{LABEL[kind]}</span>
+        {d?.liked && <span className="liked">Gillad</span>}
+      </div>
 
       {own.map((o, i) => (
         <div className="own-pick" key={i}>
           <span className="ownbadge">Ert val{o.author ? ` · ${o.author}` : ""}</span>
           <b><Product name={o.name} kind={kind} /></b>
+          {kind !== "nonAlcoholic" && !/none/.test(label(kind, o).tone) && <Label kind={kind} d={o} small />}
           {o.note && <p>{o.note}</p>}
           <button className="link" type="button" onClick={() => onAction({ action: "removeOwn", kind, index: i })}>Ta bort</button>
         </div>
@@ -34,11 +44,13 @@ function DrinkCard({ kind, d, own = [], busy, onAction }) {
 
       {d && (
         <div className="sugg">
+          <div className="lrow"><Label kind={kind} d={d} />{d.style && d.style !== d.name && <span className="style">{d.style}</span>}</div>
           <b><Product name={d.name} kind={kind} /></b>
-          {d.style && d.style !== d.name && <span className="style">{d.style}</span>}
           {d.why && <p>{d.why}</p>}
           {d.alternatives?.length > 0 && (
-            <p className="ex">Eller {d.alternatives.map((a, i) => <span key={i}>{i > 0 && ", "}<Product name={a.name} kind={kind} /></span>)}</p>
+            <div className="alts"><span className="muted">Eller</span>{d.alternatives.map((a, i) => (
+              <span key={i} className="alt">{kind !== "nonAlcoholic" && <i className={"sw " + label(kind, { ...a, color: a.color }).tone} aria-hidden="true" />}<Product name={a.name} kind={kind} />{a.style && <small>{a.style}</small>}</span>
+            ))}</div>
           )}
         </div>
       )}

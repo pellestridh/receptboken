@@ -23,10 +23,11 @@ export function Card({ r, lightKcal = 500 }) {
   );
 }
 
-export function Pick({ r, note }) {
+export function Pick({ r, note, badge }) {
   return (
     <Link href={`/recept/${r.id}`} className="pick" style={{ "--rc": accentVar(r.accent) }}>
       {r.image ? <img src={r.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <span className="mono">{r.title?.[0]}</span>}
+      {badge && <span className="pbadge">{badge}</span>}
       <div className="cap"><b>{r.title}</b><span>{note || `${r.kitchen} · ${mins(r.minutes)}`}</span></div>
     </Link>
   );

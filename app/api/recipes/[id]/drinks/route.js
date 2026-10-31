@@ -30,7 +30,7 @@ export async function POST(req, { params }) {
     const b = await body(req);
     const [row] = await db()(`select body from recipes where id = $1`, [id]);
     if (!row) return fail("Receptet finns inte.", 404);
-    const recipe = row.body;
+    const recipe = { ...row.body, id };
 
     if (b.action === "generate") {
       const fresh = await generateDrinks(recipe);
