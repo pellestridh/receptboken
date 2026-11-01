@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import ShareRecipe from "@/components/ShareRecipe";
 import { useRecipes } from "@/components/useRecipes";
 import RecipeBody from "@/components/RecipeBody";
 import RecipeImage from "@/components/RecipeImage";
@@ -96,6 +97,7 @@ export default function RecipePage({ params }) {
           <button className="chip tool" type="button" onClick={() => toShop(false)}>+ Inköpslistan</button>
           <button className="chip tool" type="button" aria-pressed={!!wake} onClick={toggleWake}>{wake ? "Skärmen tänd" : "Håll skärmen tänd"}</button>
           <Link className="chip tool" href={`/recept/${id}/andra`}>Ändra</Link>
+          <ShareRecipe id={id} />
         </div>
       </header>
 

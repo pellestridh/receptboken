@@ -1,3 +1,4 @@
+import { ownRecipe } from "@/lib/household";
 import { db } from "@/lib/db";
 import { fetchImageFor } from "@/lib/fetchRecipe";
 import { ok, fail, body } from "@/lib/http";
@@ -20,6 +21,7 @@ export async function POST(req, { params }) {
   try {
     const sql = db();
     const id = params.id;
+    await ownRecipe(id);
     const b = await body(req);
     if (b.remove) {
       await sql(`delete from recipe_images where recipe_id = $1`, [id]);

@@ -1,3 +1,4 @@
+import { ownRecipe } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { ok, fail, body } from "@/lib/http";
 
@@ -9,6 +10,7 @@ export async function POST(req, { params }) {
     const sql = db();
     const id = params.id;
     const b = await body(req);
+    await ownRecipe(id);
     await sql(`insert into notes (recipe_id) values ($1) on conflict do nothing`, [id]);
     if (b.action === "rate") {
       const v = Math.max(0, Math.min(5, Math.round(Number(b.rating) || 0)));

@@ -148,6 +148,16 @@ statements.push(
 );
 
 statements.push(
+  `create table if not exists households (
+    id text primary key,
+    name text not null,
+    code_hash text not null unique,
+    created_at timestamptz not null default now()
+  )`,
+  ...["recipes", "shopping_items", "purchases", "drafts", "menus", "drink_feedback", "staples", "wine_notes"].map(
+    (t) => `alter table ${t} add column if not exists hh text not null default 'hem'`
+  ),
+  `create index if not exists recipes_hh on recipes (hh)`,
   `alter table menus add column if not exists kcal_min int`,
   `alter table menus add column if not exists kcal_max int`
 );

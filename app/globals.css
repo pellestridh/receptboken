@@ -732,3 +732,26 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .tastings h3 { font-size: 1.2rem; }
 .taste-btn { border-color: #7A1E2C; color: #7A1E2C; }
 @media (prefers-color-scheme: dark) { .taste-btn { border-color: #E89AA8; color: #E89AA8; } .calib h3 { color: #E89AA8; } }
+
+/* hushåll och dela */
+.hhrow { display: grid; gap: .4rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
+.sharewrap { position: relative; display: inline-block; }
+.sharemenu { position: absolute; z-index: 6; top: calc(100% + .4rem); left: 0; min-width: 14rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 30px -12px rgb(0 0 0 / .35); padding: .4rem; display: grid; gap: .2rem; }
+.sharemenu button { text-align: left; border: 0; background: none; padding: .55rem .7rem; border-radius: 8px; font-weight: 700; }
+.sharemenu button:hover { background: var(--bg); }
+.sharemenu .muted { padding: .5rem .7rem; font-size: .9rem; }
+
+/* räcker till mer */
+.leftovers { margin: 1rem 0 .4rem; background: color-mix(in srgb, var(--c-spinach) 8%, var(--paper)); border: 1px solid color-mix(in srgb, var(--c-spinach) 22%, var(--line)); border-radius: 14px; padding: .9rem 1rem; display: grid; gap: .6rem; }
+.leftovers h3 { font-size: 1.25rem; color: var(--c-spinach); }
+.lo { display: grid; gap: .35rem; padding-top: .55rem; border-top: 1px solid color-mix(in srgb, var(--c-spinach) 18%, transparent); }
+.lo-h { display: flex; flex-wrap: wrap; gap: .1rem .6rem; align-items: baseline; } .lo-h .muted { font-size: .88rem; }
+.lo-n { margin: 0; font-size: .88rem; color: var(--muted); }
+.lo-c { display: grid; gap: .3rem; }
+.lo-r { display: flex; align-items: center; justify-content: space-between; gap: .6rem; background: var(--paper); border-radius: 10px; padding: .35rem .4rem .35rem .75rem; }
+.lo-r a { font-weight: 700; color: var(--ink); text-decoration: none; }
+.lo-r .chip { font-size: .82rem; white-space: nowrap; }
+.ideas { display: grid; gap: .4rem; }
+.idea { background: var(--paper); border-radius: 10px; padding: .5rem .75rem; }
+.idea p { margin: .15rem 0 .2rem; font-size: .9rem; color: var(--muted); }
+.arow > .tin { flex: 1 1 8rem; min-width: 7rem; }

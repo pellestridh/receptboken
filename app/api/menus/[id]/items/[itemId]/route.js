@@ -1,3 +1,4 @@
+import { hh, ownMenu, ownRecipe } from "@/lib/household";
 import { db } from "@/lib/db";
 import { loadMenus } from "@/lib/menus";
 import { ok, fail, body } from "@/lib/http";
@@ -9,6 +10,8 @@ export async function PATCH(req, { params }) {
   try {
     const sql = db();
     const b = await body(req);
+    await ownMenu(params.id);
+    if (b.recipeId) await ownRecipe(b.recipeId);
     if ("recipeId" in b) await sql(`update menu_items set recipe_id = $3 where id = $2 and menu_id = $1`, [params.id, params.itemId, b.recipeId || null]);
     if (b.servings) {
       const n = Math.max(1, Math.min(40, Math.round(Number(b.servings))));
@@ -22,6 +25,7 @@ export async function PATCH(req, { params }) {
 
 export async function DELETE(_req, { params }) {
   try {
+    await ownMenu(params.id);
     await db()(`delete from menu_items where id = $2 and menu_id = $1`, [params.id, params.itemId]);
     return ok({ menus: await loadMenus() });
   } catch (e) {

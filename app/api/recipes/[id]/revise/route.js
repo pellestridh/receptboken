@@ -1,3 +1,4 @@
+import { ownRecipe } from "@/lib/household";
 import { db } from "@/lib/db";
 import { reviseRecipe } from "@/lib/importer";
 import { ok, fail, body } from "@/lib/http";
@@ -9,6 +10,7 @@ export async function POST(req, { params }) {
   try {
     const { instruction } = await body(req);
     if (!instruction?.trim()) throw new Error("Skriv vad som ska ändras.");
+    await ownRecipe(params.id);
     const [r] = await db()(`select body from recipes where id = $1`, [params.id]);
     if (!r) return fail("Receptet finns inte.", 404);
     const recipe = await reviseRecipe(r.body, instruction.trim());

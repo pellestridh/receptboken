@@ -54,8 +54,12 @@ function Importer() {
 
   useEffect(() => {
     if (started.current) return;
-    const u = params.get("url"), d = params.get("utkast");
-    if (d) {
+    const u = params.get("url"), d = params.get("utkast"), ide = params.get("ide");
+    if (ide) {
+      started.current = true;
+      setText(ide);
+      run({ text: ide });
+    } else if (d) {
       started.current = true;
       api(`/api/drafts/${d}`).then((x) => { setDraft(x.recipe); setDraftId(d); }).catch((e) => setError(e.message));
     } else if (u) {

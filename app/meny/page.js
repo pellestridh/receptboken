@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Leftovers from "@/components/Leftovers";
 import { useRouter } from "next/navigation";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { useRecipes } from "@/components/useRecipes";
@@ -92,6 +93,7 @@ function MenuCard({ menu, recipes, setMenus, onShop }) {
           </li>
         ))}
       </ol>
+      {menu.kind !== "middag" && <Leftovers menu={menu} recipes={recipes} setMenus={setMenus} />}
       <div className="arow">
         <button className="btn" type="button" disabled={!filled} onClick={() => onShop(menu)}>Skapa inköpslista</button>
         {menu.kind !== "middag" && <button className="btn ghost" type="button" onClick={addDay}>Lägg till en dag</button>}

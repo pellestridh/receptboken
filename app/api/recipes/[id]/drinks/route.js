@@ -1,3 +1,4 @@
+import { ownRecipe, hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { generateDrinks } from "@/lib/drinks";
 import { ok, fail, body } from "@/lib/http";
@@ -15,8 +16,8 @@ async function save(id, drinks) {
 
 async function log(recipe, id, kind, verdict, suggested, choice, reason, author) {
   await db()(
-    `insert into drink_feedback (id, recipe_id, recipe_title, kind, suggested, verdict, your_choice, reason, author) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-    [rid(), id, recipe.title, kind, suggested || null, verdict, choice || null, reason || null, String(author || "").slice(0, 40)]
+    `insert into drink_feedback (id, recipe_id, recipe_title, kind, suggested, verdict, your_choice, reason, author, hh) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+    [rid(), id, recipe.title, kind, suggested || null, verdict, choice || null, reason || null, String(author || "").slice(0, 40), hh()]
   );
 }
 
@@ -28,6 +29,7 @@ export async function POST(req, { params }) {
   try {
     const id = params.id;
     const b = await body(req);
+    await ownRecipe(id);
     const [row] = await db()(`select body from recipes where id = $1`, [id]);
     if (!row) return fail("Receptet finns inte.", 404);
     const recipe = { ...row.body, id };

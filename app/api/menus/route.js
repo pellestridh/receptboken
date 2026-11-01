@@ -1,3 +1,4 @@
+import { hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { listRecipes } from "@/lib/recipesList";
 import { loadMenus } from "@/lib/menus";
@@ -22,7 +23,7 @@ export async function POST(req) {
     const days = menuDays(kind);
     const recipes = (await listRecipes()).filter((r) => !r.allergens?.hits?.length);
     // Undvik rätter som redan ligger i menyer de senaste två veckorna
-    const recent = await sql(`select distinct recipe_id from menu_items i join menus m on m.id = i.menu_id where m.created_at > now() - interval '14 days'`);
+    const recent = await sql(`select distinct recipe_id from menu_items i join menus m on m.id = i.menu_id where m.hh = $1 and m.created_at > now() - interval '14 days'`, [hh()]);
     const pool = recipes.filter((r) => !recent.some((x) => x.recipe_id === r.id));
     const use = pool.length >= 4 ? pool : recipes;
     const n = kind === "middag" ? 6 : Number(servings) || 2;
@@ -41,7 +42,7 @@ export async function POST(req) {
       const picks = suggestMany(use, ["forratt", "helg", "dessert"], Date.now(), kcal);
       slots = ["Förrätt", "Varmrätt", "Dessert"].map((c, i) => ({ day: iso(days[0]), course: c, recipe: picks[i] }));
     }
-    await sql(`insert into menus (id, kind, title, start_date, servings, kcal_min, kcal_max) values ($1,$2,$3,$4,$5,$6,$7)`, [id, kind, title, iso(days[0]), n, kcal?.min || null, kcal?.max || null]);
+    await sql(`insert into menus (id, kind, title, start_date, servings, kcal_min, kcal_max, hh) values ($1,$2,$3,$4,$5,$6,$7,$8)`, [id, kind, title, iso(days[0]), n, kcal?.min || null, kcal?.max || null, hh()]);
     for (let i = 0; i < slots.length; i++) {
       await sql(
         `insert into menu_items (id, menu_id, recipe_id, day, course, servings, position) values ($1,$2,$3,$4,$5,$6,$7)`,
