@@ -106,10 +106,10 @@ function Divider({ card, n, onOpen }) {
 }
 
 export default function Box({ drawers }) {
-  const [tab, setTab] = useState("ravara");
+  const [tab, setTab] = useState("ratt");
   const [open, setOpen] = useState(null); // { drawer, key, idx }
   useEffect(() => {
-    setTab(lsGet("rb-drawer", "ravara"));
+    setTab(lsGet("rb-drawer2", "ratt"));
     try { const s = JSON.parse(sessionStorage.getItem("rb-deck") || "null"); if (s) setOpen(s); } catch {}
   }, []);
   const drawer = drawers.find((d) => d.key === tab) || drawers[0];
@@ -130,7 +130,7 @@ export default function Box({ drawers }) {
         <div className="boxswitch"><span className="flabel">Dela in efter</span>
         <div className="boxseg" role="tablist">
           {drawers.map((d) => (
-            <button key={d.key} type="button" role="tab" aria-selected={d.key === drawer.key} onClick={() => { setTab(d.key); lsSet("rb-drawer", d.key); }}>{d.name}</button>
+            <button key={d.key} type="button" role="tab" aria-selected={d.key === drawer.key} onClick={() => { setTab(d.key); lsSet("rb-drawer2", d.key); }}>{d.name}</button>
           ))}
         </div></div>
       </div>

@@ -65,6 +65,17 @@ export default function Home() {
       reload();
     })();
   }, [recipes, settings.allergies, reload]);
+  const classifying = useRef(false);
+  useEffect(() => {
+    if (!recipes || classifying.current || !recipes.some((r) => r.dishes == null)) return;
+    classifying.current = true;
+    (async () => {
+      for (let i = 0; i < 12; i++) {
+        try { const d = await api("/api/classify", { method: "POST" }); if (!d.left) break; } catch { break; }
+      }
+      reload();
+    })();
+  }, [recipes, reload]);
   const shown = useMemo(() => sortRecipes(filterRecipes(all, f, q)
     .filter((r) => !f.light || (r.kcal && r.kcal <= settings.lightKcal))
     .filter((r) => !f.diet || (f.diet === "Glutenfri" ? r.allergens?.gluten === "nej" : r.allergens?.lactose === "nej")), sort), [all, f, q, sort, settings.lightKcal]);
