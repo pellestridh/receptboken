@@ -20,7 +20,8 @@ export default function Nav() {
           <Link href="/" className="tab" aria-current={at("/") || at("/recept") ? "page" : undefined}>Recept</Link>
           <Link href="/meny" className="tab" aria-current={at("/meny") ? "page" : undefined}>Meny</Link>
           <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}>Inköp</Link>
-          <Link href="/nytt" className="tab add-tab" aria-current={at("/nytt") ? "page" : undefined}>+ Nytt</Link>
+          <Link href="/dryck" className="tab" aria-current={at("/dryck") ? "page" : undefined}>Dryck</Link>
+          <Link href="/nytt" className="tab add-tab" aria-current={at("/nytt") ? "page" : undefined} aria-label="Nytt recept">+<span className="tlong"> Nytt</span></Link>
         </div>
       </div>
     </nav>

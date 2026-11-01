@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { api, getName } from "@/lib/api";
 import { useApp } from "@/components/Providers";
 import { label } from "@/lib/drinkLabel";
+import Link from "next/link";
+import { styleFor } from "@/data/beer";
 
 function Label({ kind, d, small }) {
   const l = label(kind, d);
@@ -47,6 +49,7 @@ function DrinkCard({ kind, d, own = [], busy, onAction }) {
           <div className="lrow"><Label kind={kind} d={d} />{d.style && d.style !== d.name && <span className="style">{d.style}</span>}</div>
           <b><Product name={d.name} kind={kind} /></b>
           {d.why && <p>{d.why}</p>}
+          {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Link className="stylelink" href={`/dryck/ol/${st.key}`}>Om {st.name.toLowerCase().startsWith("ipa") ? "IPA" : st.name.toLowerCase()} och mat ›</Link> : null; })()}
           {d.alternatives?.length > 0 && (
             <div className="alts"><span className="muted">Eller</span>{d.alternatives.map((a, i) => (
               <span key={i} className="alt">{kind !== "nonAlcoholic" && <i className={"sw " + label(kind, { ...a, color: a.color }).tone} aria-hidden="true" />}<Product name={a.name} kind={kind} />{a.style && <small>{a.style}</small>}</span>
