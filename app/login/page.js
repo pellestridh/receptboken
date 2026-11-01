@@ -24,6 +24,7 @@ function LoginForm() {
 
   return (
     <form className="login" onSubmit={submit}>
+      <img src="/icon-512.png" alt="" width="168" height="168" className="login-logo" />
       <h1>Receptboken</h1>
       <p className="muted" style={{ margin: 0 }}>Ange familjekoden. Du loggar in en gång per enhet.</p>
       <label className="fld"><span>Ditt namn</span>
