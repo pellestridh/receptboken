@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { hh, listHouseholds } from "@/lib/household";
 import { codeHash } from "@/lib/auth";
+import { readSettings, writeSetting } from "@/lib/settings";
 import { ok, fail, body } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic";
 const slug = (s) => String(s).toLowerCase().replace(/[åä]/g, "a").replace(/ö/g, "o").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "hushall";
 
 export async function GET() {
-  try { return ok({ current: hh(), households: await listHouseholds() }); } catch (e) { return fail(e); }
+  try { const { adminHash } = await readSettings(); return ok({ current: hh(), households: await listHouseholds(), adminSet: hh() === "hem" ? !!adminHash : undefined }); } catch (e) { return fail(e); }
 }
 
 // Bara hushållet "hem" kan lägga till och ta bort hushåll. { name, code } | { remove: id } | { id, code }
@@ -17,7 +18,19 @@ export async function POST(req) {
     if (hh() !== "hem") throw new Error("Bara huvudhushållet kan hantera hushåll.");
     const b = await body(req);
     const sql = db();
-    if (typeof b.homeName === "string") {
+    // Bara den som har administratörskoden får hantera hushåll. Första gången sätts koden.
+    const { adminHash } = await readSettings();
+    const given = String(b.admin || "").trim();
+    if (!adminHash) {
+      if (given.length < 6) throw new Error("Välj en administratörskod på minst sex tecken.");
+      await writeSetting("adminHash", await codeHash("admin:" + given));
+    } else if ((await codeHash("admin:" + given)) !== adminHash) {
+      await new Promise((r) => setTimeout(r, 600));
+      const e = new Error("Fel administratörskod."); e.status = 403; throw e;
+    }
+    if (b.check) {
+      // bara kontroll av koden
+    } else if (typeof b.homeName === "string") {
       const n = b.homeName.trim().slice(0, 60);
       if (!n) throw new Error("Skriv ett namn.");
       await sql(`insert into settings (key, value) values ('householdName', $1::jsonb) on conflict (key) do update set value = excluded.value`, [JSON.stringify(n)]);
@@ -40,7 +53,7 @@ export async function POST(req) {
         await sql(`insert into households (id, name, code_hash) values ($1, $2, $3)`, [id, name, h]);
       }
     }
-    return ok({ current: hh(), households: await listHouseholds() });
+    return ok({ current: hh(), households: await listHouseholds(), adminSet: true });
   } catch (e) {
     return fail(e);
   }

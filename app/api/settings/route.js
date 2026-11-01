@@ -1,10 +1,10 @@
 import { ok, fail, body } from "@/lib/http";
-import { readSettings, writeSetting } from "@/lib/settings";
+import { readSettings, writeSetting, publicSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  try { return ok({ settings: await readSettings() }); } catch (e) { return fail(e, 500); }
+  try { return ok({ settings: await publicSettings() }); } catch (e) { return fail(e, 500); }
 }
 
 // { lightKcal? } | { allergies?: [{who, what}] }
@@ -27,7 +27,7 @@ export async function POST(req) {
       const [k, v] = Object.entries(b.wineProgress)[0] || [];
       if (k) await writeSetting("wineProgress", { ...cur, [String(k).slice(0, 30)]: { done: !!v?.done, quiz: Number(v?.quiz) || 0, at: new Date().toISOString() } });
     }
-    return ok({ settings: await readSettings() });
+    return ok({ settings: await publicSettings() });
   } catch (e) {
     return fail(e);
   }

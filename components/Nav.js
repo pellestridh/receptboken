@@ -1,6 +1,33 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+
+// "+" öppnar en liten meny: nytt recept, inspiration och inställningar.
+function More({ active }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const path = usePathname();
+  useEffect(() => { setOpen(false); }, [path]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open]);
+  return (
+    <span className="navmore" ref={ref}>
+      <button type="button" className="tab add-tab" aria-current={active ? "page" : undefined} aria-expanded={open} aria-haspopup="menu" aria-label="Mer" onClick={() => setOpen(!open)}>+<span className="tlong"> Mer</span></button>
+      {open && (
+        <span className="moremenu" role="menu">
+          <Link role="menuitem" href="/nytt"><b>Nytt recept</b><span>Länk, foto eller fil</span></Link>
+          <Link role="menuitem" href="/inspiration"><b>Inspiration</b><span>Recept från de andra hushållen</span></Link>
+          <Link role="menuitem" href="/installningar"><b>Inställningar</b><span>Allergier, hushåll, namn och utloggning</span></Link>
+        </span>
+      )}
+    </span>
+  );
+}
 
 export default function Nav() {
   const path = usePathname();
@@ -21,7 +48,7 @@ export default function Nav() {
           <Link href="/meny" className="tab" aria-current={at("/meny") ? "page" : undefined}>Meny</Link>
           <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}>Inköp</Link>
           <Link href="/dryck" className="tab" aria-current={at("/dryck") ? "page" : undefined}>Dryck</Link>
-          <Link href="/nytt" className="tab add-tab" aria-current={at("/nytt") ? "page" : undefined} aria-label="Nytt recept">+<span className="tlong"> Nytt</span></Link>
+          <More active={at("/nytt") || at("/inspiration") || at("/installningar")} />
         </div>
       </div>
     </nav>

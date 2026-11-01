@@ -762,3 +762,14 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .toggle .muted { font-size: .88rem; }
 .ifrom { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
 .inspo .pick .pbadge { color: var(--accent); }
+
+/* plus-menyn */
+.navmore { position: relative; display: inline-flex; }
+.navmore > .tab { background: var(--paper); cursor: pointer; }
+.moremenu { position: fixed; right: max(16px, env(safe-area-inset-right)); top: calc(env(safe-area-inset-top) + 3.7rem); z-index: 20; width: min(17rem, calc(100vw - 32px)); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 36px -14px rgb(0 0 0 / .4); padding: .35rem; display: grid; }
+.moremenu a { display: grid; gap: .05rem; padding: .65rem .8rem; border-radius: 10px; text-decoration: none; }
+.moremenu a:hover, .moremenu a:focus-visible { background: var(--bg); }
+.moremenu a span { font-size: .85rem; color: var(--muted); }
+.adminlock { display: grid; gap: .4rem; background: var(--bg); border-radius: 12px; padding: .8rem .9rem; } .adminlock .hint { margin: 0; }
+
+@media (max-width: 390px) { .tab { padding: .38rem .5rem; font-size: .86rem; } .tabs { gap: .2rem; } .navrow { gap: .4rem; } .hbtn { width: 2.1rem; height: 2.1rem; } }
