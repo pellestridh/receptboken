@@ -5,6 +5,7 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { shrink } from "@/lib/image";
 import { useRecipes } from "@/components/useRecipes";
+import { findDuplicate } from "@/lib/dupes";
 import ReviewForm from "@/components/ReviewForm";
 import { useApp } from "@/components/Providers";
 
@@ -46,6 +47,7 @@ function Importer() {
   const [error, setError] = useState("");
   const [draft, setDraft] = useState(null);
   const [draftId, setDraftId] = useState(null);
+  const [exists, setExists] = useState(null); // { dup, input }
   const [saving, setSaving] = useState(false);
   const started = useRef(false);
   const [over, setOver] = useState(false);
@@ -70,6 +72,8 @@ function Importer() {
     try {
       setStatus(input.url && !input.text ? "Hämtar sidan och läser receptet …" : input.files?.length ? "Claude läser receptet … det tar oftast under en minut" : "Claude läser receptet …");
       const d = await api("/api/import", { method: "POST", json: input });
+      if (d.duplicate) { setExists({ dup: d.duplicate, input }); return; }
+      setExists(null);
       setDraft(d.recipe);
       window.scrollTo(0, 0);
     } catch (e) {
@@ -110,9 +114,28 @@ function Importer() {
   }
 
   if (draft) {
-    const dup = draft.source?.url && (recipes || []).find((r) => r.sourceUrl === draft.source.url);
+    const dup = findDuplicate(recipes || [], { url: draft.source?.url, title: draft.title });
     return <ReviewForm recipe={draft} recipes={recipes || []} onSave={save} onDiscard={discard} busy={saving}
-      dupWarning={dup ? `Det finns redan ett recept från samma länk: ${dup.title}.` : null} />;
+      dupWarning={dup ? <>{dup.why === "url" ? "Det här receptet finns redan, från samma länk: " : "Det finns redan ett recept som verkar vara samma: "}<Link href={`/recept/${dup.id}`}>{dup.title}</Link>. Spara bara om ni vill ha båda.</> : null} />;
+  }
+
+  if (exists) {
+    const { dup, input } = exists;
+    return (
+      <div className="narrow">
+        <div className="hero"><h1>Finns redan</h1></div>
+        <div className="panel">
+          <p style={{ margin: 0 }}>{dup.kind === "draft" ? <>Receptet från den här länken väntar redan på granskning: <b>{dup.title}</b>.</> : <>Receptet från den här länken finns redan i Receptboken: <b>{dup.title}</b>.</>}</p>
+          <div className="arow">
+            {dup.kind === "draft"
+              ? <button className="btn" type="button" onClick={() => api(`/api/drafts/${dup.id}`).then((x) => { setExists(null); setDraft(x.recipe); setDraftId(dup.id); }).catch((e) => setError(e.message))}>Granska utkastet</button>
+              : <Link className="btn" href={`/recept/${dup.id}`}>Öppna receptet</Link>}
+            <button className="btn ghost" type="button" onClick={() => { setExists(null); run({ ...input, force: true }); }}>Läs in en gång till ändå</button>
+            <button className="link" type="button" onClick={() => { setExists(null); setUrl(""); }}>Avbryt</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const canGo = mode === "link" ? !!(url.trim() || text.trim()) : files.length > 0;

@@ -2,6 +2,7 @@
 // som utkast som väntar på granskning i appen. Skyddas med SHORTCUT_KEY.
 import { db, rid } from "@/lib/db";
 import { importRecipe } from "@/lib/importer";
+import { duplicateOf } from "@/lib/dupesDb";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -15,9 +16,15 @@ async function handle(key, url, pasted) {
   const link = (url || "").match(/https?:\/\/\S+/)?.[0];
   if (!link && !pasted) return text("Ingen länk kom med.", 400);
   try {
+    if (link) {
+      const dup = await duplicateOf({ url: link });
+      if (dup) return text(dup.kind === "draft" ? `${dup.title} väntar redan på granskning i Receptboken.` : `${dup.title} finns redan i Receptboken.`);
+    }
     const recipe = await importRecipe({ url: link || null, text: pasted || null });
+    const same = await duplicateOf({ title: recipe.title });
+    if (same?.kind === "draft") return text(`${same.title} väntar redan på granskning i Receptboken.`);
     await db()(`insert into drafts (id, body, source_url) values ($1, $2, $3)`, [rid(), JSON.stringify(recipe), link || null]);
-    return text(`${recipe.title} väntar på granskning i Receptboken.`);
+    return text(`${recipe.title} väntar på granskning i Receptboken.${same ? ` Obs, det liknar ${same.title} som redan finns.` : ""}`);
   } catch (e) {
     return text(`Det gick inte: ${e.message}`, 400);
   }
