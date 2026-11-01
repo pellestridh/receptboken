@@ -17,7 +17,11 @@ export async function POST(req) {
     if (hh() !== "hem") throw new Error("Bara huvudhushållet kan hantera hushåll.");
     const b = await body(req);
     const sql = db();
-    if (b.remove) {
+    if (typeof b.homeName === "string") {
+      const n = b.homeName.trim().slice(0, 60);
+      if (!n) throw new Error("Skriv ett namn.");
+      await sql(`insert into settings (key, value) values ('householdName', $1::jsonb) on conflict (key) do update set value = excluded.value`, [JSON.stringify(n)]);
+    } else if (b.remove) {
       if (b.remove === "hem") throw new Error("Huvudhushållet kan inte tas bort.");
       await sql(`delete from households where id = $1`, [b.remove]);
     } else {

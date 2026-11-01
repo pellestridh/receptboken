@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRecipes, sortRecipes, filterRecipes, timeBucket } from "@/components/useRecipes";
 import { Card, Pick } from "@/components/Card";
 import { api, lsGet, lsSet } from "@/lib/api";
-import { daysSince, mins } from "@/lib/format";
+import { daysSince, mins, accentVar } from "@/lib/format";
 import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
@@ -39,6 +39,8 @@ export default function Home() {
   const [showFilters, setShowFilters] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [group, setGroup] = useState("none");
+  const [insp, setInsp] = useState(null);
+  useEffect(() => { api("/api/inspiration").then(setInsp).catch(() => {}); }, []);
   useEffect(() => { setGroup(lsGet("rb-group", "none")); }, []);
 
   useEffect(() => {
@@ -174,6 +176,22 @@ export default function Home() {
         </>
       )}
       {!filtering && recipes && all.length > 0 && <Box drawers={box} />}
+
+      {!filtering && insp?.households?.length > 0 && (() => {
+        const fresh = insp.recipes.filter((r) => !r.have && !r.allergens?.hits?.length).slice(0, 3);
+        return (
+          <>
+            <div className="section-h"><h2>Inspiration från {insp.households.map((h) => h.name).join(" och ")}</h2><Link href="/inspiration" className="muted">Bläddra i deras recept ›</Link></div>
+            {fresh.length ? <div className="rail">{fresh.map((r) => (
+              <Link key={r.id} href={`/inspiration/${r.id}`} className="pick" style={{ "--rc": accentVar(r.accent) }}>
+                {r.image ? <img src={r.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <span className="mono">{r.title?.[0]}</span>}
+                <span className="pbadge">{r.fromName}</span>
+                <div className="cap"><b>{r.title}</b><span>{r.kitchen} · {mins(r.minutes)}</span></div>
+              </Link>
+            ))}</div> : <p className="muted">Ni har redan allt de delar. <Link href="/inspiration">Se ändå</Link></p>}
+          </>
+        );
+      })()}
 
       {!filtering && inSeason.length > 0 && (
         <>

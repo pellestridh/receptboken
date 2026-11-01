@@ -21,6 +21,7 @@ export async function POST(req) {
         .slice(0, 30);
       await writeSetting("allergies", list);
     }
+    if (typeof b.shareInspiration === "boolean") await writeSetting("shareInspiration", b.shareInspiration);
     if (b.wineProgress && typeof b.wineProgress === "object") {
       const cur = (await readSettings()).wineProgress || {};
       const [k, v] = Object.entries(b.wineProgress)[0] || [];

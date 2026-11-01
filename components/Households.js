@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useApp } from "@/components/Providers";
+import { useSettings } from "@/components/useSettings";
 
 export default function Households() {
   const { toast } = useApp();
@@ -10,6 +11,7 @@ export default function Households() {
   const [code, setCode] = useState("");
   const [arm, setArm] = useState(null);
   const [newCode, setNewCode] = useState({});
+  const [settings, saveSettings] = useSettings();
   useEffect(() => { api("/api/households").then(setD).catch(() => {}); }, []);
   if (!d) return null;
   const me = d.households.find((h) => h.id === d.current);
@@ -19,8 +21,17 @@ export default function Households() {
     <div className="panel">
       <h2 style={{ fontSize: "1.4rem" }}>Hushåll</h2>
       <p className="hint">Du är inloggad i <b>{me?.name || d.current}</b>. Varje hushåll har egen familjekod, egna recept, menyer, inköpslista, allergier och provningar. Recept kan kopieras mellan hushåll med Dela på receptet.</p>
+      <label className="toggle">
+        <input type="checkbox" checked={!!settings.shareInspiration} onChange={(e) => saveSettings({ shareInspiration: e.target.checked }).then(() => toast(e.target.checked ? "Era recept syns nu som inspiration" : "Era recept visas inte längre för andra")).catch((x) => toast(x.message))} />
+        <span><b>Visa våra recept som inspiration</b><br /><span className="muted">De andra hushållen kan läsa era recept och spara kopior. Anteckningar, menyer och inköpslista syns aldrig.</span></span>
+      </label>
       {d.current === "hem" && (
         <>
+          <form className="arow" onSubmit={(e) => { e.preventDefault(); act({ homeName: e.target.hn.value }, "Namnet är sparat"); }}>
+            <input name="hn" className="tin" style={{ maxWidth: "16rem" }} defaultValue={me?.name} placeholder="Ert hushålls namn" aria-label="Ert hushålls namn" />
+            <button className="btn ghost" type="submit">Spara namnet</button>
+          </form>
+          <p className="hint" style={{ marginTop: "-.4rem" }}>Så heter ni för de andra hushållen, till exempel Mamma och pappa.</p>
           <ul className="nlist">
             {d.households.filter((h) => h.id !== "hem").map((h) => (
               <li key={h.id} className="hhrow">
