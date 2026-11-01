@@ -290,7 +290,7 @@ export const STYLES = [
     why: "Den lena kroppen och rostningen bär mustiga grytor och mjukar upp det rökiga.",
     examples: ["Samuel Smith’s Oatmeal Stout"] },
   { key: "imperial-stout", name: "Imperial stout", family: "starka", kind: "ale", map: { x: 0.46, y: 0.76 }, ebc: [60, 80], abv: [8, 12], ibu: [50, 90], temp: "12–15 °C",
-    alias: /imperial stout|russian stout|imperial porter|imperial|russian/,
+    alias: /imperial stout|russian stout|imperial(?! (pils|porter|ipa))|russian/,
     about: "Ursprungligen bryggd i England för export till Ryssland från 1780-talet. Mycket mörk, extremt fyllig och kraftfull med en ton av tjära.",
     food: ["Chokladfondant och chokladdesserter", "Jordgubbar med vaniljglass", "Blåmögelost", "Vitlöksbröd"],
     cheese: "Vällagrad Gruyère eller Cabrales",
@@ -411,6 +411,36 @@ export const STYLES = [
     cheese: "Feta",
     why: "Salt och syra i ölet gör det till en flytande citronskiva med flingsalt.",
     examples: [], src: "tillägg" },
+  // Från Pelles öltypskort
+  { key: "modern-lager", name: "Modern ljus lager", family: "ljuslager", kind: "lager", map: { x: 0.70, y: 0.82, est: true }, ebc: [7, 20], abv: [4.5, 5.6], ibu: [35, 45], temp: "8–10 °C",
+    alias: /modern (ljus )?lager|helmaltsöl/,
+    about: "Ett ljust helmaltsöl med mycket karaktär och stora humlegivor, alla humlesorter tillåtna. Mycket tydlig humlekaraktär med blommiga och fruktiga inslag och tydlig malt av bröd och karamell.",
+    food: ["Husmanskost och pyttipanna", "Grillad kyckling och fläsk", "Friterat och fish and chips", "Pizza"],
+    cheese: "Mellanlagrad hårdost",
+    why: "Mer malt och humle än en vanlig lager: kropp nog för stekyta och beska nog för fett, men fortfarande läskande.",
+    examples: ["S:t Eriks Pils"] },
+  { key: "imperial-pils", name: "Imperial pils", family: "ljuslager", kind: "lager", map: { x: 0.70, y: 0.92, est: true }, ebc: [5, 10], abv: [6, 9], ibu: [45, 120], temp: "8–10 °C",
+    alias: /imperial pils|imperial pilsner/,
+    about: "En nyligen tillkommen ölstil: pils med mycket kraftigare beska och betydligt mer alkohol. Torr och krispig.",
+    food: ["Kryddig grillad mat", "Fet fisk och skaldjur", "Lagrad ost"],
+    cheese: "Lagrad Gouda, Parmesan",
+    why: "Torrheten och den kraftiga beskan skär genom mycket fett, och alkoholen ger kropp nog för grillat.",
+    examples: ["Samuel Adams Hallertau Imperial Pilsner"] },
+  { key: "imperial-porter", name: "Imperial porter", family: "starka", kind: "ale", map: { x: 0.56, y: 0.50, est: true }, ebc: [80, 80], abv: [7, 12], ibu: [35, 50], temp: "12–15 °C",
+    alias: /imperial porter/,
+    about: "Mycket komplex med många lager i doft och smak: karamell, kakao, kaffe och torkad frukt. Värmande alkohol och balans mellan sötma och humlebeska.",
+    food: ["Vilt och viltgrytor", "Chokladdesserter", "Lagrade hårdostar"],
+    cheese: "Vällagrad Gruyère, Cheddar eller Parmesan",
+    dessert: "Chokladtårta, tiramisu",
+    why: "Kakao och kaffe möter choklad och mörka såser, och alkoholen klarar kraftiga smaker.",
+    examples: ["Flying Dog Gonzo Imperial Porter"] },
+  { key: "amber-ale", name: "Amber ale och red ale", family: "paleale", kind: "ale", map: { x: 0.55, y: 0.70, est: true }, ebc: [22, 36], abv: [4.5, 6], ibu: [30, 40], temp: "10–12 °C",
+    alias: /amber ale|red ale|röd ale|irish red/,
+    about: "Amerikansk red ale med karamellmalt och amerikansk humle. Totalt sett mer fruktig och beskare än en irländsk red ale.",
+    food: ["Hamburgare och BBQ", "Pizza", "Mexikanskt", "Grillad kyckling"],
+    cheese: "Vit cheddar",
+    why: "Karamellmalten möter grill och tomat, och citrushumlen lyfter kryddor.",
+    examples: [] },
 ];
 
 // Grundreglerna, ur "Allt om Öl och Mat".
@@ -487,7 +517,7 @@ export function styleFor(text) {
   const t = low(text);
   if (!t) return null;
   // Längre och mer specifika först, t.ex. "dubbel ipa" före "ipa" och "imperial stout" före "stout".
-  for (const k of ["dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
+  for (const k of ["imperial-porter", "imperial-pils", "modern-lager", "dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
     const s = STYLES.find((x) => x.key === k);
     if (s.alias.test(t)) return s;
   }

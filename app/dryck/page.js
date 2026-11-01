@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import BeerMap from "@/components/BeerMap";
+import BeerTree from "@/components/BeerTree";
 import { StyleRow, Glass } from "@/components/BeerBits";
 import { STYLES, FAMILIES, PRINCIPLES, CHEESE, DESSERT, styleByKey } from "@/data/beer";
 
-const VIEWS = [["karta", "Ölkartan"], ["stilar", "Stilarna"], ["mat", "Öl och mat"], ["ost", "Ost"], ["dessert", "Dessert"]];
+const VIEWS = [["karta", "Ölkartan"], ["trad", "Släktträdet"], ["stilar", "Stilarna"], ["mat", "Öl och mat"], ["ost", "Ost"], ["dessert", "Dessert"]];
 
 function BeerLink({ k }) {
   const s = styleByKey(k);
@@ -29,7 +30,7 @@ function Drinks() {
       <div className="hero">
         <span className="kicker">Dryck</span>
         <h1>Öl och mat</h1>
-        <p className="muted" style={{ margin: 0 }}>Byggt på Pelles material om öl och mat. Kartan visar var stilarna ligger i smak, korten varför de passar till maten.</p>
+        <p className="muted" style={{ margin: 0 }}>Byggt på Pelles material: smakkartan, släktträdet, öltypskorten och texterna om öl och mat.</p>
       </div>
       <div className="boxseg vtabs" role="tablist">
         {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => go(v)}>{l}</button>)}
@@ -39,6 +40,13 @@ function Drinks() {
         <section className="dsec">
           <p className="hint">Smakreferensen från Liten Ölguide. Vänster är fruktigt, höger maltigt, uppåt sött och nedåt beskt. Färgen är ölets färg. {usedCount ? "Ringarna visar stilar som föreslagits till era recept." : ""} Tryck på en stil, eller välj en familj för att se namnen.</p>
           <BeerMap usage={usage} />
+        </section>
+      )}
+
+      {view === "trad" && (
+        <section className="dsec">
+          <p className="hint">Pelles släktträd över ölstilarna, Allt om Ölstilar 2 från 2012: från jäsningssätt via familjer till stilar och exempel. Tryck på plus för att fälla ut, och på en stil med glas för att öppna stilkortet. <a href="/ol/allt-om-olstilar.jpg" target="_blank" rel="noopener noreferrer">Visa originalet</a>.</p>
+          <BeerTree usage={usage} />
         </section>
       )}
 

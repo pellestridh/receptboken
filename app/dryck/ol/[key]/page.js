@@ -7,6 +7,20 @@ import { accentVar } from "@/lib/format";
 import BeerMap from "@/components/BeerMap";
 import { Glass, Stats } from "@/components/BeerBits";
 import { styleByKey, familyName, STYLES } from "@/data/beer";
+import { cardsFor } from "@/data/beerCards";
+
+const range = (t) => { const m = String(t || "").replace(/,/g, ".").match(/([\d.]+)\s*(?:-\s*([\d.]+))?/); return m ? [Number(m[1]), Number(m[2] || (t.includes("+") ? 80 : m[1]))] : null; };
+
+function Card({ c }) {
+  const rows = [["Doft", c.doft], ["Utseende", c.utseende], ["Smak", c.smak], ["Munkänsla och kropp", c.kropp]].filter(([, v]) => v);
+  return (
+    <div className="okort">
+      {c.sammanfattning && <p className="osum">{c.sammanfattning}</p>}
+      <dl>{rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      {(c.ibu || c.ebc || c.abv) && <p className="ovals">{c.ibu && <span><b>{c.ibu}</b> IBU</span>}{c.ebc && <span><b>{c.ebc}</b> EBC</span>}{c.abv && <span><b>{c.abv}</b> % alkohol</span>}</p>}
+    </div>
+  );
+}
 
 const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
 const KIND = { ale: "Överjäst", lager: "Underjäst", spontan: "Spontanjäst", hybrid: "Lagerjäst vid överjäsningstemperatur" };
@@ -15,9 +29,13 @@ export default function StylePage() {
   const { key } = useParams();
   const s = styleByKey(key);
   const [usage, setUsage] = useState({});
+  const [ci, setCi] = useState(0);
   useEffect(() => { api("/api/beer-usage").then((d) => setUsage(d.usage || {})).catch(() => {}); }, []);
   if (!s) return <div className="narrow"><div className="empty">Den ölstilen finns inte. <Link href="/dryck?vy=stilar">Alla stilar</Link></div></div>;
   const recs = usage[s.key] || [];
+  const cards = cardsFor(s.key);
+  const c0 = cards[0];
+  const st = c0 ? { ...s, ibu: range(c0.ibu) || s.ibu, ebc: range(c0.ebc) || s.ebc, abv: range(c0.abv) || s.abv } : s;
   const same = STYLES.filter((x) => x.family === s.family && x.key !== s.key);
 
   return (
@@ -30,13 +48,25 @@ export default function StylePage() {
           <p className="muted" style={{ margin: 0 }}>Servering {s.temp}</p>
         </div>
       </header>
-      <Stats s={s} />
+      <Stats s={st} />
 
       <section className="bsec">
         <h2>Om stilen</h2>
         <p>{s.about}</p>
         <p className="src">{s.src === "tillägg" ? "Tillägg, finns inte i Pelles material" : "Ur Pelles Ölkunskap och Liten Ölguide"}</p>
       </section>
+
+      {cards.length > 0 && (
+        <section className="bsec">
+          <h2>Pelles öltypskort</h2>
+          {cards[0].intro && <p>{cards[0].intro}</p>}
+          {cards.length > 1 && (
+            <div className="boxseg small ctabs" role="tablist">{cards.map((c, i) => <button key={i} type="button" role="tab" aria-selected={ci === i} onClick={() => setCi(i)}>{c.name}</button>)}</div>
+          )}
+          <Card c={cards[Math.min(ci, cards.length - 1)]} />
+          <p className="src">Ur Allt om Öls öltypskort 2010–2011</p>
+        </section>
+      )}
 
       <section className="bsec food">
         <h2>Passar till</h2>

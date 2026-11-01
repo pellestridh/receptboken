@@ -621,3 +621,34 @@ textarea.tin { resize: vertical; }
 .becau { background: color-mix(in srgb, var(--c-dijon) 14%, var(--paper)); border-radius: 14px; padding: .9rem 1.1rem; }
 .becau h3 { font-size: 1.15rem; color: var(--c-crust); margin-bottom: .2rem; }
 .stylelink { font-size: .88rem; font-weight: 700; color: var(--rc); text-decoration: none; }
+
+/* släktträdet */
+.btree { display: grid; gap: 1rem; }
+.troot { --tc: #A23A2A; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.troot.t-spontan { --tc: #E08A2E; } .troot.t-under { --tc: #D9A520; }
+.troot h3 { background: var(--tc); color: #fff; font-family: var(--body); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .85rem; padding: .55rem 1rem; }
+.btree ul { list-style: none; margin: 0; padding: 0; }
+.troot > ul { padding: .5rem .6rem .7rem; }
+.tn ul { margin-left: 1.05rem; padding-left: .75rem; border-left: 2px solid color-mix(in srgb, var(--tc) 35%, transparent); }
+.trow { display: flex; flex-wrap: wrap; align-items: center; gap: .1rem .5rem; padding: .22rem 0; }
+.tog { width: 1.6rem; height: 1.6rem; flex: none; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--tc) 45%, var(--line)); background: color-mix(in srgb, var(--tc) 10%, var(--paper)); color: var(--tc); font-weight: 700; line-height: 1; padding: 0 0 .1rem; }
+.tog.none { border: 0; background: none; width: .9rem; }
+.tog.none::before { content: ""; display: block; width: .45rem; height: .45rem; margin: auto; border-radius: 50%; background: color-mix(in srgb, var(--tc) 50%, transparent); }
+.tname { border: 0; background: none; padding: 0; font-weight: 700; text-align: left; display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; }
+.tn.d0 > .trow .tname { font-family: var(--display); font-weight: 400; font-size: 1.15rem; }
+.tname.link { color: var(--tc); }
+.tname.link:hover { text-decoration: underline; }
+.tex { flex-basis: 100%; padding-left: 2.1rem; font-size: .82rem; color: var(--muted); }
+.tn.d0 > .trow .tex { padding-left: 2.1rem; }
+@media (min-width: 900px) { .btree { grid-template-columns: 1fr 1fr; align-items: start; } .troot.t-over { grid-column: 1; grid-row: 1 / span 2; } .troot.t-spontan { grid-column: 2; grid-row: 1; } .troot.t-under { grid-column: 2; grid-row: 2; } }
+
+/* öltypskort */
+.ctabs { display: inline-grid; justify-self: start; }
+.okort { background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--c-crust); border-radius: 14px; padding: 1rem 1.15rem; display: grid; gap: .7rem; }
+.osum { font-family: var(--display); font-size: 1.2rem; line-height: 1.3; }
+.okort dl { margin: 0; display: grid; gap: .6rem; }
+.okort dt { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--c-crust); }
+.okort dd { margin: .1rem 0 0; }
+.ovals { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; color: var(--muted); font-size: .92rem; border-top: 1px solid var(--line); padding-top: .6rem; }
+.ovals b { color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) { .ctabs { display: grid; grid-auto-flow: row; border-radius: 14px; width: 100%; } .ctabs button { border-radius: 10px; } }
