@@ -101,7 +101,7 @@ export default function RecipePage({ params }) {
 
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
 
-      <Drinks id={id} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
+      <Drinks id={id} title={r.title} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
       <Nutrition id={id} nutrition={r.nutrition} lightKcal={settings.lightKcal} onChange={(nu) => setData((x) => ({ ...x, recipe: { ...x.recipe, nutrition: nu } }))} />
 
       {pairs.length > 0 && (

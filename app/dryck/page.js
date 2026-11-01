@@ -32,6 +32,10 @@ function Drinks() {
         <h1>Öl och mat</h1>
         <p className="muted" style={{ margin: 0 }}>Byggt på Pelles material: smakkartan, släktträdet, öltypskorten och texterna om öl och mat.</p>
       </div>
+      <div className="boxseg vtabs drinktabs" role="tablist">
+        <Link href="/dryck" role="tab" aria-selected="true">Öl</Link>
+        <Link href="/dryck/vin" role="tab" aria-selected="false">Vin</Link>
+      </div>
       <div className="boxseg vtabs" role="tablist">
         {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => go(v)}>{l}</button>)}
       </div>
@@ -104,10 +108,10 @@ function Drinks() {
         </section>
       )}
 
-      <div className="panel wine-soon">
-        <h2 style={{ fontSize: "1.3rem" }}>Vin</h2>
-        <p className="muted" style={{ margin: 0 }}>Vinskolan för nybörjare kommer här: druvor, smakprofiler och vin till maten, förklarat från grunden.</p>
-      </div>
+      <Link href="/dryck/vin" className="panel wine-soon">
+        <h2 style={{ fontSize: "1.3rem" }}>Vinskolan ›</h2>
+        <p className="muted" style={{ margin: 0 }}>Sex lektioner, druvkort och en provningslogg med betyg som lär sig vad ni gillar.</p>
+      </Link>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useApp } from "@/components/Providers";
 import { label } from "@/lib/drinkLabel";
 import Link from "next/link";
 import { styleFor } from "@/data/beer";
+import { WineLog, WineNote } from "@/components/Wine";
 
 function Label({ kind, d, small }) {
   const l = label(kind, d);
@@ -21,7 +22,7 @@ function Product({ name, kind }) {
   return <a href={sb(name)} target="_blank" rel="noopener noreferrer">{name}</a>;
 }
 
-function DrinkCard({ kind, d, own = [], busy, onAction }) {
+function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
   const [mode, setMode] = useState(null); // "swap" | "add"
   const [text, setText] = useState("");
   const [note, setNote] = useState("");
@@ -75,18 +76,31 @@ function DrinkCard({ kind, d, own = [], busy, onAction }) {
             {d && <button type="button" className="chip" aria-pressed={!!d.liked} onClick={() => onAction({ action: "feedback", kind, verdict: "up" })}>Bra val</button>}
             {d && <button type="button" className="chip" onClick={() => setMode("swap")}>Byt förslag</button>}
             <button type="button" className="chip" onClick={() => setMode("add")}>Lägg till eget</button>
+            {kind === "wine" && <button type="button" className="chip taste-btn" onClick={() => onTaste(d)}>Vi provade ett vin</button>}
           </div>
         )}
     </div>
   );
 }
 
-export default function Drinks({ id, drinks: initial, onChange }) {
+export default function Drinks({ id, drinks: initial, onChange, title }) {
   const { toast } = useApp();
   const [drinks, setDrinks] = useState(initial || null);
   const [busy, setBusy] = useState(null);
   const [err, setErr] = useState("");
   const started = useRef(false);
+  const [notes, setNotes] = useState([]);
+  const [tasting, setTasting] = useState(null);
+  useEffect(() => { api(`/api/wine-notes?recept=${encodeURIComponent(id)}`).then((x) => setNotes(x.notes)).catch(() => {}); }, [id]);
+  const delNote = (nid) => api(`/api/wine-notes/${nid}`, { method: "DELETE" }).then(() => setNotes((n) => n.filter((x) => x.id !== nid))).catch((e) => toast(e.message));
+  const tastings = (
+    <>
+      {tasting && <div className="panel"><WineLog initial={tasting} recipeId={id} recipeTitle={title} onSaved={(n) => setNotes(n)} onCancel={() => setTasting(null)} /></div>}
+      {notes.length > 0 && (
+        <div className="tastings"><h3>Era provningar</h3><div className="wnotes">{notes.map((n) => <WineNote key={n.id} n={n} showRecipe={false} onDelete={delNote} />)}</div></div>
+      )}
+    </>
+  );
 
   useEffect(() => { setDrinks(initial || null); }, [initial]);
   const generate = () => {
@@ -126,8 +140,9 @@ export default function Drinks({ id, drinks: initial, onChange }) {
   return (
     <section className="rsec"><h2>Att dricka till</h2>
       <div className="drinks">
-        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} own={drinks.own?.[k] || []} busy={busy === k} onAction={act} />)}
+        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} own={drinks.own?.[k] || []} busy={busy === k} onAction={act} onTaste={(x) => setTasting({ wine: "", style: x?.style || "", color: x?.color || "" , suggested: x })} />)}
       </div>
+      {tastings}
       <p className="hint">Namnen länkar till Systembolagets sökning. Era egna val och omdömen används när Claude föreslår drycker till nya recept.</p>
     </section>
   );

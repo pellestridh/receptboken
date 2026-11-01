@@ -122,6 +122,23 @@ statements.push(
     key text primary key,
     value jsonb not null
   )`,
+  `create table if not exists wine_notes (
+    id text primary key,
+    recipe_id text,
+    recipe_title text,
+    wine text not null,
+    style text,
+    color text,
+    grape text,
+    rating int,
+    match int,
+    dims jsonb,
+    aromas jsonb,
+    note text,
+    price int,
+    author text,
+    created_at timestamptz not null default now()
+  )`,
   `create table if not exists staples (
     id text primary key,
     name text not null,

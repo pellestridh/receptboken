@@ -21,6 +21,11 @@ export async function POST(req) {
         .slice(0, 30);
       await writeSetting("allergies", list);
     }
+    if (b.wineProgress && typeof b.wineProgress === "object") {
+      const cur = (await readSettings()).wineProgress || {};
+      const [k, v] = Object.entries(b.wineProgress)[0] || [];
+      if (k) await writeSetting("wineProgress", { ...cur, [String(k).slice(0, 30)]: { done: !!v?.done, quiz: Number(v?.quiz) || 0, at: new Date().toISOString() } });
+    }
     return ok({ settings: await readSettings() });
   } catch (e) {
     return fail(e);
