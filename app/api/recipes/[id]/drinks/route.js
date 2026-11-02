@@ -1,6 +1,6 @@
 import { ownRecipe, hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
-import { generateDrinks } from "@/lib/drinks";
+import { generateDrinks, explainDrink } from "@/lib/drinks";
 import { ok, fail, body } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +46,13 @@ export async function POST(req, { params }) {
     current.own = { wine: [], beer: [], nonAlcoholic: [], ...(current.own || {}) };
     const suggested = current[kind]?.name || current[kind]?.style || "";
     const reason = String(b.reason || "").trim().slice(0, 300);
+
+    if (b.action === "explain") {
+      if (!current[kind]?.name) throw new Error("Inget förslag att förklara.");
+      const ex = await explainDrink(recipe, kind, current[kind]);
+      current[kind] = { ...current[kind], basis: ex.basis, rule: ex.rule, why: current[kind].why || ex.why };
+      return ok({ drinks: await save(id, current) });
+    }
 
     if (b.action === "feedback") {
       await log(recipe, id, kind, b.verdict === "up" ? "up" : "down", suggested, null, reason, b.author);

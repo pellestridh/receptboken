@@ -17,6 +17,32 @@ const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURICompon
 // Gamla eller tomma förslag görs om automatiskt.
 const usable = (d) => d && d.v >= 3 && d.wine?.name && d.beer?.name && !/<\/?parameter/.test(JSON.stringify(d));
 
+const RULES = {
+  intensitet: ["Matcha intensiteten", "Lätt mat, lätt dryck. Kraftig mat, kraftig dryck."],
+  syra: ["Syra möter syra", "Drycken behöver minst lika mycket syra som maten, annars känns den platt."],
+  tanniner: ["Tanniner behöver protein och fett", "Strama viner mjuknar av kött och ost."],
+  sotma: ["Sött till sött", "Drycken ska vara sötare än maten."],
+  hetta: ["Hetta och alkohol krockar", "Chili förstärker tanniner, beska och alkohol. Lite sötma och låg alkohol dämpar hettan."],
+  regionalt: ["Det som växer ihop passar ihop", "Dryck och mat från samma trakt."],
+  harmoni: ["Harmoniera", "Samma smaker i drycken och maten förstärker varandra."],
+  kontrast: ["Kontrastera", "Motsatta smaker balanserar varandra, som syra mot fett."],
+  fett: ["Skär genom fettet", "Syra, kolsyra och beska fräschar upp mellan tuggorna."],
+};
+
+function Basis({ d, kind, onAction }) {
+  if (!d) return null;
+  if (!d.basis?.length && !d.rule) return <button type="button" className="link whylink" onClick={() => onAction({ action: "explain", kind })}>Vad bygger förslaget på?</button>;
+  const r = RULES[d.rule];
+  return (
+    <details className="basis">
+      <summary>Vad bygger förslaget på?</summary>
+      {d.basis?.length > 0 && <p><span className="muted">Rättens </span>{d.basis.map((b) => <span key={b} className="bchip">{b}</span>)}</p>}
+      {r && <p><b>{r[0]}.</b> {r[1]} {kind === "wine" ? <Link href="/dryck/vin/mat">Vin och mat ›</Link> : kind === "beer" ? <Link href="/dryck?vy=mat">Öl och mat ›</Link> : null}</p>}
+      <p className="muted">Claude väger också in era tidigare omdömen, era egna val och betygen i provningsloggen.</p>
+    </details>
+  );
+}
+
 function Product({ name, kind }) {
   if (kind === "nonAlcoholic") return <>{name}</>;
   return <a href={sb(name)} target="_blank" rel="noopener noreferrer">{name}</a>;
@@ -50,6 +76,7 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
           <div className="lrow"><Label kind={kind} d={d} />{d.style && d.style !== d.name && <span className="style">{d.style}</span>}</div>
           <b><Product name={d.name} kind={kind} /></b>
           {d.why && <p>{d.why}</p>}
+          <Basis d={d} kind={kind} onAction={onAction} />
           {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Link className="stylelink" href={`/dryck/ol/${st.key}`}>Om {st.name.toLowerCase().startsWith("ipa") ? "IPA" : st.name.toLowerCase()} och mat ›</Link> : null; })()}
           {d.alternatives?.length > 0 && (
             <div className="alts"><span className="muted">Eller</span>{d.alternatives.map((a, i) => (
@@ -76,6 +103,11 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
             {d && <button type="button" className="chip" aria-pressed={!!d.liked} onClick={() => onAction({ action: "feedback", kind, verdict: "up" })}>Bra val</button>}
             {d && <button type="button" className="chip" onClick={() => setMode("swap")}>Byt förslag</button>}
             <button type="button" className="chip" onClick={() => setMode("add")}>Lägg till eget</button>
+            {kind === "wine" && d && (() => {
+              const red = /rött|rott/.test(d.color || "") || /röd|red|rouge|pinot noir|nebbiolo|sangiovese|tempranillo|syrah|cabernet|merlot|gamay/i.test(`${d.style} ${d.name}`);
+              const want = red ? "vitt" : "rött";
+              return <button type="button" className="chip" onClick={() => onAction({ action: "feedback", kind, verdict: "down", reason: `Vi vill hellre ha ${want} vin till den här rätten.` })}>Hellre {want}</button>;
+            })()}
             {kind === "wine" && <button type="button" className="chip taste-btn" onClick={() => onTaste(d)}>Vi provade ett vin</button>}
           </div>
         )}
