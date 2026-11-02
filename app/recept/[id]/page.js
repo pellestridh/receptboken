@@ -14,6 +14,10 @@ import { api, getName } from "@/lib/api";
 import { accentVar, dateSv, mins } from "@/lib/format";
 import { shoppingItems } from "@/lib/shopping";
 
+// Tillbehör, bröd och såser får inga egna dryckesförslag. Förrätter och desserter får.
+const isSide = (r) => /tillbehör|bröd|sås|garnityr|dressing/i.test(r.type || "") ||
+  ((r.dishes || []).length > 0 && (r.dishes || []).every((d) => ["brod", "tillbehor"].includes(d)) && !/huvud|förrätt|dessert/i.test(r.type || ""));
+
 export default function RecipePage({ params }) {
   const id = params.id;
   const { recipes } = useRecipes();
@@ -21,6 +25,7 @@ export default function RecipePage({ params }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [serv, setServ] = useState(null);
+  const [showDrinks, setShowDrinks] = useState(false);
   const [note, setNote] = useState("");
   const [wake, setWake] = useState(null);
   const wantWake = useRef(false);
@@ -103,7 +108,14 @@ export default function RecipePage({ params }) {
 
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
 
-      <Drinks id={id} title={r.title} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
+      {isSide(r) && !showDrinks ? (
+        <section className="rsec"><h2>Att dricka till</h2>
+          <p className="muted" style={{ margin: 0 }}>Ett tillbehör får inga egna dryckesförslag, drycken väljs efter huvudrätten{pairs.length ? <>: {pairs.map((p, i) => <span key={p.id}>{i > 0 && ", "}<Link href={`/recept/${p.id}`}>{p.title}</Link></span>)}.</> : "."}{" "}
+            <button className="link" type="button" onClick={() => setShowDrinks(true)}>Visa förslag ändå</button></p>
+        </section>
+      ) : (
+        <Drinks id={id} title={r.title} drinks={r.drinks} onChange={(dr) => setData((x) => ({ ...x, recipe: { ...x.recipe, drinks: dr } }))} />
+      )}
       <Nutrition id={id} nutrition={r.nutrition} lightKcal={settings.lightKcal} onChange={(nu) => setData((x) => ({ ...x, recipe: { ...x.recipe, nutrition: nu } }))} />
 
       {pairs.length > 0 && (
