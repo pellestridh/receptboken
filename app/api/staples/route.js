@@ -41,7 +41,7 @@ export async function POST(req) {
         const name = raw.slice(0, 80);
         if (existing.has(name.toLowerCase())) continue;
         const [{ max }] = await sql(`select coalesce(max(position), -1) as max from staples where hh = $1`, [H]);
-        await sql(`insert into staples (id, name, position, hh, selected, aisle) values ($1, $2, $3, $4, false, $5)`, [rid(), name, Number(max) + 1, H, aisleFor(name)]);
+        await sql(`insert into staples (id, name, position, hh, selected, aisle) values ($1, $2, $3, $4, false, null)`, [rid(), name, Number(max) + 1, H]);
         existing.add(name.toLowerCase());
       }
     }
