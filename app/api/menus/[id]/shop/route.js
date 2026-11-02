@@ -2,6 +2,7 @@ import { hh, ownMenu, ownRecipe } from "@/lib/household";
 import { db } from "@/lib/db";
 import { shoppingItems } from "@/lib/shopping";
 import { addShopping } from "@/lib/shoppingDb";
+import { aisleFor } from "@/lib/aisles";
 import { ok, fail, body } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
@@ -18,8 +19,8 @@ export async function POST(req, { params }) {
     const byId = Object.fromEntries(bodies.map((b) => [b.id, b.body]));
     const all = items.flatMap((i) => (byId[i.recipe_id] ? shoppingItems(byId[i.recipe_id], i.servings) : []));
     if (staples.length) {
-      const rows = await sql(`select name from staples where id = any($1) and hh = $2`, [staples, hh()]);
-      all.push(...rows.map((s) => ({ name: s.name, unit: "", q: null, amt: "", aisle: "Baslistan", from: "Baslistan" })));
+      const rows = await sql(`select name, aisle from staples where id = any($1) and hh = $2`, [staples, hh()]);
+      all.push(...rows.map((s) => ({ name: s.name, unit: "", q: null, amt: "", aisle: s.aisle || aisleFor(s.name), from: "Baslistan" })));
     }
     const list = await addShopping(all);
     return ok({ items: list, added: all.length });

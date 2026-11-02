@@ -791,3 +791,27 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 @media (prefers-color-scheme: dark) { .of-tags i.mem, .offtag { color: #FF8A8A !important; } }
 .navmore > .tab[aria-current="page"] { background: var(--accent); border-color: var(--accent); }
 .addrow .btn { white-space: nowrap; }
+
+/* baslistan */
+.shoptabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin: .2rem 0 1.1rem; }
+.staples { display: grid; gap: .8rem; padding-bottom: 5rem; }
+.staples .hint { margin: 0; }
+.staples .addrow { margin: 0; }
+.freq { gap: .35rem; } .freq .muted { font-size: .88rem; margin-right: .2rem; }
+.stbar { display: flex; justify-content: space-between; align-items: center; gap: .8rem; }
+.stlist { list-style: none; margin: 0; padding: 0; display: grid; }
+.strow { border-top: 1px solid var(--line); }
+.strow:first-child { border-top: 0; }
+.strow > button { width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: center; padding: .7rem .2rem; border: 0; background: none; text-align: left; font-size: 1.05rem; }
+.strow .ck { width: 1.6rem; height: 1.6rem; border-radius: 7px; border: 2px solid var(--line); display: grid; place-items: center; font-weight: 700; color: var(--paper); font-size: .95rem; }
+.strow.on .ck { background: var(--accent); border-color: var(--accent); }
+.strow.on .nm { font-weight: 700; }
+.strow.there > button { opacity: .55; cursor: default; }
+.strow .tag { font-size: .75rem; font-weight: 700; background: var(--accent-soft); color: var(--accent); border-radius: 99px; padding: .1rem .55rem; }
+.strow .gr { font-size: .8rem; }
+.strow.edit { display: grid; grid-template-columns: 1fr minmax(0, 10rem) auto; gap: .4rem; align-items: center; padding: .45rem 0; }
+.strow.edit .tin { padding: .45rem .6rem; }
+.strow .del { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); color: var(--c-ember); font-weight: 700; }
+@media (max-width: 480px) { .strow.edit { grid-template-columns: 1fr auto; } .strow.edit select { grid-column: 1; grid-row: 2; } .strow.edit .del { grid-row: 1 / span 2; grid-column: 2; } }
+.staples .sgroup h2 { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; font-family: var(--body); font-weight: 700; color: var(--muted); margin-bottom: .2rem; }
+.stickyact { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; display: flex; justify-content: center; align-items: center; gap: 1rem; padding: .8rem 16px calc(.8rem + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--line); }

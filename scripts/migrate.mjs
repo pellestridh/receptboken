@@ -166,6 +166,7 @@ statements.push(
     (t) => `alter table ${t} add column if not exists hh text not null default 'hem'`
   ),
   `create index if not exists recipes_hh on recipes (hh)`,
+  `alter table staples add column if not exists aisle text`,
   `alter table menus add column if not exists kcal_min int`,
   `alter table menus add column if not exists kcal_max int`
 );

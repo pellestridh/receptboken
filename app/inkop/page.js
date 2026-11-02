@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { amtText } from "@/lib/format";
 import { AISLE_ORDER } from "@/lib/aisles";
 import { useApp } from "@/components/Providers";
+import Staples from "@/components/Staples";
 import Link from "next/link";
 import { flatOffers, matchOffer } from "@/lib/offerMatch";
 
@@ -12,27 +13,11 @@ export default function Shopping() {
   const [items, setItems] = useState(null);
   const [custom, setCustom] = useState("");
   const [armed, setArmed] = useState(false);
-  const [staples, setStaples] = useState([]);
-  const [sel, setSel] = useState({});
-  const [newStaple, setNewStaple] = useState("");
-  const [editStaples, setEditStaples] = useState(false);
+  const [tab, setTab] = useState("lista");
   const [offers, setOffers] = useState([]);
   useEffect(() => { api("/api/offers").then((d) => setOffers(flatOffers(d.stores))).catch(() => {}); }, []);
 
   const load = useCallback(() => api("/api/shopping").then((d) => setItems(d.items)).catch((e) => toast(e.message)), [toast]);
-  useEffect(() => {
-    api("/api/staples").then((d) => { setStaples(d.staples); setSel(Object.fromEntries(d.staples.map((x) => [x.id, x.selected]))); }).catch(() => {});
-  }, []);
-  async function staplesAct(json) {
-    const d = await api("/api/staples", { method: "POST", json }).catch((er) => { toast(er.message); return null; });
-    if (d) { setStaples(d.staples); setSel((cur) => ({ ...Object.fromEntries(d.staples.map((x) => [x.id, cur[x.id] ?? true])) })); }
-    return d;
-  }
-  async function staplesToList() {
-    const ids = Object.entries(sel).filter(([, v]) => v).map(([k]) => k);
-    if (!ids.length) return;
-    if (await staplesAct({ toShopping: ids })) { toast(`${ids.length} varor från baslistan ligger i listan`); load(); }
-  }
   useEffect(() => {
     load();
     const t = setInterval(() => document.visibilityState === "visible" && load(), 15000);
@@ -68,6 +53,11 @@ export default function Shopping() {
       <div className="hero"><h1>Inköpslista</h1>
         <p className="muted" style={{ margin: 0 }}>{items ? `${open} varor kvar att handla. Listan är gemensam och sorterad efter butikens avdelningar.` : "Hämtar listan …"}</p>
       </div>
+      <div className="boxseg shoptabs" role="tablist">
+        <button type="button" role="tab" aria-selected={tab === "lista"} onClick={() => setTab("lista")}>Inköpslistan{items ? ` (${open})` : ""}</button>
+        <button type="button" role="tab" aria-selected={tab === "bas"} onClick={() => setTab("bas")}>Baslistan</button>
+      </div>
+      {tab === "bas" ? <Staples shopping={list} onAdded={load} /> : <>
       <form className="addrow" onSubmit={add}>
         <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Lägg till en egen vara" autoComplete="off" />
         <button className="btn" type="submit">Lägg till</button>
@@ -100,24 +90,7 @@ export default function Shopping() {
             : <button className="link" type="button" onClick={() => { setArmed(true); setTimeout(() => setArmed(false), 4000); }}>Töm hela listan</button>}
         </div>
       )}
-      <section className="panel">
-        <h2 style={{ fontSize: "1.4rem" }}>Baslistan</h2>
-        <p className="hint">Det ni brukar handla oavsett meny. Markera det som behövs och lägg till det i listan.{" "}
-          {staples.length > 0 && <button className="link" type="button" onClick={() => setEditStaples(!editStaples)}>{editStaples ? "Klar" : "Ändra baslistan"}</button>}</p>
-        <div className="frow">
-          {staples.map((x) => (
-            editStaples
-              ? <button key={x.id} type="button" className="chip" aria-label={`Ta bort ${x.name}`} onClick={() => staplesAct({ remove: x.id })}>{x.name} ✕</button>
-              : <button key={x.id} type="button" className="chip" aria-pressed={!!sel[x.id]} onClick={() => setSel({ ...sel, [x.id]: !sel[x.id] })}>{x.name}</button>
-          ))}
-          {!staples.length && <span className="muted">Baslistan är tom än.</span>}
-        </div>
-        <form className="addrow" style={{ margin: 0 }} onSubmit={(e) => { e.preventDefault(); if (newStaple.trim()) staplesAct({ add: newStaple }).then(() => setNewStaple("")); }}>
-          <input className="tin" value={newStaple} onChange={(e) => setNewStaple(e.target.value)} placeholder="Till exempel mjölk, kaffe, bröd" />
-          <button className="btn ghost" type="submit">Lägg till</button>
-        </form>
-        {staples.length > 0 && <div><button className="btn" type="button" onClick={staplesToList}>Lägg valda i inköpslistan</button></div>}
-      </section>
+      </>}
     </div>
   );
 }
