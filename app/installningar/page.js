@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSettings } from "@/components/useSettings";
 import Households from "@/components/Households";
+import Stores from "@/components/Stores";
 import { useApp } from "@/components/Providers";
 import { getName, setName } from "@/lib/api";
 
@@ -53,6 +54,7 @@ export default function Settings() {
         <p className="hint">Visas på anteckningar och dryckesomdömen du gör härifrån.</p>
         <div><button className="btn" type="button" onClick={() => { setName(name.trim()); toast("Sparat"); }}>Spara</button></div>
       </div>
+      <Stores />
       <Households />
       <div className="panel">
         <p className="hint" style={{ margin: 0 }}><Link href="/genvag">Dela recept från Safari</Link></p>

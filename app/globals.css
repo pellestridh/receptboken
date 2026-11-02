@@ -773,3 +773,21 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .adminlock { display: grid; gap: .4rem; background: var(--bg); border-radius: 12px; padding: .8rem .9rem; } .adminlock .hint { margin: 0; }
 
 @media (max-width: 390px) { .tab { padding: .38rem .5rem; font-size: .86rem; } .tabs { gap: .2rem; } .navrow { gap: .4rem; } .hbtn { width: 2.1rem; height: 2.1rem; } }
+
+/* erbjudanden */
+.storehead { display: grid; gap: .4rem; }
+.sh { display: flex; flex-wrap: wrap; gap: .2rem .8rem; align-items: baseline; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: .6rem .9rem; }
+.sh .muted { font-size: .88rem; flex: 1; }
+.offlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: .5rem; }
+.offlist > div > .muted { display: block; font-size: .8rem; margin: 0 0 .15rem .2rem; }
+.offer { display: grid; grid-template-columns: 5.6rem 1fr; gap: .7rem; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: .55rem .7rem; }
+.of-p { background: #E30613; color: #fff; font-weight: 700; border-radius: 8px; padding: .35rem .4rem; text-align: center; font-size: .9rem; line-height: 1.15; }
+.of-t { display: grid; gap: .1rem; min-width: 0; } .of-t b { line-height: 1.2; } .of-t .muted { font-size: .8rem; }
+.of-tags { display: flex; flex-wrap: wrap; gap: .25rem; }
+.of-tags i { font-style: normal; font-size: .72rem; font-weight: 700; background: var(--bg); border-radius: 99px; padding: .05rem .5rem; color: var(--muted); }
+.of-tags i.mem { background: color-mix(in srgb, #E30613 12%, var(--paper)); color: #B5050F; }
+.offtag { display: inline-block !important; margin-top: .15rem; background: color-mix(in srgb, #E30613 12%, var(--paper)); color: #B5050F !important; border-radius: 99px; padding: 0 .5rem; font-weight: 700; }
+.offbanner { background: color-mix(in srgb, #E30613 9%, var(--paper)); border-radius: 12px; padding: .65rem .9rem; margin: 0 0 1rem; }
+@media (prefers-color-scheme: dark) { .of-tags i.mem, .offtag { color: #FF8A8A !important; } }
+.navmore > .tab[aria-current="page"] { background: var(--accent); border-color: var(--accent); }
+.addrow .btn { white-space: nowrap; }

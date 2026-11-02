@@ -148,6 +148,14 @@ statements.push(
 );
 
 statements.push(
+  `create table if not exists store_offers (
+    store text primary key,
+    name text,
+    url text,
+    offers jsonb,
+    error text,
+    fetched_at timestamptz
+  )`,
   `create table if not exists households (
     id text primary key,
     name text not null,

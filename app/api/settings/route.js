@@ -21,6 +21,12 @@ export async function POST(req) {
         .slice(0, 30);
       await writeSetting("allergies", list);
     }
+    if (Array.isArray(b.stores)) {
+      const list = b.stores.map((x) => ({ name: String(x.name || "").trim().slice(0, 60), url: String(x.url || "").trim().slice(0, 300) }))
+        .filter((x) => x.name && /^https:\/\/(www\.)?(ica|willys|coop|hemkop|lidl)\.se\//.test(x.url)).slice(0, 6)
+        .map((x) => ({ ...x, key: x.url.replace(/^https:\/\/(www\.)?/, "").replace(/[^a-z0-9]+/gi, "-").replace(/-+$/, "").slice(0, 60) }));
+      await writeSetting("stores", list);
+    }
     if (typeof b.shareInspiration === "boolean") await writeSetting("shareInspiration", b.shareInspiration);
     if (b.wineProgress && typeof b.wineProgress === "object") {
       const cur = (await readSettings()).wineProgress || {};

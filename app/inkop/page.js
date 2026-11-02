@@ -4,6 +4,8 @@ import { api } from "@/lib/api";
 import { amtText } from "@/lib/format";
 import { AISLE_ORDER } from "@/lib/aisles";
 import { useApp } from "@/components/Providers";
+import Link from "next/link";
+import { flatOffers, matchOffer } from "@/lib/offerMatch";
 
 export default function Shopping() {
   const { toast } = useApp();
@@ -14,6 +16,8 @@ export default function Shopping() {
   const [sel, setSel] = useState({});
   const [newStaple, setNewStaple] = useState("");
   const [editStaples, setEditStaples] = useState(false);
+  const [offers, setOffers] = useState([]);
+  useEffect(() => { api("/api/offers").then((d) => setOffers(flatOffers(d.stores))).catch(() => {}); }, []);
 
   const load = useCallback(() => api("/api/shopping").then((d) => setItems(d.items)).catch((e) => toast(e.message)), [toast]);
   useEffect(() => {
@@ -68,6 +72,9 @@ export default function Shopping() {
         <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Lägg till en egen vara" autoComplete="off" />
         <button className="btn" type="submit">Lägg till</button>
       </form>
+      {offers.length > 0 && list.some((i) => !i.done && matchOffer(i.name, offers)) && (
+        <p className="offbanner"><b>{list.filter((i) => !i.done && matchOffer(i.name, offers)).length} varor</b> på listan är på erbjudande. <Link href="/erbjudanden">Se veckans erbjudanden ›</Link></p>
+      )}
       {items && !list.length && <div className="empty">Listan är tom. Öppna ett recept och tryck på Lägg i inköpslistan.</div>}
       {groups.map(([name, xs]) => (
         <div className="sgroup" key={name}>
@@ -78,7 +85,7 @@ export default function Shopping() {
                 <label>
                   <input type="checkbox" checked={it.done} onChange={(e) => check(it, e.target.checked)} />
                   <span className="amt">{amtText(it)}</span>
-                  <span>{it.name}{it.from?.length > 0 && <small>{it.from.join(", ")}</small>}</span>
+                  <span>{it.name}{it.from?.length > 0 && <small>{it.from.join(", ")}</small>}{!it.done && (() => { const o = matchOffer(it.name, offers); return o ? <small className="offtag">{o.price} på {o.store}{o.member ? ` (${o.member})` : ""}</small> : null; })()}</span>
                 </label>
               </li>
             ))}
