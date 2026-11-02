@@ -59,11 +59,11 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
       <div className="meta-edit">
         <label className="fld wide"><span>Rubrik</span><input className="tin" value={m.title} onChange={set("title")} /></label>
         <label className="fld"><span>Kök</span><input className="tin" list="l-kitchen" value={m.kitchen} onChange={set("kitchen")} />{list("l-kitchen", "kitchen")}</label>
-        <label className="fld"><span>Typ</span><input className="tin" list="l-type" value={m.type} onChange={set("type")} />{list("l-type", "type")}</label>
+        <label className="fld"><span>Del av måltiden</span><input className="tin" list="l-type" value={m.type} onChange={set("type")} />{list("l-type", "type")}</label>
         <label className="fld"><span>Bas</span><input className="tin" list="l-base" value={m.base} onChange={set("base")} />{list("l-base", "base")}</label>
         <label className="fld"><span>Minuter totalt</span><input className="tin" type="number" min="1" inputMode="numeric" value={m.minutes} onChange={set("minutes")} /></label>
         <label className="fld"><span>Antal {recipe.servingsUnit || "portioner"}</span><input className="tin" type="number" min="1" inputMode="numeric" value={m.servings} onChange={set("servings")} /></label>
-        <div className="fld wide"><span>Typ av rätt, en eller två</span>
+        <div className="fld wide"><span>Typ av rätt, en eller två (styr korten i Receptlådan)</span>
           <div className="frow">{DISHES.map((x) => <button key={x.key} type="button" className="chip" aria-pressed={dishes.includes(x.key)} onClick={() => toggleDish(x.key)}>{x.name}</button>)}</div>
         </div>
         <label className="fld wide"><span>Källa</span><input className="tin" value={m.source} onChange={set("source")} placeholder="Till exempel Köket.se eller en kokbok" /></label>
