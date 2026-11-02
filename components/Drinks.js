@@ -37,7 +37,7 @@ function Basis({ d, kind, onAction }) {
     <details className="basis">
       <summary>Vad bygger förslaget på?</summary>
       {d.basis?.length > 0 && <p><span className="muted">Rättens </span>{d.basis.map((b) => <span key={b} className="bchip">{b}</span>)}</p>}
-      {r && <p><b>{r[0]}.</b> {r[1]} {kind === "wine" ? <Link href="/dryck/vin/mat">Vin och mat ›</Link> : kind === "beer" ? <Link href="/dryck?vy=mat">Öl och mat ›</Link> : null}</p>}
+      {r && <p><b>{r[0]}.</b> {r[1]} {kind === "wine" ? <Link href="/dryck/lar/vin/mat">Vin och mat ›</Link> : kind === "beer" ? <Link href="/dryck/lar/ol/mat">Öl och mat ›</Link> : null}</p>}
       <p className="muted">Claude väger också in era tidigare omdömen, era egna val och betygen i provningsloggen.</p>
     </details>
   );
@@ -108,7 +108,7 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
               const want = red ? "vitt" : "rött";
               return <button type="button" className="chip" onClick={() => onAction({ action: "feedback", kind, verdict: "down", reason: `Vi vill hellre ha ${want} vin till den här rätten.` })}>Hellre {want}</button>;
             })()}
-            {kind === "wine" && <button type="button" className="chip taste-btn" onClick={() => onTaste(d)}>Vi provade ett vin</button>}
+            {kind !== "nonAlcoholic" && <button type="button" className="chip taste-btn" onClick={() => onTaste(kind, d)}>{kind === "beer" ? "Vi provade en öl" : "Vi provade ett vin"}</button>}
           </div>
         )}
     </div>
@@ -127,7 +127,7 @@ export default function Drinks({ id, drinks: initial, onChange, title }) {
   const delNote = (nid) => api(`/api/wine-notes/${nid}`, { method: "DELETE" }).then(() => setNotes((n) => n.filter((x) => x.id !== nid))).catch((e) => toast(e.message));
   const tastings = (
     <>
-      {tasting && <div className="panel"><WineLog initial={tasting} recipeId={id} recipeTitle={title} onSaved={(n) => setNotes(n)} onCancel={() => setTasting(null)} /></div>}
+      {tasting && <div className="panel"><WineLog kind={tasting.kind} initial={tasting} recipeId={id} recipeTitle={title} onSaved={(n) => setNotes(n)} onCancel={() => setTasting(null)} /></div>}
       {notes.length > 0 && (
         <div className="tastings"><h3>Era provningar</h3><div className="wnotes">{notes.map((n) => <WineNote key={n.id} n={n} showRecipe={false} onDelete={delNote} />)}</div></div>
       )}
@@ -172,7 +172,7 @@ export default function Drinks({ id, drinks: initial, onChange, title }) {
   return (
     <section className="rsec"><h2>Att dricka till</h2>
       <div className="drinks">
-        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} own={drinks.own?.[k] || []} busy={busy === k} onAction={act} onTaste={(x) => setTasting({ wine: "", style: x?.style || "", color: x?.color || "" , suggested: x })} />)}
+        {order.map((k) => <DrinkCard key={k} kind={k} d={drinks[k]} own={drinks.own?.[k] || []} busy={busy === k} onAction={act} onTaste={(kd, x) => setTasting({ kind: kd, wine: "", style: x?.style || "", color: x?.color || "", suggested: x })} />)}
       </div>
       {tastings}
       <p className="hint">Namnen länkar till Systembolagets sökning. Era egna val och omdömen används när Claude föreslår drycker till nya recept.</p>

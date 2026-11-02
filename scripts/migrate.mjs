@@ -167,6 +167,7 @@ statements.push(
   ),
   `create index if not exists recipes_hh on recipes (hh)`,
   `alter table staples add column if not exists aisle text`,
+  `alter table wine_notes add column if not exists kind text not null default 'wine'`,
   `alter table menus add column if not exists kcal_min int`,
   `alter table menus add column if not exists kcal_max int`
 );

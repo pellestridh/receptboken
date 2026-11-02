@@ -28,10 +28,10 @@ export async function POST(req) {
       await writeSetting("stores", list);
     }
     if (typeof b.shareInspiration === "boolean") await writeSetting("shareInspiration", b.shareInspiration);
-    if (b.wineProgress && typeof b.wineProgress === "object") {
-      const cur = (await readSettings()).wineProgress || {};
-      const [k, v] = Object.entries(b.wineProgress)[0] || [];
-      if (k) await writeSetting("wineProgress", { ...cur, [String(k).slice(0, 30)]: { done: !!v?.done, quiz: Number(v?.quiz) || 0, at: new Date().toISOString() } });
+    for (const pk of ["wineProgress", "beerProgress"]) if (b[pk] && typeof b[pk] === "object") {
+      const cur = (await readSettings())[pk] || {};
+      const [k, v] = Object.entries(b[pk])[0] || [];
+      if (k) await writeSetting(pk, { ...cur, [String(k).slice(0, 30)]: { done: !!v?.done, quiz: Number(v?.quiz) || 0, at: new Date().toISOString() } });
     }
     return ok({ settings: await publicSettings() });
   } catch (e) {

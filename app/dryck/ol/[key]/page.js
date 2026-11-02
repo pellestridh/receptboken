@@ -8,6 +8,8 @@ import BeerMap from "@/components/BeerMap";
 import { Glass, Stats } from "@/components/BeerBits";
 import { styleByKey, familyName, STYLES } from "@/data/beer";
 import { cardsFor } from "@/data/beerCards";
+import { beerProfile } from "@/data/beerSchool";
+import { ProfileBars, WineNote, itemFor } from "@/components/Wine";
 
 const range = (t) => { const m = String(t || "").replace(/,/g, ".").match(/([\d.]+)\s*(?:-\s*([\d.]+))?/); return m ? [Number(m[1]), Number(m[2] || (t.includes("+") ? 80 : m[1]))] : null; };
 
@@ -30,8 +32,10 @@ export default function StylePage() {
   const s = styleByKey(key);
   const [usage, setUsage] = useState({});
   const [ci, setCi] = useState(0);
+  const [notes, setNotes] = useState([]);
+  useEffect(() => { api("/api/wine-notes?typ=beer").then((d) => setNotes(d.notes)).catch(() => {}); }, []);
   useEffect(() => { api("/api/beer-usage").then((d) => setUsage(d.usage || {})).catch(() => {}); }, []);
-  if (!s) return <div className="narrow"><div className="empty">Den ölstilen finns inte. <Link href="/dryck?vy=stilar">Alla stilar</Link></div></div>;
+  if (!s) return <div className="narrow"><div className="empty">Den ölstilen finns inte. <Link href="/dryck?typ=ol&vy=kort">Alla stilar</Link></div></div>;
   const recs = usage[s.key] || [];
   const cards = cardsFor(s.key);
   const c0 = cards[0];
@@ -43,12 +47,13 @@ export default function StylePage() {
       <header className="bhead">
         <Glass s={s} size={72} />
         <div>
-          <span className="kicker"><Link href="/dryck?vy=stilar">{familyName(s.family)}</Link> · {KIND[s.kind]}</span>
+          <span className="kicker"><Link href="/dryck?typ=ol&vy=kort">{familyName(s.family)}</Link> · {KIND[s.kind]}</span>
           <h1>{s.name}</h1>
           <p className="muted" style={{ margin: 0 }}>Servering {s.temp}</p>
         </div>
       </header>
       <Stats s={st} />
+      <div className="stats" style={{ marginTop: ".6rem" }}><ProfileBars p={beerProfile(s)} kind="beer" /></div>
 
       <section className="bsec">
         <h2>Om stilen</h2>
@@ -106,6 +111,12 @@ export default function StylePage() {
           <BeerMap usage={usage} focus={s.key} compact />
         </section>
       )}
+
+      <section className="bsec"><h2>Era provningar</h2>
+        {(() => { const mine = notes.filter((n) => itemFor("beer", `${n.style || ""} ${n.wine}`, n.grape)?.key === s.key); return mine.length
+          ? <div className="wnotes">{mine.map((n) => <WineNote key={n.id} n={n} />)}</div>
+          : <p className="muted">Ni har inte loggat någon {s.name.toLowerCase()} än. <Link href="/dryck?typ=ol&vy=provat">Logga en öl ›</Link></p>; })()}
+      </section>
 
       {same.length > 0 && (
         <section className="bsec">
