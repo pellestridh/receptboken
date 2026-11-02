@@ -19,11 +19,22 @@ function b64(file) {
     r.readAsDataURL(file);
   });
 }
+const isImage = (f) => /^image\//.test(f.type) || /\.(heic|heif|jpe?g|png|webp)$/.test((f.name || "").toLowerCase());
+
+// Förminskar så att varje bild håller sig under ungefär 1,5 MB som base64.
+async function shrinkFit(f) {
+  for (const [max, q] of [[1800, 0.82], [1500, 0.75], [1300, 0.7], [1100, 0.65]]) {
+    const d = await shrink(f, max, q);
+    if (d.length < 1_500_000) return d;
+  }
+  return shrink(f, 1000, 0.6);
+}
+
 async function prepare(files) {
   const out = [];
   for (const f of files) {
     const n = (f.name || "").toLowerCase();
-    if (/^image\//.test(f.type) || /\.(heic|heif|jpe?g|png|webp)$/.test(n)) out.push({ mediaType: "image/jpeg", data: await shrink(f) });
+    if (isImage(f)) out.push({ mediaType: "image/jpeg", data: await shrinkFit(f) });
     else if (f.type === "application/pdf" || n.endsWith(".pdf")) {
       if (f.size > MAX_BYTES) throw new Error("PDF:en är för stor. Den får vara högst 4 MB.");
       out.push({ mediaType: "application/pdf", data: await b64(f) });
@@ -91,7 +102,24 @@ function Importer() {
       if (!url.trim() && !text.trim()) { setError("Klistra in en länk eller receptets text."); return; }
       run({ url: url.trim() || null, text: text.trim() || null });
     } else {
-      try { setStatus("Förbereder …"); const prepared = await prepare(files.map((f) => f.file)); run({ files: prepared }); }
+      const fs = files.map((f) => f.file);
+      // Flera foton: läs av en sida i taget och sätt sedan ihop receptet av texten.
+      if (fs.length > 1 && fs.every(isImage)) {
+        setBusy(true); setError("");
+        try {
+          const parts = [];
+          for (let i = 0; i < fs.length; i++) {
+            setStatus(`Läser sida ${i + 1} av ${fs.length} …`);
+            const data = await shrinkFit(fs[i]);
+            const d = await api("/api/import/page", { method: "POST", json: { data, n: i + 1, of: fs.length } });
+            parts.push(d.text);
+          }
+          setBusy(false);
+          run({ text: parts.map((t, i) => `--- Sida ${i + 1} ---\n${t}`).join("\n\n") });
+        } catch (e) { setBusy(false); setStatus(""); setError(e.message); }
+        return;
+      }
+      try { setStatus("Förbereder …"); const prepared = await prepare(fs); run({ files: prepared }); }
       catch (e) { setStatus(""); setError(e.message); }
     }
   }
