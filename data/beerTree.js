@@ -3,9 +3,9 @@
 import { STYLES, FAMILIES } from "@/data/beer";
 
 const ROOTS = [
-  { n: "Underjäst, lager", tone: "under", fams: ["ljuslager", "morklager"] },
-  { n: "Överjäst, ale", tone: "over", fams: ["veteol", "paleale", "brownale", "stout", "belgisk"] },
-  { n: "Syrlig och spontanjäst", tone: "spontan", fams: ["syrlig"] },
+  { n: "Underjäst, lager", tone: "under", fams: ["lager"] },
+  { n: "Överjäst, ale", tone: "over", fams: ["paleale", "ipa", "veteol", "belgisk", "starka"] },
+  { n: "Syrlig öl och suröl", tone: "spontan", fams: ["syrlig"] },
 ];
 
 export const TREE = ROOTS.map((r) => ({

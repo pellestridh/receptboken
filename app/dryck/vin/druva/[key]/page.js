@@ -8,7 +8,6 @@ import { grapeByKey, GRAPES } from "@/data/wine";
 import { grapeExtra, WINE_TREE } from "@/data/wineExtra";
 import { ProfileBars, WineNote, swatch, itemFor, profileOf } from "@/components/Wine";
 import Clocks from "@/components/Clocks";
-import WineMap from "@/components/WineMap";
 
 const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
 const CN = { vitt: "Vitt", rott: "Rött", "rosé": "Rosé", mousserande: "Mousserande", "sött": "Sött och starkt" };
@@ -30,7 +29,7 @@ export default function Grape() {
     api("/api/wine-notes?typ=wine").then((d) => setNotes(d.notes)).catch(() => {});
     api("/api/beer-usage").then((d) => setUsage(d.wine || {})).catch(() => {});
   }, []);
-  if (!g) return <div className="narrow"><div className="empty">Druvan finns inte. <Link href="/dryck?typ=vin&vy=kort">Alla druvor</Link></div></div>;
+  if (!g) return <div className="narrow"><div className="empty">Druvan finns inte. <Link href="/dryck?typ=vin&vy=stilar">Alla druvor</Link></div></div>;
   const x = grapeExtra(g.key);
   const mine = notes.filter((n) => itemFor("wine", `${n.style || ""} ${n.wine}`, n.grape)?.key === g.key);
   const prof = profileOf("wine", notes, GRAPES.map((y) => ({ key: y.key, name: y.name, p: y.p })));
@@ -41,30 +40,21 @@ export default function Grape() {
     <article className="narrow bstyle">
       <header className="bhead">
         <span className="wglass" style={{ "--sw": swatch(g.color) }} />
-        <div><span className="kicker"><Link href="/dryck?typ=vin&vy=kort">{CN[g.color]}{fam ? ` · ${fam.name.toLowerCase()}` : ""}</Link></span><h1>{g.name}</h1><p className="muted" style={{ margin: 0 }}>{g.where}</p></div>
+        <div><span className="kicker"><Link href="/dryck?typ=vin&vy=stilar">{CN[g.color]}{fam ? ` · ${fam.name.toLowerCase()}` : ""}</Link></span><h1>{g.name}</h1><p className="muted" style={{ margin: 0 }}>{g.where}</p></div>
       </header>
-      <div className="stats"><Clocks kind="wine" g={g} />{prof.liked > 0 && <details className="ownprof"><summary>Jämför med er smakprofil</summary><ProfileBars p={g.p} compare={prof.avg} /><p className="hint">Strecket visar er smakprofil.</p></details>}</div>
+      <div className="stats"><Clocks kind="wine" g={g} noColor />{prof.liked > 0 && <details className="ownprof"><summary>Jämför med er smakprofil</summary><ProfileBars p={g.p} compare={prof.avg} /><p className="hint">Strecket visar er smakprofil.</p></details>}</div>
 
-      <section className="bsec"><h2>Om druvan</h2><p>{g.about}</p></section>
-      <section className="bsec"><h2>Doft och smak</h2><p>{g.smell}</p></section>
+      <section className="bsec"><h2>Om druvan</h2><p className="lead">{g.about}</p><p><b>Doft och smak:</b> {g.smell}</p></section>
       <section className="bsec food">
         <h2>Passar till</h2>
         <div className="becau"><p>{g.food}</p></div>
-        <div className="duo">
-          {x.cheese && <div className="card2"><h3>Ost</h3><p>{x.cheese}</p></div>}
-          {x.dessert && <div className="card2"><h3>Dessert</h3><p>{x.dessert}</p></div>}
-        </div>
       </section>
 
-      {recs.length > 0 && (
+      {(recs.length > 0 || mine.length > 0) && (
         <section className="bsec">
-          <h2>I era recept</h2>
-          <div className="rail small">{recs.map((r) => (
-            <Link key={r.id} href={`/recept/${r.id}`} className="wday" style={{ "--rc": accentVar(r.accent) }}>
-              <div className="wimg">{r.image ? <img src={r.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <span className="mono">{r.title?.[0]}</span>}</div>
-              <div className="wtxt"><span>{r.how === "ert val" ? "Ert val" : r.how === "alternativ" ? "Alternativ" : "Föreslagen"}</span><b>{r.title}</b></div>
-            </Link>
-          ))}</div>
+          <h2>Hos er</h2>
+          {recs.length > 0 && <ul className="plainlist">{recs.map((r) => <li key={r.id}><Link href={`/recept/${r.id}`}>{r.title}</Link> <span className="muted">{r.how === "ert val" ? "ert val" : r.how === "alternativ" ? "alternativ" : "föreslagen"}</span></li>)}</ul>}
+          {mine.length > 0 && <div className="wnotes">{mine.map((n) => <WineNote key={n.id} n={n} />)}</div>}
         </section>
       )}
 
@@ -73,20 +63,10 @@ export default function Grape() {
         <p className="hint">Länkarna söker på Systembolaget.</p>
       </section>
 
-      <section className="bsec"><h2>På kartan</h2><WineMap usage={usage} focus={g.key} compact /></section>
-
       <section className="bsec"><h2>Gillar ni {g.name.split(" ")[0]}, prova</h2>
         <div className="frow">{g.next.map((k) => { const y = grapeByKey(k); return <Link key={k} className="chip blink wine" href={`/dryck/vin/druva/${k}`}><i className="sw" style={{ "--sw": swatch(y.color) }} />{y.name}</Link>; })}</div>
       </section>
-      {fam?.keys.length > 0 && (
-        <section className="bsec"><h2>Samma familj</h2>
-          <div className="frow">{fam.keys.map((k) => { const y = grapeByKey(k); return <Link key={k} className="chip blink wine" href={`/dryck/vin/druva/${k}`}><i className="sw" style={{ "--sw": swatch(y.color) }} />{y.name}</Link>; })}</div>
-        </section>
-      )}
-
-      <section className="bsec"><h2>Era provningar</h2>
-        {mine.length ? <div className="wnotes">{mine.map((n) => <WineNote key={n.id} n={n} />)}</div> : <p className="muted">Ni har inte loggat någon {g.name} än. <Link href="/dryck?typ=vin&vy=provat">Logga ett vin ›</Link></p>}
-      </section>
+      <p className="arow"><Link className="btn ghost" href="/dryck?typ=vin&vy=provat">Logga ett vin</Link></p>
     </article>
   );
 }

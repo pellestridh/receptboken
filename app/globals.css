@@ -555,7 +555,7 @@ textarea.tin { resize: vertical; }
 .pt:not(.named) .lbl { display: none; }
 .pt:hover .lbl { display: inline; }
 .pt:focus { outline: none; }
-@media (max-width: 600px) { .pt .lbl { font-size: 34px; stroke-width: 8px; } .bmap-box { padding: 1.2rem 1.3rem; } }
+@media (max-width: 600px) { .pt .lbl { font-size: 29px; stroke-width: 7px; } .bmap-box { padding: 1.2rem 1.3rem; } }
 .bmap.compact .pt:not(.on) .lbl { display: none; }
 .bmap.compact .pt:not(.on) { opacity: .45; }
 .bmap-key { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .85rem; }
@@ -973,3 +973,15 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .clocks.small { max-width: 20rem; justify-content: flex-start; gap: .7rem; }
 .clocks.small .clock { flex: 0 0 auto; }
 .clocks.small .cglass.wine { width: 1.8rem; height: 2.2rem; }
+.slist { display: grid; gap: .1rem; }
+.sitem { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: start; padding: .7rem .2rem; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.sitem:hover b { text-decoration: underline; }
+.sitem > span:last-child { display: grid; gap: .15rem; }
+.sitem .muted { font-size: .92rem; line-height: 1.4; }
+.sitem .wglass.sm { margin-top: .2rem; }
+.kindh { margin: 1.6rem 0 -.4rem; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+.kindh .muted { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.famintro { margin: .1rem 0 .4rem; }
+.plainlist { list-style: none; padding: 0; margin: 0 0 .8rem; display: grid; gap: .35rem; }
+.deeper summary { cursor: pointer; font-family: var(--display); font-size: 1.2rem; }
+.deeper[open] summary { margin-bottom: .8rem; }

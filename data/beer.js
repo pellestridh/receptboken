@@ -7,15 +7,15 @@
 // ebc/abv/ibu: ungefärliga intervall.
 
 export const FAMILIES = [
-  { key: "ljuslager", name: "Ljus lager" },
-  { key: "morklager", name: "Mörk och bärnstensfärgad lager" },
-  { key: "veteol", name: "Veteöl" },
-  { key: "paleale", name: "Pale ale och IPA" },
-  { key: "brownale", name: "Brittisk och irländsk ale" },
-  { key: "stout", name: "Porter och stout" },
-  { key: "belgisk", name: "Belgisk ale" },
-  { key: "syrlig", name: "Syrlig öl" },
+  { key: "lager", name: "Lager", kind: "Underjäst", intro: "Världens mest druckna öltyp. Jäses svalt vilket ger en ren, krispig smakprofil där råvarorna står i fokus." },
+  { key: "paleale", name: "Pale ale och bitter", kind: "Överjäst", intro: "Humle och malt i balans." },
+  { key: "ipa", name: "IPA", kind: "Överjäst", intro: "Humlen i fokus: beska och doft." },
+  { key: "veteol", name: "Veteöl", kind: "Överjäst", intro: "Tyska veteöl, där jästen ger banan och kryddnejlika." },
+  { key: "belgisk", name: "Belgiska och franska stilar", kind: "Överjäst", intro: "Jästen gör jobbet: frukt, kryddor och ofta mer alkohol." },
+  { key: "starka", name: "Starka ales, stout och porter", kind: "Överjäst", intro: "Kraftiga, mörka eller alkoholstarka öl med malt, rostning och torkad frukt." },
+  { key: "syrlig", name: "Syrlig öl och suröl", kind: "Syrlig", intro: "Öl som medvetet syrats, antingen genom modern snabbsyrning eller traditionell, långvarig vildjäsning." },
 ];
+export const ALE_INTRO = "Jäses vid högre temperaturer, vilket bildar estrar och ger en mer fruktig, kryddig och komplex doft och smak.";
 
 const ALL = [
   // Ljus lager
@@ -475,6 +475,49 @@ const ALL = [
     cheese: "Vit cheddar",
     why: "Karamellmalten möter grill och tomat, och citrushumlen lyfter kryddor.",
     examples: [] },
+  // Nya i Pelles lista med de 40 vanligaste (2026)
+  { key: "kellerbier", name: "Kellerbier och zwicklbier", family: "lager", kind: "lager", map: { x: 0.78, y: 0.66, est: true }, ebc: [6, 20], abv: [4.5, 5.5], ibu: [20, 35], temp: "7–9 °C",
+    alias: /kellerbier|zwickl|keller\b|ofiltrerad lager/,
+    about: "Lagern som den smakar direkt ur bryggeriets källare. Ofiltrerad och opastöriserad, med jäst kvar i ölet.",
+    food: ["Schnitzel och korv", "Kyckling och fläsk från grillen", "Pretzel och ost", "Smörrebröd"],
+    cheese: "Mellanlagrad hårdost",
+    why: "Mjuk kolsyra och brödig jäst gör den rundare än en filtrerad lager, men den är fortfarande frisk nog att skölja bort fett.",
+    examples: [], src: "pelle" },
+  { key: "blonde-ale", name: "Blonde ale", family: "paleale", kind: "ale", map: { x: 0.45, y: 0.60, est: true }, ebc: [6, 12], abv: [4, 5.5], ibu: [15, 28], temp: "6–8 °C",
+    alias: /blonde? ale|golden ale|sommarale/,
+    about: "En lätt och lättdrucken ale, ofta en inkörsport till hantverksöl. Mjuk malt, lite frukt och låg beska.",
+    food: ["Sallad och kyckling", "Fisk och skaldjur", "Pizza", "Lätt asiatiskt"],
+    cheese: "Mild hårdost, mozzarella",
+    why: "Låg beska och mild frukt tar inte över lätt mat, och kolsyran fräschar upp.",
+    examples: [], src: "pelle" },
+  { key: "engelsk-ipa", name: "Engelsk IPA", family: "ipa", kind: "ale", map: { x: 0.50, y: 0.88, est: true }, ebc: [12, 28], abv: [5, 7.5], ibu: [40, 60], temp: "10–12 °C",
+    alias: /engelsk ipa|english ipa|brittisk ipa/,
+    about: "Originalet från 1800-talets England. Jordig och örtig engelsk humle mot en bärnstensfärgad maltbas, beskare än en bitter men mindre fruktig än en amerikansk IPA.",
+    food: ["Fish and chips", "Indiskt och curry", "Lammstek", "Lagrad cheddar"],
+    cheese: "Lagrad cheddar",
+    why: "Beskan skär genom friterat och fett, och den kexiga malten möter stekyta och kryddor.",
+    examples: [], src: "pelle" },
+  { key: "strong-ale", name: "Imperial och strong ale", family: "starka", kind: "ale", map: { x: 0.45, y: 0.14, est: true }, ebc: [20, 60], abv: [7, 11], ibu: [30, 65], temp: "12–15 °C",
+    alias: /strong ale|stark ale|imperial red|imperial amber|old ale|wee heavy|scotch ale|old peculier/,
+    about: "En bred grupp kraftiga ales, brittiska och amerikanska, som inte är barley wine eller stout. Ofta bärnstensfärgade till mörka med mörk malt, torkad frukt och alkohol.",
+    food: ["Vilt och långkok", "Julbord och skinka", "Revbensspjäll", "Fruktkaka"],
+    cheese: "Lagrad cheddar och blåmögelost",
+    why: "Sötma, alkohol och mörk frukt klarar kraftig, söt och rökig mat.",
+    examples: [], src: "pelle" },
+  { key: "pastry-sour", name: "Pastry sour och smoothie sour", family: "syrlig", kind: "ale", map: { x: 0.10, y: 0.12, est: true }, ebc: [4, 20], abv: [4, 8], ibu: [0, 10], temp: "6–8 °C",
+    alias: /pastry sour|smoothie|dessert sour/,
+    about: "Tjocka, grumliga suröl som påminner om en smoothie. Sötade med laktos och smaksatta med bär, vanilj eller marshmallow för att likna bakverk.",
+    food: ["Bärdesserter och cheesecake", "Pannacotta", "Våfflor med sylt", "Glass"],
+    cheese: "Färskost och mascarpone",
+    why: "Sötman och frukten gör den till en dessert i sig. Den ska vara minst lika söt som desserten.",
+    examples: [], src: "pelle" },
+  { key: "sour-ipa", name: "Sour IPA", family: "syrlig", kind: "ale", map: { x: 0.14, y: 0.82, est: true }, ebc: [4, 10], abv: [5, 7], ibu: [20, 40], temp: "6–8 °C",
+    alias: /sour ipa|sur ipa/,
+    about: "En modern hybrid: den friska syran från en snabbsyrad öl ihop med den tropiska humlen från en IPA.",
+    food: ["Ceviche och tacos med fisk", "Thai och vietnamesiskt", "Grillad kyckling med lime", "Getostsallad"],
+    cheese: "Färsk getost",
+    why: "Syran och humlefrukten fungerar som lime och koriander: frisk mot fett och hetta.",
+    examples: [], src: "pelle" },
 ];
 
 // Grundreglerna, ur "Allt om Öl och Mat".
@@ -549,28 +592,62 @@ export const DESSERT = {
 };
 
 const low = (s) => String(s || "").toLowerCase();
-// Kärnstilarna: de stilar som visas i kartan, översikten, korten och som Claude föreslår.
-// Övriga stilar finns kvar för att känna igen namn i förslag och provningar och räknas till sin närmaste kärnstil.
+// De 40 stilarna, Pelles lista över de vanligaste idag. De visas på kartan, i Stilarna och korten, och det är bland dem Claude väljer.
+// Övriga stilar finns kvar för att känna igen namn i gamla förslag och provningar och räknas till närmaste stil.
+// desc = Pelles rad om stilen. Ordningen här är ordningen i listan.
 const CORE = {
-  "internationell-lager": { short: "Ljus lager" }, helles: { short: "Helles" }, "tysk-pilsner": { name: "Pilsner" },
-  marzen: { name: "Märzen och wienerlager", short: "Märzen" }, dunkel: { short: "Dunkel" }, schwarzbier: {}, rauchbier: { name: "Rauchbier" }, dubbelbock: { name: "Bock och dubbelbock", short: "Bock" }, steam: { family: "morklager", short: "California common" },
-  weissbier: {}, wit: {},
-  apa: { short: "Pale ale" }, ipa: {}, neipa: { short: "NEIPA" }, dipa: {}, "black-ipa": {}, "amber-ale": {},
-  bitter: { name: "Bitter och pale ale", short: "Bitter", family: "brownale" }, "irish-red": {}, "brown-ale": {}, "barley-wine": { family: "brownale" },
-  porter: {}, "dry-stout": {}, "oatmeal-stout": { short: "Oatmeal" }, "imperial-stout": { family: "stout" },
-  saison: {}, dubbel: {}, tripel: {}, "golden-strong": { short: "Duvel-typ" }, quadrupel: { name: "Quadrupel" }, "belgisk-ipa": {},
-  lambic: { short: "Gueuze" }, kriek: { name: "Kriek och fruktlambic", short: "Kriek" }, "berliner-weisse": { name: "Berliner Weisse och gose", short: "Berliner Weisse" },
+  "internationell-lager": { family: "lager", name: "Ljus lager", desc: "Internationell ljus lager, världens mest sålda öltyp. Extremt lättdrickande och krispig med minimal beska." },
+  "tysk-pilsner": { family: "lager", name: "Pilsner, tysk", short: "Tysk pilsner", desc: "Gyllene, krispig och torr med en tydlig, stram och blommig humlebeska." },
+  "tjeckisk-pilsner": { family: "lager", name: "Pilsner, tjeckisk", short: "Tjeckisk pilsner", desc: "Något mörkare gyllene, med en mer framträdande brödig mjukhet från malten och en rund, tydlig beska." },
+  helles: { family: "lager", name: "Helles", desc: "Sydtysk ljus lager där fokus ligger helt på den söta, brödiga maltsmaken framför humlebeskan." },
+  export: { family: "lager", name: "Dortmunder export", short: "Export", desc: "Något kraftigare och alkoholstarkare än en helles, med en balanserad profil av både malt och humle." },
+  wiener: { family: "lager", name: "Wienerlager", desc: "Bärnstensfärgad lager med en tydlig karaktär av rostad malt, lätt sötma och en torr finish." },
+  marzen: { family: "lager", name: "Märzen och Oktoberfestbier", short: "Märzen", desc: "Bärnstensfärgad, fyllig och maltig med inslag av knäckebröd och karamell." },
+  dunkel: { family: "lager", name: "Dunkel", desc: "Tysk mörk lager. Mörkbrun och smakar mycket av rostat bröd, choklad och karamell, utan att bli tung." },
+  schwarzbier: { family: "lager", name: "Schwarzbier", desc: "Tysklands svarta öl. Mycket mörk men lätt i kroppen, med torra inslag av kaffe och mörk choklad." },
+  bock: { family: "lager", name: "Bocköl", short: "Bock", desc: "Stark, fyllig och maltfokuserad lager med tydlig sötma och alkoholvärme." },
+  dubbelbock: { family: "lager", name: "Dubbelbock", desc: "Ännu starkare och fylligare bocköl. Extremt maltig med smaker av torkad frukt, sirap och choklad." },
+  kellerbier: { family: "lager", short: "Kellerbier", desc: "Ofiltrerad och opastöriserad lager. Grumlig, jästig och mycket frisk med mjuk kolsyra." },
+  bitter: { family: "paleale", name: "English bitter", short: "Bitter", desc: "Den klassiska brittiska pub-alen. Bärnstensfärgad, låg kolsyra, med en jordig humlebeska och nötig maltprofil." },
+  apa: { family: "paleale", name: "American pale ale", short: "Pale ale", desc: "Humledriven med tydliga amerikanska toner av citrus, tall och tropisk frukt, balanserad av en lätt maltsötma." },
+  "amber-ale": { family: "paleale", name: "Amber ale", desc: "Fokus ligger på den karamelliga och rostade malten, men med en märkbar amerikansk humlebeska i bakgrunden." },
+  "blonde-ale": { family: "paleale", desc: "Lätt, ljust gyllene och mycket lättdrickande ale med låg beska och en subtil fruktighet." },
+  "engelsk-ipa": { family: "ipa", desc: "Den klassiska engelska. Jordig, örtig och ganska besk med en tydlig, bärnstensfärgad maltbas." },
+  ipa: { family: "ipa", name: "American IPA, West Coast", short: "West Coast IPA", desc: "Gyllene till bärnstensfärgad, mycket besk och torr. Domineras av citrus-, kåda- och talltoner." },
+  neipa: { family: "ipa", name: "New England IPA", short: "NEIPA", desc: "Hazy IPA. Grumlig och gul med minimal beska och en explosion av juiceliknande tropisk frukt." },
+  dipa: { family: "ipa", name: "Double IPA", desc: "Double eller imperial IPA, en uppskruvad IPA. Högre alkoholhalt, massiv humlebeska och intensiv arom." },
+  "session-ipa": { family: "ipa", desc: "Samma intensiva humlearom och beska som en IPA, men med en betydligt lägre och lättare alkoholhalt." },
+  weissbier: { family: "veteol", name: "Hefeweizen", desc: "Det klassiska tyska veteölet. Ofiltrerat och grumligt med en mycket karakteristisk doft och smak av banan och kryddnejlika från jästen." },
+  dunkelweizen: { family: "veteol", desc: "En mörk hefeweizen där rostad malt ger inslag av karamell och bröd till banantonerna." },
+  weizenbock: { family: "veteol", desc: "Ett starkt och fylligt veteöl i bockölsstyrka. Kraftigt fruktigt och värmande." },
+  wit: { family: "belgisk", name: "Belgisk witbier", short: "Witbier", desc: "Ett ljust veteöl bryggt med omältat vete, som till skillnad från de tyska kryddas med korianderfrö och apelsinskal." },
+  blonde: { family: "belgisk", desc: "Gyllene ale med en tydlig jästkaraktär som ger toner av banan, kryddnejlika och en lätt sötma." },
+  dubbel: { family: "belgisk", name: "Belgisk dubbel", short: "Dubbel", desc: "Mörkbrun och maltig med komplexa smaker av russin, dadlar, brunt farinsocker och kryddor." },
+  tripel: { family: "belgisk", name: "Belgisk tripel", short: "Tripel", desc: "Ljust gyllene men stark. Kryddig, fruktig och förrädiskt lättdrickande med en torr finish." },
+  quadrupel: { family: "belgisk", name: "Belgisk quadrupel", short: "Quadrupel", desc: "Abt, den starkaste belgiska stilen. Mörk, fyllig, extremt komplex och söt med kraftig alkoholvärme." },
+  saison: { family: "belgisk", name: "Saison och farmhouse ale", short: "Saison", desc: "Torr, frisk, mycket kolsyrad med en rustik, kryddig och ibland lätt syrlig bondgårdskaraktär." },
+  "barley-wine": { family: "starka", desc: "Ett av ölvärldens starkaste och mest komplexa öl. Extremt fylligt och maltigt med torkat fikon, toffee, sirap och värmande alkohol. Passar för lagring." },
+  "strong-ale": { family: "starka", short: "Strong ale", desc: "Kraftfulla ales, både brittiska och amerikanska. Ofta bärnstensfärgade till mörka, fylliga och med mörk malt, torkad frukt och alkohol." },
+  "dry-stout": { family: "starka", name: "Dry stout", desc: "Den klassiska irländska stilen, som Guinness. Svart, mycket torr, med en rostad smak av kaffe och mörk choklad." },
+  "imperial-stout": { family: "starka", desc: "Extremt kraftig, svart och alkoholstark. Tjära, lakrits, mörk choklad, kaffe och torkad frukt. Lagras ofta på ekfat." },
+  porter: { family: "starka", desc: "Släkting till stouten men ofta lättare i kroppen och mer fokus på choklad, karamell och nötter än på den hårt rostade kaffesmaken." },
+  "berliner-weisse": { family: "syrlig", name: "Fruktig gose och Berliner Weisse", short: "Fruktig gose", map: { x: 0.10, y: 0.50, est: true }, desc: "Den vanligaste syrliga ölen på Systembolaget idag. Lätta, krispiga snabbsuröl smaksatta med mycket frukt eller bär, som hallon eller passionsfrukt." },
+  "pastry-sour": { family: "syrlig", short: "Pastry sour", desc: "Tjocka, grumliga öl som påminner om en smoothie. Sötade med laktos och smaksatta med bär, vanilj eller marshmallow." },
+  "sour-ipa": { family: "syrlig", desc: "Modern hybrid som kombinerar den friska syran från en snabbsyrad öl med den tropiska humlearomen från en IPA." },
+  lambic: { family: "syrlig", name: "Lambic och geuze", short: "Lambic", desc: "Klassisk spontanjäst öl från Belgien, lagrad i åratal på ekfat. Extremt torr, syrlig och komplex med en stallig karaktär." },
+  "flanders-red": { family: "syrlig", name: "Flamländsk röd- och brunale", short: "Flamländsk röd", desc: "Klassisk belgisk suröl lagrad på stora ekfat. Vinliknande, med smak av röda bär och balsamvinäger." },
 };
 export const PARENT = {
-  "tjeckisk-pilsner": "tysk-pilsner", "modern-lager": "tysk-pilsner", "imperial-pils": "tysk-pilsner", export: "helles", kolsch: "helles",
-  wiener: "marzen", bock: "dubbelbock", "helles-bock": "dubbelbock", eisbock: "dubbelbock",
-  dunkelweizen: "weissbier", weizenbock: "weissbier", "amerikansk-vete": "weissbier",
-  "session-ipa": "ipa", "engelsk-pale-ale": "bitter", altbier: "bitter", mild: "brown-ale", "amerikansk-brown": "brown-ale", scottish: "brown-ale", "old-ale": "barley-wine",
-  "baltisk-porter": "porter", "imperial-porter": "porter", "sweet-stout": "oatmeal-stout",
-  blonde: "golden-strong", "biere-de-garde": "saison", "flanders-red": "lambic", "oud-bruin": "lambic", gose: "berliner-weisse",
+  "modern-lager": "tysk-pilsner", "imperial-pils": "tysk-pilsner", kolsch: "helles", altbier: "bitter",
+  "helles-bock": "bock", eisbock: "dubbelbock", rauchbier: "marzen", steam: "amber-ale",
+  "amerikansk-vete": "weissbier", "engelsk-pale-ale": "bitter", mild: "bitter", "brown-ale": "bitter", "irish-red": "amber-ale", "amerikansk-brown": "amber-ale",
+  scottish: "strong-ale", "old-ale": "strong-ale", "black-ipa": "ipa", "belgisk-ipa": "ipa",
+  "golden-strong": "tripel", "biere-de-garde": "saison", "baltisk-porter": "porter", "imperial-porter": "porter",
+  "oatmeal-stout": "dry-stout", "sweet-stout": "porter", kriek: "lambic", "oud-bruin": "flanders-red", gose: "berliner-weisse",
 };
+const ORDER = Object.keys(CORE);
 export const ALL_STYLES = ALL;
-export const STYLES = ALL.filter((s) => CORE[s.key]).map((s) => ({ ...s, ...CORE[s.key] }));
+export const STYLES = ORDER.map((k) => { const s = ALL.find((x) => x.key === k); return { ...s, ...CORE[k], map: CORE[k].map || s.map }; });
 const core = (s) => (s ? STYLES.find((x) => x.key === s.key) || STYLES.find((x) => x.key === PARENT[s.key]) || null : null);
 // Stilar som räknas till en kärnstil, t.ex. tjeckisk pilsner till pilsner.
 export const childrenOf = (k) => Object.keys(PARENT).filter((c) => PARENT[c] === k);
@@ -579,7 +656,7 @@ export function styleFor(text) {
   const t = low(text);
   if (!t) return null;
   // Längre och mer specifika först, t.ex. "dubbel ipa" före "ipa" och "imperial stout" före "stout".
-  for (const k of ["black-ipa", "belgisk-ipa", "session-ipa", "internationell-lager", "irish-red", "imperial-porter", "imperial-pils", "modern-lager", "dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
+  for (const k of ["pastry-sour", "sour-ipa", "engelsk-ipa", "kellerbier", "blonde-ale", "strong-ale", "black-ipa", "belgisk-ipa", "session-ipa", "internationell-lager", "irish-red", "imperial-porter", "imperial-pils", "modern-lager", "dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
     const s = ALL.find((x) => x.key === k);
     if (s && s.alias.test(t)) return core(s);
   }

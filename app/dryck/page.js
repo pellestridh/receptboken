@@ -10,15 +10,15 @@ import WineMap from "@/components/WineMap";
 import BeerTree from "@/components/BeerTree";
 import { StyleRow, Glass } from "@/components/BeerBits";
 import { WineLog, WineNote, ProfileBars, swatch, profileOf } from "@/components/Wine";
-import { STYLES, FAMILIES, PRINCIPLES, styleByKey } from "@/data/beer";
+import { STYLES, FAMILIES, ALE_INTRO, styleByKey } from "@/data/beer";
 import { GRAPES, grapeByKey } from "@/data/wine";
-import { WINE_TREE, WINE_PRINCIPLES, CHEESE_BOTH, DESSERT_BOTH } from "@/data/wineExtra";
+import { WINE_TREE, CHEESE_BOTH, DESSERT_BOTH } from "@/data/wineExtra";
 import { SCHOOL } from "@/data/school";
 import { beerProfile } from "@/data/beerSchool";
 import { EXPERTS, METHOD } from "@/data/experts";
 
-const VIEWS = [["lar", "Lär dig"], ["karta", "Kartan"], ["trad", "Översikten"], ["kort", "Korten"], ["mat", "Till maten"], ["provat", "Provat"]];
-const OLD = { stilar: "kort", ost: "mat", dessert: "mat" };
+const VIEWS = [["lar", "Lär dig"], ["karta", "Kartan"], ["stilar", "Stilarna"], ["mat", "Till maten"], ["provat", "Provat"]];
+const OLD = { kort: "stilar", trad: "stilar", ost: "mat", dessert: "mat" };
 const KINDS = { ol: "beer", vin: "wine" };
 
 function BeerLink({ k }) {
@@ -60,26 +60,12 @@ function School({ kind }) {
 }
 
 function Principles({ kind }) {
-  const P = kind === "beer" ? PRINCIPLES : WINE_PRINCIPLES;
   return (
     <section className="dsec prose">
       <h2>Så tänker ni</h2>
       <p className="lead">{METHOD.intro}</p>
       <ol className="method">{METHOD.steps.map((x, i) => <li key={x.t}><span className="mn">{i + 1}</span><div><b>{x.t}</b><p>{typeof x.d === "string" ? x.d : x.d[kind]}</p></div></li>)}</ol>
       <p className="hint">{METHOD.after}</p>
-      <h2>{kind === "beer" ? "Öl till mat" : "Vin till mat"}</h2>
-      <p>{P.intro}</p>
-      <div className="duo">{P.strengths.map((t) => <div key={t} className={"bigfact " + kind}>{t}</div>)}</div>
-      <h2>Sex tumregler</h2>
-      <ol className="rules">{P.tips.map((x) => <li key={x.t}><b>{x.t}</b><span>{x.d}</span></li>)}</ol>
-      <h2>Harmoniera eller kontrastera</h2>
-      <div className="duo">{P.ways.map((x) => <div key={x.t} className="card2"><h3>{x.t}</h3><p>{x.d}</p></div>)}</div>
-      {kind === "beer" && P.tastes && (
-        <>
-          <h2>Grundsmakerna</h2>
-          <div className="tastes">{P.tastes.map((x) => <div key={x.t} className={"taste t-" + x.t.toLowerCase()}><h3>{x.t}</h3><ul>{x.d.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div>
-        </>
-      )}
       <h2>Så tänker experterna</h2>
       <div className="experts">{EXPERTS[kind].map((e) => (
         <div key={e.name} className="expert">
@@ -104,12 +90,21 @@ function Principles({ kind }) {
   );
 }
 
-function Cards({ kind, usage }) {
+function Styles({ kind }) {
   if (kind === "beer") return (
     <section className="dsec">
-      {FAMILIES.map((f) => {
+      {FAMILIES.map((f, i) => {
         const list = STYLES.filter((s) => s.family === f.key);
-        return list.length ? <div key={f.key} className="fam"><h2>{f.name}</h2><div className="srows">{list.map((s) => <StyleRow key={s.key} s={s} uses={(usage[s.key] || []).length} />)}</div></div> : null;
+        return (
+          <div key={f.key} className="fam">
+            {(i === 0 || i === 1) && <p className="kindh">{i === 0 ? "Underjäst" : "Överjäst"}{i === 1 && <span className="muted"> · {ALE_INTRO}</span>}</p>}
+            <h2>{f.name}</h2>
+            {f.intro && <p className="muted famintro">{f.intro}</p>}
+            <div className="slist">{list.map((s) => (
+              <Link key={s.key} href={`/dryck/ol/${s.key}`} className="sitem"><Glass s={s} size={22} /><span><b>{s.name}</b><span className="muted">{s.desc}</span></span></Link>
+            ))}</div>
+          </div>
+        );
       })}
     </section>
   );
@@ -118,13 +113,8 @@ function Cards({ kind, usage }) {
     <section className="dsec">
       {groups.map((g) => (
         <div key={g.name} className="fam"><h2>{g.name[0].toUpperCase() + g.name.slice(1)}</h2>
-          <div className="srows">{g.keys.map((k) => { const x = grapeByKey(k); const u = (usage[k] || []).length; return (
-            <Link key={k} href={`/dryck/vin/druva/${k}`} className="srow">
-              <span className="wglass sm" style={{ "--sw": swatch(x.color) }} />
-              <span className="st"><b>{x.name}</b><span className="muted">{x.food.split(".")[0]}</span></span>
-              {u > 0 && <span className="uses">{u} recept</span>}
-              <span className="go">›</span>
-            </Link>
+          <div className="slist">{g.keys.map((k) => { const x = grapeByKey(k); return (
+            <Link key={k} href={`/dryck/vin/druva/${k}`} className="sitem"><span className="wglass sm" style={{ "--sw": swatch(x.color) }} /><span><b>{x.name}</b><span className="muted">{x.about.split(". ")[0].replace(/\.$/, "")}.</span></span></Link>
           ); })}</div>
         </div>
       ))}
@@ -194,17 +184,11 @@ function Drinks() {
       {view === "lar" && <School kind={kind} />}
       {view === "karta" && (
         <section className="dsec">
-          {kind === "beer" && <p className="hint">Pelles stora ölkarta med de 34 kärnstilarna. Åt höger mer beska, uppåt mer frukt. Färgen är ölets färg. Tryck på en stil för att läsa mer, eller välj Lista för att se alla namn i rutor.</p>}
-          {kind === "beer" ? <BeerMap usage={u} /> : <WineMap usage={u} />}
+          {kind === "beer" && <p className="hint">Uppåt sött, nedåt beskt. Åt vänster lätta öl, åt höger kraftiga. Prickens färg är ölets färg. Tryck på en stil för att öppna kortet.</p>}
+          {kind === "beer" ? <BeerMap /> : <WineMap />}
         </section>
       )}
-      {view === "trad" && (
-        <section className="dsec">
-          <p className="hint">{kind === "beer" ? <>Samma 34 stilar som på kartan och korten, ordnade från jäsningssätt via familjer till stilar och öl att leta efter. Pelles stora släktträd finns som <a href="/ol/allt-om-olstilar.jpg" target="_blank" rel="noopener noreferrer">original att titta på</a>.</> : "Vinets släktträd: färg, stil och druvor, med områden att leta efter på etiketten."} Tryck på plus för att fälla ut, och på en färgad punkt för att öppna kortet.</p>
-          <BeerTree usage={u} kind={kind} tree={kind === "wine" ? WINE_TREE : undefined} />
-        </section>
-      )}
-      {view === "kort" && <Cards kind={kind} usage={u} />}
+      {view === "stilar" && <Styles kind={kind} />}
       {view === "mat" && <Principles kind={kind} />}
       {view === "provat" && <Tasted kind={kind} />}
     </div>

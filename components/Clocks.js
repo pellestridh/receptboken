@@ -1,7 +1,6 @@
 // Smakklockor som Systembolagets: en urtavla som fylls medurs från tolv, i 12 steg.
 // Ölets färg visas bredvid som ett glas, eftersom färgen säger något om rostningen.
 import { styleColor } from "@/data/beer";
-import { spectrumFor } from "@/data/beerSpectrum";
 import { beerProfile } from "@/data/beerSchool";
 import { swatch, COLORS } from "@/components/Wine";
 
@@ -26,11 +25,12 @@ function Clock({ v, label, color }) {
 const ebcWord = (e) => (e <= 12 ? "Ljus" : e <= 30 ? "Bärnsten" : e <= 60 ? "Mörk" : "Svart");
 
 export function beerClocks(s) {
-  const p = beerProfile(s), sp = spectrumFor(s.key);
+  const p = beerProfile(s);
+  const ibu = s.ibu ? (s.ibu[0] + s.ibu[1]) / 2 : 25;
   return [
-    { label: "Beska", v: sp ? Math.max(1, Math.round(1 + (sp.b * 11) / 100)) : to12(p.beska) },
+    { label: "Beska", v: Math.max(1, Math.min(12, Math.round(ibu / 6))) },
     { label: "Fyllighet", v: to12(p.fyllighet) },
-    { label: "Sötma", v: to12(p.sotma) },
+    { label: "Sötma", v: s.map ? Math.max(1, Math.min(12, Math.round(1 + (1 - s.map.y) * 11))) : to12(p.sotma) },
   ];
 }
 export function wineClocks(g) {
@@ -44,7 +44,7 @@ export function wineClocks(g) {
 }
 
 // kind "beer" med s (ölstil) eller "wine" med g (druva).
-export default function Clocks({ kind, s, g, small = false }) {
+export default function Clocks({ kind, s, g, small = false, noColor = false }) {
   const beer = kind === "beer";
   const list = beer ? beerClocks(s) : wineClocks(g);
   const col = beer ? "#9A5B1E" : "#7A1E2C";
@@ -53,7 +53,7 @@ export default function Clocks({ kind, s, g, small = false }) {
   return (
     <div className={"clocks" + (small ? " small" : "")}>
       {list.map((c) => <Clock key={c.label} v={c.v} label={c.label} color={col} />)}
-      {beer
+      {noColor ? null : beer
         ? <span className="clock colorc"><i className="cglass" style={{ background: styleColor(s) }} /><small>{ebcWord(ebc)}</small></span>
         : <span className="clock colorc"><i className="cglass wine" style={{ background: swatch(g.color) }} /><small>{(COLORS.find(([k]) => k === g.color) || [, "Färg"])[1]}</small></span>}
       {abv && !small && <span className="clock abv"><b>{abv}</b><small>Alkohol</small></span>}
