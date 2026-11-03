@@ -79,7 +79,7 @@ function Principles({ kind }) {
       <div className="both">
         <div className="both-h"><span /><span>Vin</span><span>Öl</span></div>
         {CHEESE_BOTH.map((x) => (
-          <div key={x.cheese} className="both-r"><b>{x.cheese}</b><WineLink k={x.wineKey} label={x.wine} /><BeerLink k={x.beer} /><p>{x.why}</p></div>
+          <div key={x.cheese} className={"both-r" + (x.own ? " own" : "")}><b>{x.cheese}{x.own && <span className="owntag">Er favorit</span>}</b><WineLink k={x.wineKey} label={x.wine} /><span className="blinks">{x.beers.map((k) => <BeerLink key={k} k={k} />)}</span><p>{x.why}</p></div>
         ))}
         {DESSERT_BOTH.map((x) => (
           <div key={x.dessert} className="both-r dess"><b>{x.dessert}</b><WineLink k={x.wineKey} label={x.wine} /><span className="blinks">{x.beers.map((k) => <BeerLink key={k} k={k} />)}</span></div>
