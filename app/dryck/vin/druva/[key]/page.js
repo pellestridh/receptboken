@@ -7,6 +7,7 @@ import { accentVar } from "@/lib/format";
 import { grapeByKey, GRAPES } from "@/data/wine";
 import { grapeExtra, WINE_TREE } from "@/data/wineExtra";
 import { ProfileBars, WineNote, swatch, itemFor, profileOf } from "@/components/Wine";
+import Clocks from "@/components/Clocks";
 import WineMap from "@/components/WineMap";
 
 const sb = (q) => `https://www.systembolaget.se/sok/?textQuery=${encodeURIComponent(q)}`;
@@ -42,7 +43,7 @@ export default function Grape() {
         <span className="wglass" style={{ "--sw": swatch(g.color) }} />
         <div><span className="kicker"><Link href="/dryck?typ=vin&vy=kort">{CN[g.color]}{fam ? ` · ${fam.name.toLowerCase()}` : ""}</Link></span><h1>{g.name}</h1><p className="muted" style={{ margin: 0 }}>{g.where}</p></div>
       </header>
-      <div className="stats"><ProfileBars p={g.p} compare={prof.liked ? prof.avg : null} />{prof.liked > 0 && <p className="hint">Strecket visar er smakprofil.</p>}</div>
+      <div className="stats"><Clocks kind="wine" g={g} />{prof.liked > 0 && <details className="ownprof"><summary>Jämför med er smakprofil</summary><ProfileBars p={g.p} compare={prof.avg} /><p className="hint">Strecket visar er smakprofil.</p></details>}</div>
 
       <section className="bsec"><h2>Om druvan</h2><p>{g.about}</p></section>
       <section className="bsec"><h2>Doft och smak</h2><p>{g.smell}</p></section>

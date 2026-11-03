@@ -10,6 +10,7 @@ import { BEER_DIMS } from "@/data/beerSchool";
 import { PRINCIPLES } from "@/data/beer";
 import { ProfileBars, swatch } from "@/components/Wine";
 import AromaWheel from "@/components/AromaWheel";
+import Clocks from "@/components/Clocks";
 
 export default function Lesson() {
   const { kind: slug, key } = useParams();
@@ -52,7 +53,7 @@ export default function Lesson() {
       ))}</div></section>}
 
       {l.grapes && <section className="bsec"><h2>Druvorna</h2><div className="gcards">{l.grapes.map((k) => { const g = grapeByKey(k); return (
-        <Link key={k} href={`/dryck/vin/druva/${k}`} className="gcard"><div className="gcard-h"><i className="sw big" style={{ "--sw": swatch(g.color) }} /><b>{g.name}</b></div><ProfileBars p={g.p} /><p className="muted">{g.smell}</p></Link>
+        <Link key={k} href={`/dryck/vin/druva/${k}`} className="gcard"><div className="gcard-h"><i className="sw big" style={{ "--sw": swatch(g.color) }} /><b>{g.name}</b></div><Clocks kind="wine" g={g} small /><p className="muted">{g.smell}</p></Link>
       ); })}</div></section>}
 
       {l.rules && <section className="bsec"><h2>Reglerna</h2><ol className="rules">{l.rules.map((r) => <li key={r.t}><b>{r.t}</b><span>{r.d}</span></li>)}</ol></section>}

@@ -11,6 +11,7 @@ import { cardsFor } from "@/data/beerCards";
 import { beerProfile } from "@/data/beerSchool";
 import { spectrumFor } from "@/data/beerSpectrum";
 import { ProfileBars, WineNote, itemFor } from "@/components/Wine";
+import Clocks from "@/components/Clocks";
 
 const range = (t) => { const m = String(t || "").replace(/,/g, ".").match(/([\d.]+)\s*(?:-\s*([\d.]+))?/); return m ? [Number(m[1]), Number(m[2] || (t.includes("+") ? 80 : m[1]))] : null; };
 
@@ -54,8 +55,7 @@ export default function StylePage() {
           <p className="muted" style={{ margin: 0 }}>Servering {s.temp}</p>
         </div>
       </header>
-      <Stats s={st} />
-      <div className="stats" style={{ marginTop: ".6rem" }}><ProfileBars p={beerProfile(s)} kind="beer" /></div>
+      <div className="stats"><Clocks kind="beer" s={st} /></div>
 
       <section className="bsec">
         <h2>Om stilen</h2>

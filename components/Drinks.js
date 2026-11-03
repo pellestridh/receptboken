@@ -5,6 +5,8 @@ import { useApp } from "@/components/Providers";
 import { label } from "@/lib/drinkLabel";
 import Link from "next/link";
 import { styleFor } from "@/data/beer";
+import { grapeFor } from "@/data/wine";
+import Clocks from "@/components/Clocks";
 import { WineLog, WineNote } from "@/components/Wine";
 
 function Label({ kind, d, small }) {
@@ -76,6 +78,8 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
           <div className="lrow"><Label kind={kind} d={d} />{d.style && d.style !== d.name && <span className="style">{d.style}</span>}</div>
           <b><Product name={d.name} kind={kind} /></b>
           {d.why && <p>{d.why}</p>}
+          {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Clocks kind="beer" s={st} small /> : null; })()}
+          {kind === "wine" && (() => { const g = grapeFor(`${d.name} ${d.style || ""}`); return g ? <Clocks kind="wine" g={g} small /> : null; })()}
           <Basis d={d} kind={kind} onAction={onAction} />
           {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Link className="stylelink" href={`/dryck/ol/${st.key}`}>Om {st.name.toLowerCase().startsWith("ipa") ? "IPA" : st.name.toLowerCase()} och mat ›</Link> : null; })()}
           {d.alternatives?.length > 0 && (
