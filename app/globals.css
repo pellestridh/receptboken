@@ -994,3 +994,39 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .pairrow > b { font-weight: 700; }
 .pairrow p { grid-column: 1 / -1; }
 @media (max-width: 600px) { .pairrow { grid-template-columns: 1fr; } }
+
+/* Rutnät mat mot dryck */
+.pmwrap { margin-top: .6rem; }
+.pm { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.pm th, .pm td { padding: 0; }
+.pm .pmcorner { width: 38%; text-align: left; vertical-align: bottom; font-size: .75rem; font-weight: 400; padding: 0 .3rem .4rem 0; }
+.pmh { vertical-align: bottom; height: 8.5rem; position: relative; }
+.pmh .pmhl { position: absolute; bottom: 1.9rem; left: 50%; transform: rotate(-60deg); transform-origin: left bottom; white-space: nowrap; font-size: .72rem; font-weight: 700; color: var(--ink); }
+.pmbottle { display: block; width: .8rem; height: 1.5rem; margin: 0 auto .2rem; border-radius: 3px 3px 4px 4px; border: 1px solid rgb(0 0 0 / .25); position: relative; }
+.pmbottle::before { content: ""; position: absolute; left: 50%; top: -.45rem; width: .3rem; height: .5rem; transform: translateX(-50%); background: inherit; border: 1px solid rgb(0 0 0 / .25); border-bottom: 0; border-radius: 2px 2px 0 0; }
+.pmbottle.sm { display: inline-block; width: .55rem; height: 1rem; margin: 0 .4rem 0 0; vertical-align: -2px; }
+.pmbottle.sm::before { height: .35rem; top: -.33rem; width: .22rem; }
+.pmgroup th { text-align: left; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); padding: 1rem 0 .3rem; font-weight: 700; }
+.pmrow { cursor: pointer; }
+.pmrow th { text-align: left; font-weight: 400; }
+.pmrow th button { all: unset; display: flex; gap: .4rem; align-items: center; font-size: .9rem; line-height: 1.2; padding: .45rem .2rem .45rem 0; cursor: pointer; }
+.pmrow:hover th button, .pmrow.on th button { font-weight: 700; }
+.pmrow td { text-align: center; border-top: 1px dashed var(--line); }
+.pmrow th { border-top: 1px dashed var(--line); }
+.pmrow.on td, .pmrow.on th { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.pmi { font-size: 1.05rem; width: 1.4rem; text-align: center; flex: none; }
+.pmdot { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; background: var(--muted); vertical-align: middle; border: 1px solid rgb(0 0 0 / .2); }
+.pmdot.big { width: 1.05rem; height: 1.05rem; }
+.pmdetail td { padding: .6rem .7rem .8rem; background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 0 0 12px 12px; }
+.pmdetail p { margin: .4rem 0 0; font-size: .9rem; }
+.pmchips { display: flex; flex-wrap: wrap; gap: .35rem; }
+.pmchip { display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .6rem; border: 1px solid var(--line); border-radius: 99px; background: var(--paper); color: var(--ink); text-decoration: none; font-size: .85rem; font-weight: 600; }
+.pmchip i { width: .65rem; height: .65rem; border-radius: 50%; border: 1px solid rgb(0 0 0 / .25); }
+.pmlist { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.pmlist li { display: grid; gap: .3rem; }
+.pmkey { display: flex; align-items: center; gap: .4rem; font-size: .8rem; margin: .7rem 0 0; }
+.pmkey .pmdot.big { margin-left: .6rem; }
+.pmlegend { display: grid; gap: .55rem; margin-top: 1rem; }
+.pmleg { display: grid; gap: .3rem; }
+.pmleg b { font-size: .9rem; }
+@media (max-width: 600px) { .pm .pmcorner { width: 42%; } .pmrow th button { font-size: .8rem; } .pmh .pmhl { font-size: .66rem; } .pmdot.big { width: .9rem; height: .9rem; } }

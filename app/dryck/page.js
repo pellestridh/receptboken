@@ -16,7 +16,7 @@ import { WINE_TREE, CHEESE_BOTH, DESSERT_BOTH } from "@/data/wineExtra";
 import { SCHOOL } from "@/data/school";
 import { beerProfile } from "@/data/beerSchool";
 import { EXPERTS, METHOD } from "@/data/experts";
-import { DISH_PAIRS } from "@/data/pairings";
+import PairMatrix from "@/components/PairMatrix";
 
 const VIEWS = [["lar", "Lär dig"], ["karta", "Kartan"], ["stilar", "Stilarna"], ["mat", "Till maten"], ["provat", "Provat"]];
 const OLD = { kort: "stilar", trad: "stilar", ost: "mat", dessert: "mat" };
@@ -68,33 +68,9 @@ function Principles({ kind }) {
       <p className="lead">{METHOD.intro}</p>
       <ol className="method">{METHOD.steps.map((x, i) => <li key={x.t}><span className="mn">{i + 1}</span><div><b>{x.t}</b><p>{typeof x.d === "string" ? x.d : x.d[kind]}</p></div></li>)}</ol>
       <p className="hint">{METHOD.after}</p>
-      <h2>Till maträtterna</h2>
-      <p className="hint">{beer ? "Två eller tre ölstilar" : "Två eller tre druvor"} per sorts rätt. Tryck för att läsa mer.</p>
-      <div className="pairgrid">{DISH_PAIRS.map((d) => (
-        <div key={d.dish} className="paircard">
-          <h3>{d.dish}</h3>
-          <div className="blinks">{d[kind].map((k) => (beer ? <BeerLink key={k} k={k} /> : <WineLink key={k} k={k} />))}</div>
-          <p className="muted">{d.why[kind]}</p>
-        </div>
-      ))}</div>
-
-      <h2>Till osten</h2>
-      <div className="pairlist">{CHEESE_BOTH.map((x) => (
-        <div key={x.cheese} className="pairrow">
-          <b>{x.cheese}{x.own && <span className="owntag">Er favorit</span>}</b>
-          <span className="blinks">{beer ? x.beers.map((k) => <BeerLink key={k} k={k} />) : <WineLink k={x.wineKey} label={x.wine} />}</span>
-          <p className="muted">{beer ? x.why : x.whyWine}</p>
-        </div>
-      ))}</div>
-
-      <h2>Till desserten</h2>
-      <p className="hint">Oftast ska drycken vara sötare än desserten, annars smakar den surt och tunt. Undantaget är beska som kontrast, som Double IPA mot crème brûlée.</p>
-      <div className="pairlist">{DESSERT_BOTH.map((x) => (
-        <div key={x.dessert} className="pairrow">
-          <b>{x.dessert}</b>
-          <span className="blinks">{beer ? x.beers.map((k) => <BeerLink key={k} k={k} />) : <WineLink k={x.wineKey} label={x.wine} />}</span>
-        </div>
-      ))}</div>
+      <h2>{beer ? "Vilken öl till vad?" : "Vilket vin till vad?"}</h2>
+      <p className="hint">Stor prick passar riktigt bra, liten prick passar. Tryck på en rad för konkreta tips, och på en stil för att läsa mer.</p>
+      <PairMatrix kind={kind} />
 
       <h2>Så tänker experterna</h2>
       <div className="experts">{EXPERTS[kind].map((e) => (

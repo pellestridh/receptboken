@@ -92,26 +92,26 @@ export const WINE_PRINCIPLES = {
 // Gemensam sida för ost och dessert: öl och vin bredvid varandra.
 // own: något ni själva har kommit fram till. Visas som "Er favorit".
 export const CHEESE_BOTH = [
-  { cheese: "Fransk bondost med päronmarmelad", whyWine: "Chenins frukt och syra mot den smöriga osten, och päronet binder ihop.", wine: "Chenin blanc från Loire", wineKey: "chenin", beers: ["saison"], own: true, why: "Ert bästa par: saisonens kryddiga torrhet och kolsyra mot den milda, smöriga osten, och päronet lyfter ölets frukt." },
-  { cheese: "Gruyère eller Manchego med fikonmarmelad", whyWine: "Nötig ost och söt fikon mot ett mjukt rött eller en nötig sherry.", wine: "Tempranillo eller amontillado", wineKey: "tempranillo", beers: ["saison"], own: true, why: "Nötig, lagrad ost och söt fikon. Saisonen håller det friskt, fikonet binder ihop." },
-  { cheese: "Gruyère och Comté", whyWine: "Nötighet mot nötighet: en lagrad vit Chardonnay, gärna från Jura.", wine: "Chardonnay, gärna Jura", wineKey: "chardonnay", beers: ["imperial-stout", "dubbelbock"], own: true, why: "Nötighet och kristaller mot rostad kraft i en imperial stout, eller kola i en dubbelbock." },
-  { cheese: "Lagrad prästost", whyWine: "Syran i en lagrad Riesling skär genom sälta och fett.", wine: "Lagrad Riesling", wineKey: "riesling", beers: ["golden-strong"], own: true, why: "Belgisk stark ljus ale som Duvel: torr, pepprig och mycket kolsyra mot sälta och fett." },
-  { cheese: "Lagrad cheddar", whyWine: "Skarp, nötig ost behöver kraft och tanniner.", wine: "Cabernet sauvignon", wineKey: "cabernet", beers: ["ipa"], why: "Skarp, nötig ost behöver kraft: humlebeska." },
-  { cheese: "Färsk getost", whyWine: "Syra och örtighet mot syrlig, färsk ost. Sancerre och getost är ett klassiskt par.", wine: "Sauvignon blanc", wineKey: "sauvignon-blanc", beers: ["lambic"], why: "Syra och örtighet mot syrlig, färsk ost." },
-  { cheese: "Brie och Camembert", whyWine: "Bubblor eller syra skär genom det krämiga.", wine: "Champagne eller Pinot noir", wineKey: "champagne", beers: ["lambic", "tripel"], why: "Bubblor eller syra skär genom det krämiga." },
-  { cheese: "Parmesan och pecorino", whyWine: "Umami och sälta mot ett italienskt rött med hög syra.", wine: "Sangiovese eller Nebbiolo", wineKey: "nebbiolo", beers: ["barley-wine"], why: "Umami och sälta mot sötma och alkohol." },
-  { cheese: "Blåmögel, Roquefort och Stilton", whyWine: "Sött mot salt. Aldo Sohm föredrar sherry: umamit i en oloroso möter osten ännu bättre.", wine: "Sauternes, portvin eller oloroso-sherry", wineKey: "sott", beers: ["barley-wine"], why: "Sött mot salt, en av de klassiska kontrasterna." },
-  { cheese: "Kittost som Münster", whyWine: "Kraftig doft mot ett lika aromatiskt vin.", wine: "Gewürztraminer", wineKey: "gewurz", beers: ["lambic"], why: "Kraftig doft mot syrlig gueuze." },
-  { cheese: "Västerbotten", whyWine: "Sälta och kristaller mot hög syra eller bubblor.", wine: "Lagrad Riesling eller Champagne", wineKey: "riesling", beers: ["porter"], why: "Sälta och kristaller mot rostad sötma." },
+  { cheese: "Fransk bondost med päronmarmelad", cat: "farsk", whyWine: "Chenins frukt och syra mot den smöriga osten, och päronet binder ihop.", wine: "Chenin blanc från Loire", wineKey: "chenin", beers: ["saison"], own: true, why: "Ert bästa par: saisonens kryddiga torrhet och kolsyra mot den milda, smöriga osten, och päronet lyfter ölets frukt." },
+  { cheese: "Gruyère eller Manchego med fikonmarmelad", cat: "lagrad", whyWine: "Nötig ost och söt fikon mot ett mjukt rött eller en nötig sherry.", wine: "Tempranillo eller amontillado", wineKey: "tempranillo", beers: ["saison"], own: true, why: "Nötig, lagrad ost och söt fikon. Saisonen håller det friskt, fikonet binder ihop." },
+  { cheese: "Gruyère och Comté", cat: "lagrad", whyWine: "Nötighet mot nötighet: en lagrad vit Chardonnay, gärna från Jura.", wine: "Chardonnay, gärna Jura", wineKey: "chardonnay", beers: ["imperial-stout", "dubbelbock"], own: true, why: "Nötighet och kristaller mot rostad kraft i en imperial stout, eller kola i en dubbelbock." },
+  { cheese: "Lagrad prästost", cat: "lagrad", whyWine: "Syran i en lagrad Riesling skär genom sälta och fett.", wine: "Lagrad Riesling", wineKey: "riesling", beers: ["golden-strong"], own: true, why: "Belgisk stark ljus ale som Duvel: torr, pepprig och mycket kolsyra mot sälta och fett." },
+  { cheese: "Lagrad cheddar", cat: "lagrad", whyWine: "Skarp, nötig ost behöver kraft och tanniner.", wine: "Cabernet sauvignon", wineKey: "cabernet", beers: ["ipa"], why: "Skarp, nötig ost behöver kraft: humlebeska." },
+  { cheese: "Färsk getost", cat: "farsk", whyWine: "Syra och örtighet mot syrlig, färsk ost. Sancerre och getost är ett klassiskt par.", wine: "Sauvignon blanc", wineKey: "sauvignon-blanc", beers: ["lambic"], why: "Syra och örtighet mot syrlig, färsk ost." },
+  { cheese: "Brie och Camembert", cat: "vitmogel", whyWine: "Bubblor eller syra skär genom det krämiga.", wine: "Champagne eller Pinot noir", wineKey: "champagne", beers: ["lambic", "tripel"], why: "Bubblor eller syra skär genom det krämiga." },
+  { cheese: "Parmesan och pecorino", cat: "lagrad", whyWine: "Umami och sälta mot ett italienskt rött med hög syra.", wine: "Sangiovese eller Nebbiolo", wineKey: "nebbiolo", beers: ["barley-wine"], why: "Umami och sälta mot sötma och alkohol." },
+  { cheese: "Blåmögel, Roquefort och Stilton", cat: "bla", whyWine: "Sött mot salt. Aldo Sohm föredrar sherry: umamit i en oloroso möter osten ännu bättre.", wine: "Sauternes, portvin eller oloroso-sherry", wineKey: "sott", beers: ["barley-wine"], why: "Sött mot salt, en av de klassiska kontrasterna." },
+  { cheese: "Kittost som Münster", cat: "bla", whyWine: "Kraftig doft mot ett lika aromatiskt vin.", wine: "Gewürztraminer", wineKey: "gewurz", beers: ["lambic"], why: "Kraftig doft mot syrlig gueuze." },
+  { cheese: "Västerbotten", cat: "lagrad", whyWine: "Sälta och kristaller mot hög syra eller bubblor.", wine: "Lagrad Riesling eller Champagne", wineKey: "riesling", beers: ["porter"], why: "Sälta och kristaller mot rostad sötma." },
 ];
 
 export const DESSERT_BOTH = [
-  { dessert: "Chokladfondant", wine: "Portvin eller Banyuls", wineKey: "sott", beers: ["imperial-stout", "porter"] },
-  { dessert: "Crème brûlée", wine: "Sauternes eller Tokaji", wineKey: "sott", beers: ["dipa", "barley-wine"] },
-  { dessert: "Äppelkaka och tarte tatin", wine: "Söt Chenin blanc eller Riesling", wineKey: "chenin", beers: ["dubbelbock", "dubbel"] },
-  { dessert: "Jordgubbar och vaniljglass", wine: "Moscato d'Asti", wineKey: "champagne", beers: ["barley-wine", "imperial-stout"] },
-  { dessert: "Citroncheesecake", wine: "Söt Riesling", wineKey: "riesling", beers: ["dipa", "barley-wine"] },
-  { dessert: "Panna cotta med bär", wine: "Moscato eller Tokaji", wineKey: "sott", beers: ["pastry-sour"] },
+  { dessert: "Chokladfondant", cat: "choklad", wine: "Portvin eller Banyuls", wineKey: "sott", beers: ["imperial-stout", "porter"] },
+  { dessert: "Crème brûlée", cat: "vanilj", wine: "Sauternes eller Tokaji", wineKey: "sott", beers: ["dipa", "barley-wine"] },
+  { dessert: "Äppelkaka och tarte tatin", cat: "frukt", wine: "Söt Chenin blanc eller Riesling", wineKey: "chenin", beers: ["dubbelbock", "dubbel"] },
+  { dessert: "Jordgubbar och vaniljglass", cat: "frukt", wine: "Moscato d'Asti", wineKey: "champagne", beers: ["barley-wine", "imperial-stout"] },
+  { dessert: "Citroncheesecake", cat: "vanilj", wine: "Söt Riesling", wineKey: "riesling", beers: ["dipa", "barley-wine"] },
+  { dessert: "Panna cotta med bär", cat: "frukt", wine: "Moscato eller Tokaji", wineKey: "sott", beers: ["pastry-sour"] },
 ];
 
 // Fördjupning för vin.
