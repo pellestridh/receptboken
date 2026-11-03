@@ -37,6 +37,14 @@ export default function Lesson() {
 
       {l.wheel && <section className="bsec"><h2>Doftcirkeln</h2><p>{l.wheel}</p><AromaWheel kind={kind} /></section>}
 
+      {l.vocab && l.vocab.map((v) => (
+        <section key={v.h} className="bsec vocab">
+          <h2>{v.h}</h2>
+          <p className="muted">{v.intro}</p>
+          <dl>{v.terms.map(([t, d]) => <div key={t}><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
+        </section>
+      ))}
+
       {l.body.map((b) => <section key={b.h} className="bsec"><h2>{b.h}</h2><p>{b.t}</p></section>)}
 
       {(l.dims || l.key === "prova" && kind === "beer") && <section className="bsec"><h2>Känn efter</h2><div className="dimcards">{D.map((d) => (

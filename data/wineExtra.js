@@ -98,17 +98,17 @@ export const CHEESE_BOTH = [
   { cheese: "Lagrad prästost", wine: "Lagrad Riesling", wineKey: "riesling", beers: ["golden-strong"], own: true, why: "Belgisk stark ljus ale som Duvel: torr, pepprig och mycket kolsyra mot sälta och fett." },
   { cheese: "Lagrad cheddar", wine: "Cabernet sauvignon", wineKey: "cabernet", beers: ["ipa"], why: "Skarp, nötig ost behöver kraft: tanniner eller humlebeska." },
   { cheese: "Färsk getost", wine: "Sauvignon blanc", wineKey: "sauvignon-blanc", beers: ["lambic"], why: "Syra och örtighet mot syrlig, färsk ost." },
-  { cheese: "Brie och Camembert", wine: "Champagne eller Pinot noir", wineKey: "champagne", beers: ["flanders-red"], why: "Bubblor eller syra skär genom det krämiga." },
+  { cheese: "Brie och Camembert", wine: "Champagne eller Pinot noir", wineKey: "champagne", beers: ["lambic", "tripel"], why: "Bubblor eller syra skär genom det krämiga." },
   { cheese: "Parmesan och pecorino", wine: "Sangiovese eller Nebbiolo", wineKey: "nebbiolo", beers: ["barley-wine"], why: "Umami och sälta mot syra eller sötma." },
-  { cheese: "Blåmögel, Roquefort och Stilton", wine: "Sauternes eller portvin", wineKey: "sott", beers: ["barley-wine"], why: "Sött mot salt, en av de klassiska kontrasterna." },
+  { cheese: "Blåmögel, Roquefort och Stilton", wine: "Sauternes, portvin eller oloroso-sherry", wineKey: "sott", beers: ["barley-wine"], why: "Sött mot salt, en av de klassiska kontrasterna. Aldo Sohm föredrar sherry: umamit i en oloroso eller amontillado möter osten ännu bättre." },
   { cheese: "Kittost som Münster", wine: "Gewürztraminer", wineKey: "gewurz", beers: ["lambic"], why: "Kraftig doft mot aromatiskt vin eller syrlig gueuze." },
-  { cheese: "Västerbotten", wine: "Lagrad Riesling eller Champagne", wineKey: "riesling", beers: ["baltisk-porter"], why: "Sälta och kristaller mot syra eller rostad sötma." },
+  { cheese: "Västerbotten", wine: "Lagrad Riesling eller Champagne", wineKey: "riesling", beers: ["porter"], why: "Sälta och kristaller mot syra eller rostad sötma." },
 ];
 
 export const DESSERT_BOTH = [
   { dessert: "Chokladfondant", wine: "Portvin eller Banyuls", wineKey: "sott", beers: ["imperial-stout", "kriek"] },
   { dessert: "Crème brûlée", wine: "Sauternes eller Tokaji", wineKey: "sott", beers: ["dipa", "barley-wine"] },
-  { dessert: "Äppelkaka och tarte tatin", wine: "Söt Chenin blanc eller Riesling", wineKey: "chenin", beers: ["dubbelbock", "weizenbock"] },
+  { dessert: "Äppelkaka och tarte tatin", wine: "Söt Chenin blanc eller Riesling", wineKey: "chenin", beers: ["dubbelbock", "dubbel"] },
   { dessert: "Jordgubbar och vaniljglass", wine: "Moscato d'Asti", wineKey: "champagne", beers: ["barley-wine", "imperial-stout"] },
   { dessert: "Citroncheesecake", wine: "Söt Riesling", wineKey: "riesling", beers: ["dipa", "barley-wine"] },
   { dessert: "Panna cotta", wine: "Moscato eller Tokaji", wineKey: "sott", beers: ["kriek"] },

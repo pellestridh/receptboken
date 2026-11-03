@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { accentVar } from "@/lib/format";
 import BeerMap from "@/components/BeerMap";
 import { Glass, Stats } from "@/components/BeerBits";
-import { styleByKey, familyName, STYLES } from "@/data/beer";
+import { styleByKey, familyName, STYLES, childrenOf, ALL_STYLES } from "@/data/beer";
 import { cardsFor } from "@/data/beerCards";
 import { beerProfile } from "@/data/beerSchool";
 import { spectrumFor } from "@/data/beerSpectrum";
@@ -38,7 +38,8 @@ export default function StylePage() {
   useEffect(() => { api("/api/beer-usage").then((d) => setUsage(d.usage || {})).catch(() => {}); }, []);
   if (!s) return <div className="narrow"><div className="empty">Den ölstilen finns inte. <Link href="/dryck?typ=ol&vy=kort">Alla stilar</Link></div></div>;
   const recs = usage[s.key] || [];
-  const cards = cardsFor(s.key);
+  const cards = [s.key, ...childrenOf(s.key)].flatMap(cardsFor);
+  const covers = childrenOf(s.key).map((k) => ALL_STYLES.find((x) => x.key === k)?.name).filter(Boolean);
   const c0 = cards[0];
   const st = c0 ? { ...s, ibu: range(c0.ibu) || s.ibu, ebc: range(c0.ebc) || s.ebc, abv: range(c0.abv) || s.abv } : s;
   const same = STYLES.filter((x) => x.family === s.family && x.key !== s.key);
@@ -59,7 +60,8 @@ export default function StylePage() {
       <section className="bsec">
         <h2>Om stilen</h2>
         <p>{s.about}</p>
-        {spectrumFor(s.key) && <p className="sline"><b>I ölspektrumet · {spectrumFor(s.key).group.name}</b>{spectrumFor(s.key).d}</p>}
+        {spectrumFor(s.key) && <p className="sline"><b>Smakprofil</b>{spectrumFor(s.key).d}</p>}
+        {covers.length > 0 && <p className="muted">Hit räknas också {covers.join(", ").replace(/, ([^,]*)$/, " och $1").toLowerCase()}.</p>}
         <p className="src">{s.src === "tillägg" ? "Tillägg, finns inte i Pelles material" : "Ur Pelles Ölkunskap och Liten Ölguide"}</p>
       </section>
 

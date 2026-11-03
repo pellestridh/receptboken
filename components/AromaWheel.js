@@ -68,7 +68,7 @@ export default function AromaWheel({ kind = "beer" }) {
           <span className="kicker">{g.name}</span>
           <h3><i style={{ background: g.color }} />{it.n}</h3>
           <p>{it.d}</p>
-          {it.styles.length > 0 && <div className="frow">{it.styles.map((k) => { const x = ref(k); return x ? <Link key={k} href={href(k)} className="chip">{x.name} ›</Link> : null; })}</div>}
+          {it.styles.length > 0 && <div className="frow">{[...new Map(it.styles.map(ref).filter(Boolean).map((x) => [x.key, x])).values()].map((x) => <Link key={x.key} href={href(x.key)} className="chip">{x.name} ›</Link>)}</div>}
         </>}
       </div>
     </div>

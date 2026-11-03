@@ -8,17 +8,16 @@
 
 export const FAMILIES = [
   { key: "ljuslager", name: "Ljus lager" },
-  { key: "morklager", name: "Mörk lager" },
+  { key: "morklager", name: "Mörk och bärnstensfärgad lager" },
   { key: "veteol", name: "Veteöl" },
   { key: "paleale", name: "Pale ale och IPA" },
-  { key: "brownale", name: "Brown ale och skotskt" },
-  { key: "stout", name: "Stout och porter" },
-  { key: "starka", name: "Starka specialöl" },
-  { key: "belgisk", name: "Belgisk och fransk ale" },
-  { key: "syrlig", name: "Syrlig och spontanjäst" },
+  { key: "brownale", name: "Brittisk och irländsk ale" },
+  { key: "stout", name: "Porter och stout" },
+  { key: "belgisk", name: "Belgisk ale" },
+  { key: "syrlig", name: "Syrlig öl" },
 ];
 
-export const STYLES = [
+const ALL = [
   // Ljus lager
   { key: "tysk-pilsner", name: "Tysk pilsner", family: "ljuslager", kind: "lager", map: { x: 0.80, y: 0.87 }, ebc: [4, 10], abv: [4.4, 5.2], ibu: [25, 45], temp: "8–10 °C",
     alias: /tysk pils|german pils|pilsner|pilsener|\bpils\b/,
@@ -469,7 +468,7 @@ export const STYLES = [
     dessert: "Chokladtårta, tiramisu",
     why: "Kakao och kaffe möter choklad och mörka såser, och alkoholen klarar kraftiga smaker.",
     examples: ["Flying Dog Gonzo Imperial Porter"] },
-  { key: "amber-ale", name: "Amber ale och red ale", family: "paleale", kind: "ale", map: { x: 0.55, y: 0.70, est: true }, ebc: [22, 36], abv: [4.5, 6], ibu: [30, 40], temp: "10–12 °C",
+  { key: "amber-ale", name: "Amber ale", family: "paleale", kind: "ale", map: { x: 0.55, y: 0.70, est: true }, ebc: [22, 36], abv: [4.5, 6], ibu: [30, 40], temp: "10–12 °C",
     alias: /amber ale|red ale|röd ale|irish red/,
     about: "Amerikansk red ale med karamellmalt och amerikansk humle. Totalt sett mer fruktig och beskare än en irländsk red ale.",
     food: ["Hamburgare och BBQ", "Pizza", "Mexikanskt", "Grillad kyckling"],
@@ -550,17 +549,43 @@ export const DESSERT = {
 };
 
 const low = (s) => String(s || "").toLowerCase();
+// Kärnstilarna: de stilar som visas i kartan, översikten, korten och som Claude föreslår.
+// Övriga stilar finns kvar för att känna igen namn i förslag och provningar och räknas till sin närmaste kärnstil.
+const CORE = {
+  "internationell-lager": { short: "Ljus lager" }, helles: { short: "Helles" }, "tysk-pilsner": { name: "Pilsner" },
+  marzen: { name: "Märzen och wienerlager", short: "Märzen" }, dunkel: { short: "Dunkel" }, schwarzbier: {}, rauchbier: { name: "Rauchbier" }, dubbelbock: { name: "Bock och dubbelbock", short: "Bock" }, steam: { family: "morklager", short: "California common" },
+  weissbier: {}, wit: {},
+  apa: { short: "Pale ale" }, ipa: {}, neipa: { short: "NEIPA" }, dipa: {}, "black-ipa": {}, "amber-ale": {},
+  bitter: { name: "Bitter och pale ale", short: "Bitter", family: "brownale" }, "irish-red": {}, "brown-ale": {}, "barley-wine": { family: "brownale" },
+  porter: {}, "dry-stout": {}, "oatmeal-stout": { short: "Oatmeal" }, "imperial-stout": { family: "stout" },
+  saison: {}, dubbel: {}, tripel: {}, "golden-strong": { short: "Duvel-typ" }, quadrupel: { name: "Quadrupel" }, "belgisk-ipa": {},
+  lambic: { short: "Gueuze" }, kriek: { name: "Kriek och fruktlambic", short: "Kriek" }, "berliner-weisse": { name: "Berliner Weisse och gose", short: "Berliner Weisse" },
+};
+export const PARENT = {
+  "tjeckisk-pilsner": "tysk-pilsner", "modern-lager": "tysk-pilsner", "imperial-pils": "tysk-pilsner", export: "helles", kolsch: "helles",
+  wiener: "marzen", bock: "dubbelbock", "helles-bock": "dubbelbock", eisbock: "dubbelbock",
+  dunkelweizen: "weissbier", weizenbock: "weissbier", "amerikansk-vete": "weissbier",
+  "session-ipa": "ipa", "engelsk-pale-ale": "bitter", altbier: "bitter", mild: "brown-ale", "amerikansk-brown": "brown-ale", scottish: "brown-ale", "old-ale": "barley-wine",
+  "baltisk-porter": "porter", "imperial-porter": "porter", "sweet-stout": "oatmeal-stout",
+  blonde: "golden-strong", "biere-de-garde": "saison", "flanders-red": "lambic", "oud-bruin": "lambic", gose: "berliner-weisse",
+};
+export const ALL_STYLES = ALL;
+export const STYLES = ALL.filter((s) => CORE[s.key]).map((s) => ({ ...s, ...CORE[s.key] }));
+const core = (s) => (s ? STYLES.find((x) => x.key === s.key) || STYLES.find((x) => x.key === PARENT[s.key]) || null : null);
+// Stilar som räknas till en kärnstil, t.ex. tjeckisk pilsner till pilsner.
+export const childrenOf = (k) => Object.keys(PARENT).filter((c) => PARENT[c] === k);
+
 export function styleFor(text) {
   const t = low(text);
   if (!t) return null;
   // Längre och mer specifika först, t.ex. "dubbel ipa" före "ipa" och "imperial stout" före "stout".
-  for (const k of ["imperial-porter", "imperial-pils", "modern-lager", "dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
-    const s = STYLES.find((x) => x.key === k);
-    if (s.alias.test(t)) return s;
+  for (const k of ["black-ipa", "belgisk-ipa", "session-ipa", "internationell-lager", "irish-red", "imperial-porter", "imperial-pils", "modern-lager", "dipa", "neipa", "imperial-stout", "baltisk-porter", "sweet-stout", "oatmeal-stout", "dubbelbock", "helles-bock", "eisbock", "weizenbock", "dunkelweizen", "berliner-weisse", "amerikansk-brown", "amerikansk-vete", "tjeckisk-pilsner", "golden-strong", "quadrupel", "flanders-red", "oud-bruin", "kriek", "engelsk-pale-ale"]) {
+    const s = ALL.find((x) => x.key === k);
+    if (s && s.alias.test(t)) return core(s);
   }
-  return STYLES.find((s) => s.alias.test(t)) || null;
+  return core(ALL.find((s) => s.alias.test(t)));
 }
-export const styleByKey = (k) => STYLES.find((s) => s.key === k) || null;
+export const styleByKey = (k) => core(ALL.find((s) => s.key === k));
 export const familyName = (k) => FAMILIES.find((f) => f.key === k)?.name || "";
 
 // EBC till färg, ungefärligt.

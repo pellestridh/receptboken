@@ -9,7 +9,7 @@ export const SPECTRUM = [
     items: [
       { key: "neipa", b: 15, f: 85, pelle: true, d: "Extremt fruktig (juicig), minimal mätbar eller upplevd beska." },
       { key: "session-ipa", b: 55, f: 66, pelle: true, d: "Medelhög till hög beska, men lätt kropp och frisk, modern humlefruktighet." },
-      { key: "apa", b: 48, f: 60, pelle: true, d: "Balanserad, moderat beska med tydliga inslag av citrus och tall." },
+      { key: "apa", b: 35, f: 45, pelle: true, d: "Balanserad, moderat beska med tydliga inslag av citrus och tall." },
       { key: "ipa", b: 75, f: 55, pelle: true, d: "West Coast IPA: mycket hög beska, stram och kådig med balanserad citrusfruktighet i bakgrunden." },
       { key: "dipa", b: 95, f: 60, pelle: true, d: "Extremt hög beska, men också mycket hög fruktighet och alkoholstyrka för att balansera upp det hela." },
       { key: "black-ipa", b: 70, f: 70, pelle: true, d: "Black IPA (Cascadian dark ale): hög beska och modern humlefruktighet som en vanlig IPA, men med en mörk färg och subtila rostade undertoner." },
@@ -57,10 +57,10 @@ export const SPECTRUM = [
     key: "malt", name: "Bärnstensfärgade och maltiga lager", focus: "Malt, bröd och kola, lite frukt",
     items: [
       { key: "wiener", b: 26, f: 18, d: "Låg beska, rostat bröd och lätt karamell, ren och torr." },
-      { key: "marzen", b: 22, f: 20, d: "Låg beska, fyllig brödig malt med lite kola." },
+      { key: "marzen", b: 22, f: 20, d: "Märzen, Oktoberfest och wienerlager: låg beska, rostat bröd och fyllig malt med lite kola." },
       { key: "helles-bock", b: 28, f: 24, d: "Medelbeska, honung och ljus malt, starkare än en helles." },
       { key: "bock", b: 22, f: 28, d: "Låg beska, fyllig och maltsöt med lite mörk frukt." },
-      { key: "dubbelbock", b: 20, f: 42, d: "Låg beska, mycket maltsötma och kola med torkad frukt i bakgrunden." },
+      { key: "dubbelbock", b: 20, f: 42, d: "Bock och dubbelbock: låg beska, mycket maltsötma och kola, dubbelbocken med torkad frukt i bakgrunden." },
       { key: "eisbock", b: 25, f: 56, d: "Låg beska, koncentrerad maltsötma, plommon och russin och värmande alkohol." },
     ],
   },

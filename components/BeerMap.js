@@ -2,21 +2,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { STYLES, FAMILIES, styleColor, familyName, styleByKey } from "@/data/beer";
-import { SPECTRUM, spectrumFor } from "@/data/beerSpectrum";
+import { spectrumFor } from "@/data/beerSpectrum";
 import TasteGrid, { spread, placeLabels } from "@/components/TasteGrid";
 
-// Två kartor: Pelles stora ölkarta (beska och fruktighet, 0–100) och smakkartan ur Liten Ölguide.
+// Ölkartan: Pelles stora ölkarta med beska och fruktighet, 0–100, för alla kärnstilar.
 const MODES = {
   spektrum: {
     name: "Beska och fruktighet", top: "Fruktig", bottom: "Ren", left: "Låg beska", right: "Hög beska", ticks: true,
     rows: ["Mycket frukt", "Lite frukt", "Ren"], cols: ["låg beska", "medelbeska", "hög beska"], cuts: { x: [0.25, 0.45], y: [0.4, 0.7] },
-    hint: "Den stora ölkartan. Åt höger mer humlebeska, uppåt mer frukt från jästens estrar och modern humle.",
     pos: (s) => { const p = spectrumFor(s.key); return p ? { x: p.b / 100, y: 1 - p.f / 100 } : null; },
-  },
-  guide: {
-    name: "Söt–besk och fruktig–maltig", top: "Söt", bottom: "Besk", left: "Fruktig", right: "Maltig",
-    hint: "Smakkartan ur Liten Ölguide. Vänster fruktigt, höger maltigt, uppåt sött och nedåt beskt.",
-    pos: (s) => s.map || null,
   },
 };
 
@@ -24,24 +18,22 @@ export default function BeerMap({ usage = {}, focus = null, compact = false }) {
   const [mode, setMode] = useState("spektrum");
   const [fam, setFam] = useState(null);
   const [sel, setSel] = useState(focus);
-  const [view, setView] = useState(compact ? "punkter" : "rutnat");
+  const [view, setView] = useState("punkter");
   const M = MODES[mode];
   const W = 1000, H = 1000, P = 70;
   const pts = useMemo(() => spread(STYLES.map((s) => ({ s, p: M.pos(s) })).filter((o) => o.p).map(({ s, p }) => ({ s, est: p.est, x: P + p.x * (W - 2 * P), y: P + p.y * (H - 2 * P) })), 38), [mode]);
   const chosen = sel ? STYLES.find((s) => s.key === sel) : null;
   const used = (k) => (usage[k] || []).length;
-  const labels = placeLabels([...pts].filter((o) => sel === o.s.key || used(o.s.key) > 0 || (fam && o.s.family === fam)).sort((a, b) => (sel === b.s.key) - (sel === a.s.key) || used(b.s.key) - used(a.s.key)).map((o) => ({ key: o.s.key, x: o.x, y: o.y, r: sel === o.s.key ? 20 : used(o.s.key) ? 16 : 12, name: o.s.name })));
+  const labels = placeLabels([...pts].filter((o) => !compact || sel === o.s.key).sort((a, b) => (sel === b.s.key) - (sel === a.s.key) || used(b.s.key) - used(a.s.key)).map((o) => ({ key: o.s.key, x: o.x, y: o.y, r: sel === o.s.key ? 20 : used(o.s.key) ? 16 : 12, name: o.s.short || o.s.name })), 1000, 19, 36, !compact, pts.map((o) => ({ x: o.x, y: o.y, r: 14 })));
 
   return (
     <div className={"bmap" + (compact ? " compact" : "")}>
       {!compact && (
         <>
           <div className="boxseg small mapmode two" role="tablist">
-            <button type="button" role="tab" aria-selected={view === "rutnat"} onClick={() => setView("rutnat")}>Rutnät</button>
-            <button type="button" role="tab" aria-selected={view === "punkter"} onClick={() => setView("punkter")}>Punktkarta</button>
+            <button type="button" role="tab" aria-selected={view === "punkter"} onClick={() => setView("punkter")}>Karta</button>
+            <button type="button" role="tab" aria-selected={view === "rutnat"} onClick={() => setView("rutnat")}>Lista</button>
           </div>
-          <div className="boxseg small mapmode" role="tablist">{Object.entries(MODES).map(([k, m]) => <button key={k} type="button" role="tab" aria-selected={mode === k} onClick={() => setMode(k)}>{m.name}</button>)}</div>
-          <p className="hint">{M.hint}</p>
           <div className="frow fams">
             <button type="button" className="chip" aria-pressed={!fam} onClick={() => setFam(null)}>Alla</button>
             {FAMILIES.map((f) => <button key={f.key} type="button" className="chip" aria-pressed={fam === f.key} onClick={() => setFam(fam === f.key ? null : f.key)}>{f.name}</button>)}
@@ -78,7 +70,7 @@ export default function BeerMap({ usage = {}, focus = null, compact = false }) {
               const on = sel === s.key;
               const u = used(s.key);
               const r = on ? 20 : u ? 16 : 12;
-              const named = on || u > 0 || (fam && s.family === fam);
+              const named = on || (!compact && !!labels[s.key]);
               return (
                 <g key={s.key} className={"pt" + (dim ? " dim" : "") + (on ? " on" : "") + (u ? " used" : "") + (named ? " named" : "") + (est ? " est" : "")}
                   onClick={() => setSel(on ? null : s.key)} role="button" tabIndex={0} aria-label={s.name}
@@ -88,7 +80,7 @@ export default function BeerMap({ usage = {}, focus = null, compact = false }) {
                     ? <rect x={x - r} y={y - r} width={r * 2} height={r * 2} rx="5" fill={styleColor(s)} className="mk" />
                     : <circle cx={x} cy={y} r={r} fill={styleColor(s)} className="mk" />}
                   <title>{s.name}</title>
-                  <text x={labels[s.key]?.x ?? x + r + 10} y={labels[s.key]?.y ?? y + 9} textAnchor={labels[s.key]?.a || "start"} className="lbl">{s.name}</text>
+                  <text x={labels[s.key]?.x ?? x + r + 10} y={labels[s.key]?.y ?? y + 9} textAnchor={labels[s.key]?.a || "start"} className="lbl">{s.short || s.name}</text>
                 </g>
               );
             })}
@@ -103,41 +95,6 @@ export default function BeerMap({ usage = {}, focus = null, compact = false }) {
           <span className="go">›</span>
         </Link>
       )}
-      {!compact && <Spectrum fam={fam} used={used} />}
-    </div>
-  );
-}
-
-const Meter = ({ v, label }) => <span className="smeter" title={`${label} ${v} av 100`}><i style={{ width: `${v}%` }} /></span>;
-
-// Ölspektrumet: alla stilar per grupp, med beska och fruktighet och en rad om varje.
-function Spectrum({ fam, used }) {
-  return (
-    <section className="spectrum">
-      <h2>Ölspektrumet</h2>
-      <p className="hint">Alla stilar i grupper efter vad som bär smaken. Staplarna visar beska och fruktighet på samma skala som kartan.</p>
-      {SPECTRUM.map((g) => {
-        const items = g.items.filter((i) => !fam || styleByKey(i.key)?.family === fam);
-        if (!items.length) return null;
-        return (
-          <div key={g.key} className="sgroup">
-            <h3>{g.name}</h3>
-            <p className="muted sfocus">{g.focus}</p>
-            <ul>
-              {items.map((i) => {
-                const s = styleByKey(i.key);
-                return (
-                  <li key={i.key} className={used(i.key) ? "used" : ""}>
-                    <Link href={`/dryck/ol/${i.key}`} className="sname"><i className={"tdot" + (s.kind === "lager" ? " sq" : "")} style={{ background: styleColor(s) }} />{s.name}</Link>
-                    <span className="sbars"><span><small>Beska</small><Meter v={i.b} label="Beska" /></span><span><small>Frukt</small><Meter v={i.f} label="Fruktighet" /></span></span>
-                    <p>{i.d}</p>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
-        );
-      })}
-    </section>
   );
 }

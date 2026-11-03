@@ -70,8 +70,8 @@ export function spread(pts, min = 34, W = 1000, H = 1000, P = 50) {
 }
 
 // Placerar namnen så att de inte krockar: provar höger, vänster, ovanför och under punkten.
-export function placeLabels(list, W = 1000, cw = 19, h = 36) {
-  const boxes = [], out = {};
+export function placeLabels(list, W = 1000, cw = 19, h = 36, strict = false, dots = []) {
+  const boxes = dots.map(({ x, y, r }) => ({ x1: x - r - 2, x2: x + r + 2, y1: y - r - 2, y2: y + r + 2 })), out = {};
   const hit = (a) => boxes.some((b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1);
   for (const { key, x, y, r, name } of list) {
     const w = name.length * cw, g = r + 10;
@@ -81,7 +81,9 @@ export function placeLabels(list, W = 1000, cw = 19, h = 36) {
       { x, y: y - g - 4, a: "middle", b: { x1: x - w / 2, x2: x + w / 2, y1: y - g - h, y2: y - g } },
       { x, y: y + g + 26, a: "middle", b: { x1: x - w / 2, x2: x + w / 2, y1: y + g, y2: y + g + h } },
     ].filter((o) => o.b.x1 > -20 && o.b.x2 < W + 20);
-    const pick = opts.find((o) => !hit(o.b)) || opts[0] || { x: x + g, y: y + 9, a: "start", b: { x1: 0, x2: 0, y1: 0, y2: 0 } };
+    const free = opts.find((o) => !hit(o.b));
+    if (!free && strict) { boxes.push({ x1: x - r, x2: x + r, y1: y - r, y2: y + r }); continue; }
+    const pick = free || opts[0] || { x: x + g, y: y + 9, a: "start", b: { x1: 0, x2: 0, y1: 0, y2: 0 } };
     boxes.push(pick.b, { x1: x - r, x2: x + r, y1: y - r, y2: y + r });
     out[key] = pick;
   }

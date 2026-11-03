@@ -15,6 +15,7 @@ import { GRAPES, grapeByKey } from "@/data/wine";
 import { WINE_TREE, WINE_PRINCIPLES, CHEESE_BOTH, DESSERT_BOTH } from "@/data/wineExtra";
 import { SCHOOL } from "@/data/school";
 import { beerProfile } from "@/data/beerSchool";
+import { EXPERTS, METHOD } from "@/data/experts";
 
 const VIEWS = [["lar", "Lär dig"], ["karta", "Kartan"], ["trad", "Översikten"], ["kort", "Korten"], ["mat", "Till maten"], ["provat", "Provat"]];
 const OLD = { stilar: "kort", ost: "mat", dessert: "mat" };
@@ -62,7 +63,12 @@ function Principles({ kind }) {
   const P = kind === "beer" ? PRINCIPLES : WINE_PRINCIPLES;
   return (
     <section className="dsec prose">
-      <p className="lead">{P.intro}</p>
+      <h2>Så tänker ni</h2>
+      <p className="lead">{METHOD.intro}</p>
+      <ol className="method">{METHOD.steps.map((x, i) => <li key={x.t}><span className="mn">{i + 1}</span><div><b>{x.t}</b><p>{typeof x.d === "string" ? x.d : x.d[kind]}</p></div></li>)}</ol>
+      <p className="hint">{METHOD.after}</p>
+      <h2>{kind === "beer" ? "Öl till mat" : "Vin till mat"}</h2>
+      <p>{P.intro}</p>
       <div className="duo">{P.strengths.map((t) => <div key={t} className={"bigfact " + kind}>{t}</div>)}</div>
       <h2>Sex tumregler</h2>
       <ol className="rules">{P.tips.map((x) => <li key={x.t}><b>{x.t}</b><span>{x.d}</span></li>)}</ol>
@@ -74,6 +80,15 @@ function Principles({ kind }) {
           <div className="tastes">{P.tastes.map((x) => <div key={x.t} className={"taste t-" + x.t.toLowerCase()}><h3>{x.t}</h3><ul>{x.d.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div>
         </>
       )}
+      <h2>Så tänker experterna</h2>
+      <div className="experts">{EXPERTS[kind].map((e) => (
+        <div key={e.name} className="expert">
+          <h3>{e.name}</h3>
+          <p className="muted role">{e.role}</p>
+          <ol>{e.points.map(([t, d]) => <li key={t}><b>{t}</b>{d}</li>)}</ol>
+          {e.sources.length > 0 && <p className="srcs muted">Läs mer: {e.sources.map(([t, h]) => <a key={h} href={h} target="_blank" rel="noopener noreferrer">{t}</a>)}</p>}
+        </div>
+      ))}</div>
       <h2>Ost och dessert, öl och vin</h2>
       <p className="hint">Samma ost eller dessert med ett vin och en öl, så att ni kan jämföra.</p>
       <div className="both">
@@ -167,7 +182,7 @@ function Drinks() {
       <div className="hero">
         <span className="kicker">Dryck</span>
         <h1>{kind === "beer" ? "Öl och mat" : "Vin och mat"}</h1>
-        <p className="muted" style={{ margin: 0 }}>{kind === "beer" ? "Byggt på Pelles material: smakkartan, släktträdet, öltypskorten och texterna om öl och mat." : "Från grunden: druvor, smakstilar och vin till maten, med en provningslogg som lär sig vad ni gillar."}</p>
+        <p className="muted" style={{ margin: 0 }}>{kind === "beer" ? "Byggt på Pelles material: ölkartan, öltypskorten och texterna om öl och mat, med Garrett Oliver om öl till mat." : "Från grunden: druvor, smakstilar och vin till maten, med en provningslogg som lär sig vad ni gillar."}</p>
       </div>
       <div className="boxseg drinktabs" role="tablist">
         {[["ol", "Öl"], ["vin", "Vin"]].map(([t, l]) => <button key={t} type="button" role="tab" aria-selected={typ === t} onClick={() => go(t, view)}>{l}</button>)}
@@ -179,13 +194,13 @@ function Drinks() {
       {view === "lar" && <School kind={kind} />}
       {view === "karta" && (
         <section className="dsec">
-          {kind === "beer" && <p className="hint">Smakreferensen från Liten Ölguide. Vänster är fruktigt, höger maltigt, uppåt sött och nedåt beskt. Färgen är ölets färg. Tryck på en stil, eller välj en familj för att se namnen.</p>}
+          {kind === "beer" && <p className="hint">Pelles stora ölkarta med de 34 kärnstilarna. Åt höger mer beska, uppåt mer frukt. Färgen är ölets färg. Tryck på en stil för att läsa mer, eller välj Lista för att se alla namn i rutor.</p>}
           {kind === "beer" ? <BeerMap usage={u} /> : <WineMap usage={u} />}
         </section>
       )}
       {view === "trad" && (
         <section className="dsec">
-          <p className="hint">{kind === "beer" ? <>Pelles släktträd över ölstilarna, Allt om Ölstilar 2 från 2012: från jäsningssätt via familjer till stilar och exempel. <a href="/ol/allt-om-olstilar.jpg" target="_blank" rel="noopener noreferrer">Visa originalet</a>.</> : "Vinets släktträd: färg, stil och druvor, med områden att leta efter på etiketten."} Tryck på plus för att fälla ut, och på en färgad punkt för att öppna kortet.</p>
+          <p className="hint">{kind === "beer" ? <>Samma 34 stilar som på kartan och korten, ordnade från jäsningssätt via familjer till stilar och öl att leta efter. Pelles stora släktträd finns som <a href="/ol/allt-om-olstilar.jpg" target="_blank" rel="noopener noreferrer">original att titta på</a>.</> : "Vinets släktträd: färg, stil och druvor, med områden att leta efter på etiketten."} Tryck på plus för att fälla ut, och på en färgad punkt för att öppna kortet.</p>
           <BeerTree usage={u} kind={kind} tree={kind === "wine" ? WINE_TREE : undefined} />
         </section>
       )}

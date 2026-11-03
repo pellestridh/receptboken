@@ -926,3 +926,26 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .aw-info.fault { border-color: #B23A3A; }
 .aw-i:focus { outline: none; } .aw-i:focus-visible .aw-out { stroke: var(--ink); stroke-width: 5; }
 .aw-il.light { fill: #fff; }
+.vocab dl { margin: .4rem 0 0; display: grid; gap: .1rem; }
+.vocab dl > div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: .2rem 1rem; padding: .55rem 0; border-top: 1px solid var(--line); }
+.vocab dt { font-weight: 700; }
+.vocab dd { margin: 0; }
+@media (max-width: 600px) { .vocab dl > div { grid-template-columns: 1fr; } }
+.experts { display: grid; gap: .8rem; }
+.expert { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; }
+.expert h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.3rem; }
+.expert .role { margin: .15rem 0 .6rem; font-size: .9rem; }
+.expert ol { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; }
+.expert li b { display: block; }
+.expert .srcs { margin: .7rem 0 0; font-size: .82rem; }
+.expert .srcs a { margin-right: .8rem; }
+.wwhy-ask { margin: .2rem 0 .4rem; }
+.wwhy { background: color-mix(in srgb, var(--accent) 7%, var(--paper)); border-radius: 12px; padding: .7rem .85rem; margin: .4rem 0 .5rem; }
+.wwhy > b { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.wwhy p { margin: .35rem 0 0; }
+.wwhy ul { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .92rem; }
+.wwhy .bchip { text-transform: none; letter-spacing: 0; }
+.method { list-style: none; margin: .6rem 0 .4rem; padding: 0; display: grid; gap: .55rem; }
+.method li { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: .8rem; align-items: start; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: .8rem .9rem; }
+.method .mn { width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--paper); font-weight: 700; }
+.method p { margin: .2rem 0 0; }

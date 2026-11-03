@@ -142,6 +142,23 @@ export function WineLog({ kind = "wine", initial = {}, recipeId, recipeTitle, on
   );
 }
 
+function Why({ n }) {
+  const [w, setW] = useState(n.why);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const good = (n.match || 0) >= 4;
+  const ask = () => { setBusy(true); setErr(""); api("/api/wine-notes", { method: "POST", json: { action: "why", id: n.id } }).then((d) => setW(d.why)).catch((e) => setErr(e.message)).finally(() => setBusy(false)); };
+  if (!w) return <p className="wwhy-ask">{busy ? <span className="muted">Claude tänker …</span> : <button type="button" className="link" onClick={ask}>{good ? "Varför passade det?" : (n.match || 0) <= 2 ? "Varför passade det inte?" : "Vad hände i kombinationen?"}</button>}{err && <span className="err"> {err}</span>}</p>;
+  return (
+    <div className={"wwhy" + (good ? " good" : "")}>
+      <b>{good ? "Därför passade det" : "Därför blev det så"}{w.principle ? <span className="bchip">{w.principle}</span> : null}</b>
+      <p>{w.why}</p>
+      {w.met?.length > 0 && <ul>{w.met.map((m) => <li key={m}>{m}</li>)}</ul>}
+      {w.next && <p className="muted"><b>Nästa gång:</b> {w.next}</p>}
+    </div>
+  );
+}
+
 export function WineNote({ n, onDelete, showRecipe = true }) {
   const [arm, setArm] = useState(false);
   const kind = n.kind || "wine";
@@ -162,6 +179,7 @@ export function WineNote({ n, onDelete, showRecipe = true }) {
       {Object.keys(n.dims || {}).length > 0 && <div className="mini-dims">{dimsFor(kind).filter((d) => n.dims[d.key]).map((d) => <span key={d.key}>{d.name} <i style={{ "--v": n.dims[d.key] }} /></span>)}</div>}
       {n.aromas?.length > 0 && <p className="wnote-a">{n.aromas.join(", ")}</p>}
       {n.note && <p>{n.note}</p>}
+      {n.recipeId && n.match ? <Why n={n} /> : null}
       <p className="wnote-f muted">{n.author ? `${n.author}, ` : ""}{dateSv(n.createdAt)}
         {onDelete && (arm ? <button className="link" type="button" onClick={() => onDelete(n.id)}>Tryck igen för att ta bort</button> : <button className="link" type="button" onClick={() => { setArm(true); setTimeout(() => setArm(false), 4000); }}>Ta bort</button>)}
       </p>

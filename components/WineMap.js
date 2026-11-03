@@ -14,22 +14,22 @@ export default function WineMap({ usage = {}, focus = null, compact = false }) {
   const [mode, setMode] = useState("stil");
   const [fam, setFam] = useState("alla");
   const [sel, setSel] = useState(focus);
-  const [view, setView] = useState(compact ? "punkter" : "rutnat");
+  const [view, setView] = useState("punkter");
   const M = WINE_MAPS[mode];
   const W = 1000, H = 1000, P = 70;
   const pts = useMemo(() => spread(GRAPES.map((g) => { const p = wineMapPos(g, mode); return { g, x: P + p.x * (W - 2 * P), y: P + p.y * (H - 2 * P) }; }), 38), [mode]);
   const chosen = sel ? GRAPES.find((g) => g.key === sel) : null;
   const used = (k) => (usage[k] || []).length;
 
-  const labels = placeLabels([...pts].filter((o) => sel === o.g.key || used(o.g.key) > 0 || fam !== "alla").sort((a, b) => (sel === b.g.key) - (sel === a.g.key) || used(b.g.key) - used(a.g.key)).map((o) => ({ key: o.g.key, x: o.x, y: o.y, r: (sel === o.g.key ? 20 : used(o.g.key) ? 16 : 13), name: o.g.name })));
+  const labels = placeLabels([...pts].filter((o) => !compact || sel === o.g.key).sort((a, b) => (sel === b.g.key) - (sel === a.g.key) || used(b.g.key) - used(a.g.key)).map((o) => ({ key: o.g.key, x: o.x, y: o.y, r: (sel === o.g.key ? 20 : used(o.g.key) ? 16 : 13), name: o.g.short || o.g.name })), 1000, 19, 36, !compact, pts.map((o) => ({ x: o.x, y: o.y, r: 14 })));
 
   return (
     <div className={"bmap wmap" + (compact ? " compact" : "")}>
       {!compact && (
         <>
           <div className="boxseg small mapmode two" role="tablist">
-            <button type="button" role="tab" aria-selected={view === "rutnat"} onClick={() => setView("rutnat")}>Rutnät</button>
-            <button type="button" role="tab" aria-selected={view === "punkter"} onClick={() => setView("punkter")}>Punktkarta</button>
+            <button type="button" role="tab" aria-selected={view === "punkter"} onClick={() => setView("punkter")}>Karta</button>
+            <button type="button" role="tab" aria-selected={view === "rutnat"} onClick={() => setView("rutnat")}>Lista</button>
           </div>
           <div className="boxseg small mapmode" role="tablist">{Object.entries(WINE_MAPS).map(([k, m]) => <button key={k} type="button" role="tab" aria-selected={mode === k} onClick={() => setMode(k)}>{m.name}</button>)}</div>
           <p className="hint">{M.hint}</p>
@@ -50,7 +50,7 @@ export default function WineMap({ usage = {}, focus = null, compact = false }) {
           {[...pts].sort((a, b) => (sel === a.g.key) - (sel === b.g.key) || (used(a.g.key) > 0) - (used(b.g.key) > 0)).map(({ g, x, y }) => {
             const dim = fam !== "alla" && famOf(g) !== fam;
             const on = sel === g.key, u = used(g.key);
-            const named = on || u > 0 || fam !== "alla";
+            const named = on || (!compact && !!labels[g.key]);
             const r = on ? 20 : u ? 16 : 13;
             return (
               <g key={g.key} className={"pt" + (dim ? " dim" : "") + (on ? " on" : "") + (u ? " used" : "") + (named ? " named" : "")}
@@ -58,7 +58,7 @@ export default function WineMap({ usage = {}, focus = null, compact = false }) {
                 <title>{g.name}</title>
                 {u > 0 && <circle cx={x} cy={y} r={r + 9} className="halo" />}
                 <circle cx={x} cy={y} r={r} fill={swatch(g.color)} className="mk" />
-                <text x={labels[g.key]?.x ?? x + r + 10} y={labels[g.key]?.y ?? y + 9} textAnchor={labels[g.key]?.a || "start"} className="lbl">{g.name}</text>
+                <text x={labels[g.key]?.x ?? x + r + 10} y={labels[g.key]?.y ?? y + 9} textAnchor={labels[g.key]?.a || "start"} className="lbl">{g.short || g.name}</text>
               </g>
             );
           })}
