@@ -9,6 +9,7 @@ import { Glass, Stats } from "@/components/BeerBits";
 import { styleByKey, familyName, STYLES } from "@/data/beer";
 import { cardsFor } from "@/data/beerCards";
 import { beerProfile } from "@/data/beerSchool";
+import { spectrumFor } from "@/data/beerSpectrum";
 import { ProfileBars, WineNote, itemFor } from "@/components/Wine";
 
 const range = (t) => { const m = String(t || "").replace(/,/g, ".").match(/([\d.]+)\s*(?:-\s*([\d.]+))?/); return m ? [Number(m[1]), Number(m[2] || (t.includes("+") ? 80 : m[1]))] : null; };
@@ -58,6 +59,7 @@ export default function StylePage() {
       <section className="bsec">
         <h2>Om stilen</h2>
         <p>{s.about}</p>
+        {spectrumFor(s.key) && <p className="sline"><b>I ölspektrumet · {spectrumFor(s.key).group.name}</b>{spectrumFor(s.key).d}</p>}
         <p className="src">{s.src === "tillägg" ? "Tillägg, finns inte i Pelles material" : "Ur Pelles Ölkunskap och Liten Ölguide"}</p>
       </section>
 

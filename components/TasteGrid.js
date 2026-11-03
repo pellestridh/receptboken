@@ -3,10 +3,11 @@ import Link from "next/link";
 
 // Smakkartan som ett rutnät 3 x 3: samma axlar som punktkartan,
 // men varje stil får en egen rad så att inget hamnar ovanpå något annat.
-const band = (v) => (v < 1 / 3 ? 0 : v < 2 / 3 ? 1 : 2);
+const band = (v, c = [1 / 3, 2 / 3]) => (v < c[0] ? 0 : v < c[1] ? 1 : 2);
 const lc = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 
 function cellName(axes, r, c) {
+  if (axes.rows && axes.cols) return `${axes.rows[r]}, ${axes.cols[c]}`;
   const row = [axes.top, null, axes.bottom][r];
   const col = [axes.left, null, axes.right][c];
   if (row && col) return `${row} och ${lc(col)}`;
@@ -16,7 +17,7 @@ function cellName(axes, r, c) {
 // items: [{ key, name, x, y, color, square, used, href, dim }]
 export default function TasteGrid({ items, axes }) {
   const cells = Array.from({ length: 9 }, () => []);
-  for (const it of items) cells[band(it.y) * 3 + band(it.x)].push(it);
+  for (const it of items) cells[band(it.y, axes.cuts?.y) * 3 + band(it.x, axes.cuts?.x)].push(it);
 
   return (
     <div className="tgrid-wrap">

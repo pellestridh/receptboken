@@ -880,3 +880,27 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 
 @media (max-width: 600px) { .mapmode.two { grid-auto-flow: column; } }
 .owntag { display: inline-block; margin-left: .5rem; padding: .1rem .45rem; border-radius: 999px; background: var(--accent); color: var(--paper); font-family: var(--body); font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 3px; }
+
+/* Ölspektrumet */
+.bmap-box .tick { font-size: 22px; fill: var(--muted); font-family: var(--body); }
+@media (max-width: 600px) { .bmap-box .tick { font-size: 28px; } }
+.spectrum { margin-top: 2rem; }
+.spectrum h2 { margin-bottom: .2rem; }
+.sgroup { margin-top: 1.4rem; }
+.sgroup h3 { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: 0; }
+.sfocus { margin: .1rem 0 .5rem; font-size: .9rem; }
+.sgroup ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
+.sgroup li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .2rem 1rem; align-items: center; padding: .6rem 0; border-top: 1px solid var(--line); }
+.sgroup li p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.4; }
+.sname { display: flex; gap: .45rem; align-items: center; color: var(--ink); text-decoration: none; font-weight: 600; }
+.sname:hover { text-decoration: underline; }
+.sgroup li.used .sname .tdot { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
+.sbars { display: flex; gap: .8rem; }
+.sbars > span { display: flex; align-items: center; gap: .35rem; }
+.sbars small { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
+.smeter { display: inline-block; width: 3.6rem; height: .4rem; border-radius: 999px; background: var(--line); overflow: hidden; }
+.smeter i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+@media (max-width: 600px) { .smeter { width: 2.6rem; } .sbars { gap: .5rem; } }
+.sline { background: var(--card2, color-mix(in srgb, var(--accent) 8%, var(--paper))); border-radius: 14px; padding: .8rem 1rem; }
+.sline b { display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+@media (max-width: 600px) { .sgroup li { grid-template-columns: 1fr; } }

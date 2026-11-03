@@ -13,18 +13,22 @@ export const BEER_DIMS = [
 export const BEER_AROMAS = ["Bröd och kex", "Kola och karamell", "Honung", "Kaffe", "Choklad", "Rostat", "Citrus", "Tropisk frukt", "Banan", "Kryddnejlika", "Päron och äpple", "Mörk frukt", "Tall och kåda", "Blommor", "Örter och gräs", "Rök", "Syrlig", "Vinös"];
 
 // Profil per stil, räknad ur smakkartan och värdena i stilkorten.
+import { spectrumFor } from "@/data/beerSpectrum";
+
 export function beerProfile(s) {
+  const sp = spectrumFor(s.key);
+  const of100 = (v) => Math.max(1, Math.min(5, Math.round(1 + v / 25)));
   const b = (v, steps) => { let i = 1; for (const x of steps) if (v > x) i++; return Math.min(5, i); };
   const ibu = s.ibu ? (s.ibu[0] + s.ibu[1]) / 2 : 25;
   const ebc = s.ebc ? (s.ebc[0] + s.ebc[1]) / 2 : 15;
   const abv = s.abv ? (s.abv[0] + s.abv[1]) / 2 : 5;
   const syrlig = s.family === "syrlig";
   return {
-    beska: b(ibu, [15, 25, 38, 55]),
+    beska: sp ? of100(sp.b) : b(ibu, [15, 25, 38, 55]),
     sotma: s.map ? Math.max(1, Math.min(5, Math.round(5 - s.map.y * 4))) : 3,
     fyllighet: b(abv, [4.3, 5.5, 7, 9]),
     rostning: b(ebc, [14, 28, 45, 65]),
-    frukt: syrlig ? 5 : s.map ? Math.max(1, Math.min(5, Math.round(5 - s.map.x * 4))) : 3,
+    frukt: sp ? of100(sp.f) : syrlig ? 5 : s.map ? Math.max(1, Math.min(5, Math.round(5 - s.map.x * 4))) : 3,
   };
 }
 
