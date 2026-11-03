@@ -631,11 +631,11 @@ const CORE = {
   "dry-stout": { family: "starka", name: "Dry stout", desc: "Den klassiska irländska stilen, som Guinness. Svart, mycket torr, med en rostad smak av kaffe och mörk choklad." },
   "imperial-stout": { family: "starka", desc: "Extremt kraftig, svart och alkoholstark. Tjära, lakrits, mörk choklad, kaffe och torkad frukt. Lagras ofta på ekfat." },
   porter: { family: "starka", desc: "Släkting till stouten men ofta lättare i kroppen och mer fokus på choklad, karamell och nötter än på den hårt rostade kaffesmaken." },
-  "berliner-weisse": { family: "syrlig", name: "Fruktig gose och Berliner Weisse", short: "Fruktig gose", map: { x: 0.10, y: 0.50, est: true }, desc: "Den vanligaste syrliga ölen på Systembolaget idag. Lätta, krispiga snabbsuröl smaksatta med mycket frukt eller bär, som hallon eller passionsfrukt." },
-  "pastry-sour": { family: "syrlig", short: "Pastry sour", desc: "Tjocka, grumliga öl som påminner om en smoothie. Sötade med laktos och smaksatta med bär, vanilj eller marshmallow." },
-  "sour-ipa": { family: "syrlig", desc: "Modern hybrid som kombinerar den friska syran från en snabbsyrad öl med den tropiska humlearomen från en IPA." },
-  lambic: { family: "syrlig", name: "Lambic och geuze", short: "Lambic", desc: "Klassisk spontanjäst öl från Belgien, lagrad i åratal på ekfat. Extremt torr, syrlig och komplex med en stallig karaktär." },
-  "flanders-red": { family: "syrlig", name: "Flamländsk röd- och brunale", short: "Flamländsk röd", desc: "Klassisk belgisk suröl lagrad på stora ekfat. Vinliknande, med smak av röda bär och balsamvinäger." },
+  "berliner-weisse": { family: "syrlig", name: "Fruktig gose och Berliner Weisse", short: "Fruktig gose", map: { x: 0.10, y: 0.66, est: true }, sotma: 4, syra: 9, desc: "Den vanligaste syrliga ölen på Systembolaget idag. Lätta, krispiga snabbsuröl smaksatta med mycket frukt eller bär, som hallon eller passionsfrukt." },
+  "pastry-sour": { family: "syrlig", short: "Pastry sour", map: { x: 0.10, y: 0.48, est: true }, sotma: 6, syra: 8, desc: "Tjocka, grumliga öl som påminner om en smoothie. Sötade med laktos och smaksatta med bär, vanilj eller marshmallow." },
+  "sour-ipa": { family: "syrlig", sotma: 2, syra: 8, desc: "Modern hybrid som kombinerar den friska syran från en snabbsyrad öl med den tropiska humlearomen från en IPA." },
+  lambic: { family: "syrlig", sotma: 1, syra: 11, name: "Lambic och geuze", short: "Lambic", desc: "Klassisk spontanjäst öl från Belgien, lagrad i åratal på ekfat. Extremt torr, syrlig och komplex med en stallig karaktär." },
+  "flanders-red": { family: "syrlig", sotma: 4, syra: 9, name: "Flamländsk röd- och brunale", short: "Flamländsk röd", desc: "Klassisk belgisk suröl lagrad på stora ekfat. Vinliknande, med smak av röda bär och balsamvinäger." },
 };
 export const PARENT = {
   "modern-lager": "tysk-pilsner", "imperial-pils": "tysk-pilsner", kolsch: "helles", altbier: "bitter",

@@ -30,7 +30,8 @@ export function beerClocks(s) {
   return [
     { label: "Beska", v: Math.max(1, Math.min(12, Math.round(ibu / 6))) },
     { label: "Fyllighet", v: to12(p.fyllighet) },
-    { label: "Sötma", v: s.map ? Math.max(1, Math.min(12, Math.round(1 + (1 - s.map.y) * 11))) : to12(p.sotma) },
+    { label: "Sötma", v: s.sotma || (s.map ? Math.max(1, Math.min(12, Math.round(1 + (1 - s.map.y) * 11))) : to12(p.sotma)) },
+    ...(s.syra ? [{ label: "Syra", v: s.syra }] : []),
   ];
 }
 export function wineClocks(g) {
