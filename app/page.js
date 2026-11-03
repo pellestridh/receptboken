@@ -9,6 +9,7 @@ import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
 import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
+import { upcomingHoliday, holidaysOf } from "@/lib/holidays";
 
 function seeded(seed) {
   let s = seed;
@@ -69,7 +70,7 @@ export default function Home() {
   }, [recipes, settings.allergies, reload]);
   const classifying = useRef(false);
   useEffect(() => {
-    if (!recipes || classifying.current || !recipes.some((r) => r.dishes == null)) return;
+    if (!recipes || classifying.current || !recipes.some((r) => r.dishes == null || r.holidays == null)) return;
     classifying.current = true;
     (async () => {
       for (let i = 0; i < 12; i++) {
@@ -92,6 +93,7 @@ export default function Home() {
   const box = useMemo(() => makeDrawers(all, { lightKcal: settings.lightKcal }), [all, settings.lightKcal]);
   const month = new Date().getMonth();
   const inSeason = useMemo(() => seasonal(all.filter((r) => !r.allergens?.hits?.length), month).slice(0, 6), [all, month]);
+  const feast = useMemo(() => { const h = upcomingHoliday(); if (!h) return null; const list = all.filter((r) => holidaysOf(r).includes(h.key)); return list.length ? { ...h, list } : null; }, [all]);
   const seasonNow = [...new Set(inSeason.flatMap((x) => x.hits))].slice(0, 3);
   const shownIds = new Set([...picks, ...longAgo].map((r) => r.id));
   const inspo = [
@@ -193,6 +195,13 @@ export default function Home() {
         );
       })()}
 
+      {!filtering && feast && (
+        <>
+          <div className="section-h"><h2>{feast.days <= 0 ? `${feast.name} i dag` : `${feast.name} om ${feast.days} ${feast.days === 1 ? "dag" : "dagar"}`}</h2><span className="muted">{feast.list.length} recept i lådan</span></div>
+          <div className="rail">{feast.list.slice(0, 6).map((r) => <Pick key={r.id} r={r} note={mins(r.minutes)} badge={feast.name} />)}</div>
+          <p className="hint" style={{ marginTop: ".3rem" }}><a href="/fest">Planera festen: hur mycket ska ni laga? ›</a></p>
+        </>
+      )}
       {!filtering && inSeason.length > 0 && (
         <>
           <div className="section-h"><h2>I säsong i {MONTHS[month]}</h2><span className="muted">Råvarorna är som bäst nu</span></div>

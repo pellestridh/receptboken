@@ -1030,3 +1030,17 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .pmleg { display: grid; gap: .3rem; }
 .pmleg b { font-size: .9rem; }
 @media (max-width: 600px) { .pm .pmcorner { width: 42%; } .pmrow th button { font-size: .8rem; } .pmh .pmhl { font-size: .66rem; } .pmdot.big { width: .9rem; height: .9rem; } }
+/* Fest och buffé */
+.festform { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1rem; }
+.festform .wide { grid-column: 1 / -1; }
+.stepper { display: flex; align-items: center; gap: .4rem; }
+.stepper input { width: 4.5rem; text-align: center; }
+.stepper button { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); font-size: 1.2rem; cursor: pointer; }
+.festlist, .festcands { list-style: none; padding: 0; margin: .4rem 0 0; display: grid; }
+.festlist li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: .8rem; align-items: center; padding: .7rem 0; border-top: 1px solid var(--line); }
+.festlist li > div:first-child { display: grid; gap: .1rem; }
+.festlist a { color: var(--ink); text-decoration: none; }
+.festq { display: grid; justify-items: end; line-height: 1.15; }
+.festq b { font-size: 1.4rem; }
+.festcands li button { all: unset; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .6rem; align-items: center; width: 100%; padding: .55rem 0; border-top: 1px solid var(--line); }
+.festcands .plus { width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--paper); font-weight: 700; }

@@ -22,6 +22,7 @@ function More({ active }) {
         <span className="moremenu" role="menu">
           <Link role="menuitem" href="/nytt"><b>Nytt recept</b><span>Länk, foto eller fil</span></Link>
           <Link role="menuitem" href="/erbjudanden"><b>Erbjudanden</b><span>Veckans priser och recept som passar</span></Link>
+          <Link role="menuitem" href="/fest"><b>Fest och buffé</b><span>Hur mycket ska vi laga till gästerna?</span></Link>
           <Link role="menuitem" href="/inspiration"><b>Inspiration</b><span>Recept från de andra hushållen</span></Link>
           <Link role="menuitem" href="/installningar"><b>Inställningar</b><span>Allergier, hushåll, namn och utloggning</span></Link>
         </span>
@@ -49,7 +50,7 @@ export default function Nav() {
           <Link href="/meny" className="tab" aria-current={at("/meny") ? "page" : undefined}>Meny</Link>
           <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}>Inköp</Link>
           <Link href="/dryck" className="tab" aria-current={at("/dryck") ? "page" : undefined}>Dryck</Link>
-          <More active={at("/nytt") || at("/erbjudanden") || at("/inspiration") || at("/installningar")} />
+          <More active={at("/nytt") || at("/fest") || at("/erbjudanden") || at("/inspiration") || at("/installningar")} />
         </div>
       </div>
     </nav>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import RecipeBody from "@/components/RecipeBody";
 import { accentVar } from "@/lib/format";
 import { DISHES, dishesOf } from "@/lib/dishes";
+import { HOLIDAYS, holidaysOf } from "@/lib/holidays";
 
 // Granskning före sparning. Används både för nya recept och för ändringar.
 export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, saveLabel = "Spara i Receptboken", busy, dupWarning }) {
@@ -12,6 +13,8 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
   });
   const [armed, setArmed] = useState(false);
   const [dishes, setDishes] = useState(() => dishesOf(recipe));
+  const [hol, setHol] = useState(() => holidaysOf(recipe));
+  const toggleHol = (k) => setHol((cur) => cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k]);
   const toggleDish = (k) => setDishes((cur) => cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k].slice(-2));
   const opts = (k) => [...new Set([...recipes.map((r) => r[k]), recipe[k]].filter(Boolean))];
   const set = (k) => (e) => setM({ ...m, [k]: e.target.value });
@@ -20,6 +23,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
     const d = JSON.parse(JSON.stringify(recipe));
     d.title = m.title.trim() || d.title;
     if (dishes.length) d.dishes = dishes; else delete d.dishes;
+    d.holidays = hol;
     d.kitchen = m.kitchen.trim(); d.type = m.type.trim(); d.base = m.base.trim();
     const mn = parseInt(m.minutes, 10); if (mn > 0) d.minutes = mn;
     const sv = parseInt(m.servings, 10);
@@ -65,6 +69,9 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
         <label className="fld"><span>Antal {recipe.servingsUnit || "portioner"}</span><input className="tin" type="number" min="1" inputMode="numeric" value={m.servings} onChange={set("servings")} /></label>
         <div className="fld wide"><span>Typ av rätt, en eller två (styr korten i Receptlådan)</span>
           <div className="frow">{DISHES.map((x) => <button key={x.key} type="button" className="chip" aria-pressed={dishes.includes(x.key)} onClick={() => toggleDish(x.key)}>{x.name}</button>)}</div>
+        </div>
+        <div className="fld wide"><span>Högtid (valfritt)</span>
+          <div className="frow">{HOLIDAYS.map((x) => <button key={x.key} type="button" className="chip" aria-pressed={hol.includes(x.key)} onClick={() => toggleHol(x.key)}>{x.name}</button>)}</div>
         </div>
         <label className="fld wide"><span>Källa</span><input className="tin" value={m.source} onChange={set("source")} placeholder="Till exempel Köket.se eller en kokbok" /></label>
       </div>
