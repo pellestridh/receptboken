@@ -9,6 +9,7 @@ import { DIMS, grapeByKey } from "@/data/wine";
 import { BEER_DIMS } from "@/data/beerSchool";
 import { PRINCIPLES } from "@/data/beer";
 import { ProfileBars, swatch } from "@/components/Wine";
+import AromaWheel from "@/components/AromaWheel";
 
 export default function Lesson() {
   const { kind: slug, key } = useParams();
@@ -33,6 +34,8 @@ export default function Lesson() {
       <span className="kicker"><Link href={home}>{kind === "beer" ? "Ölskolan" : "Vinskolan"}</Link> · {l.level === "fordjupning" ? "Fördjupning" : "Grundkurs"} · Lektion {l.n} av {S.lessons.length}</span>
       <h1>{l.title}</h1>
       <p className="lead">{l.short}</p>
+
+      {l.wheel && <section className="bsec"><h2>Doftcirkeln</h2><p>{l.wheel}</p><AromaWheel kind={kind} /></section>}
 
       {l.body.map((b) => <section key={b.h} className="bsec"><h2>{b.h}</h2><p>{b.t}</p></section>)}
 

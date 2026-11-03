@@ -117,6 +117,7 @@ export const BEER_LESSONS = [
       { q: "Cascade doftar typiskt …", a: ["Grapefrukt och citrus", "Banan", "Rök"], c: 0 },
     ] },
   { key: "felsmaker", n: 7, level: "fordjupning", title: "Doft, smak och felsmaker", short: "Lär er doftcirkeln och de vanligaste felen, så vet ni när en öl är dålig och inte bara annorlunda.",
+    wheel: "Börja i mitten och gå utåt: först var doften kommer ifrån, malt, humle, jäst eller syra, sedan vad det faktiskt luktar. Den röda delen är felen.",
     body: [
       { h: "Grundsmakerna", t: "Sött på tungspetsen, salt och surt på sidorna, beskt längst bak. Umami ger mustighet. Det mesta av smaken är dock doft." },
       { h: "Diacetyl", t: "Smör och smörkola. Ett fel i de flesta stilar, men en svag ton är tillåten i tjeckisk pilsner och vissa engelska ale." },

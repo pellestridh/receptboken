@@ -904,3 +904,25 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .sline { background: var(--card2, color-mix(in srgb, var(--accent) 8%, var(--paper))); border-radius: 14px; padding: .8rem 1rem; }
 .sline b { display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
 @media (max-width: 600px) { .sgroup li { grid-template-columns: 1fr; } }
+
+/* Doftcirkel */
+.awheel { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .awheel { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; } }
+.awheel svg { width: 100%; height: auto; display: block; max-width: 640px; margin: 0 auto; }
+.aw-in, .aw-out { stroke: var(--paper); stroke-width: 4; cursor: pointer; transition: opacity .15s; }
+.aw-out { opacity: .78; }
+.aw-i:hover .aw-out, .aw-i.on .aw-out { opacity: 1; }
+.aw-g.dim { opacity: .35; }
+.aw-i.on .aw-out { stroke: var(--ink); stroke-width: 5; }
+.aw-gl { font-family: var(--body); font-weight: 700; font-size: 30px; fill: #fff; pointer-events: none; letter-spacing: .02em; }
+.aw-il { font-family: var(--body); font-size: 25px; fill: #1d1d1d; pointer-events: none; }
+.aw-hub { fill: var(--paper); cursor: pointer; }
+.aw-hubt { font-family: var(--display); font-size: 56px; fill: var(--ink); pointer-events: none; }
+@media (max-width: 600px) { .aw-il { font-size: 27px; } }
+.aw-info { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; }
+.aw-info h3 { display: flex; align-items: center; gap: .5rem; margin: .1rem 0 .4rem; font-family: var(--display); font-weight: 400; font-size: 1.3rem; }
+.aw-info h3 i { width: .9rem; height: .9rem; border-radius: 50%; flex: none; }
+.aw-info p { margin: 0 0 .6rem; }
+.aw-info.fault { border-color: #B23A3A; }
+.aw-i:focus { outline: none; } .aw-i:focus-visible .aw-out { stroke: var(--ink); stroke-width: 5; }
+.aw-il.light { fill: #fff; }

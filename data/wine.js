@@ -193,7 +193,7 @@ export function grapeFor(text) {
 
 // Lektionerna. Byggs på varandra; varje lektion har en övning vid middagsbordet och tre kontrollfrågor.
 export const LESSONS = [
-  { key: "prova", n: 1, title: "Så provar man vin", short: "Titta, lukta, smaka, fundera. Fyra steg som gör att ni minns vad ni druckit.",
+  { key: "prova", n: 1, title: "Så provar man vin", short: "Titta, lukta, smaka, fundera. Fyra steg som gör att ni minns vad ni druckit.", wheel: "Doftcirkeln hjälper er hitta ord för det ni känner. Börja i mitten: är det frukt, blommor, krydda eller ek? Gå sedan utåt. Den röda delen är felen.",
     body: [
       { h: "Titta", t: "Håll glaset mot något vitt. Vita viner går från blekt gröngult (ungt, svalt klimat) till guld (ek, ålder, värme). Röda från lila (ungt) till tegelbrunt (moget). Färgen ger ledtrådar, inget mer." },
       { h: "Lukta", t: "Snurra glaset så att vinet tar luft, och lukta i två korta drag. Det mesta av det vi kallar smak är egentligen doft. Säg det första ni kommer att tänka på: citrus, bär, smör, jord. Det finns inga fel svar." },
