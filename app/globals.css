@@ -1048,3 +1048,20 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 @media (prefers-color-scheme: dark) { .strow .tag.deal { color: #FF8A8A; } }
 .offbase { display: grid; gap: .3rem; }
 .offbase .btn { justify-self: start; }
+/* Nyhetsrutan och Om */
+.newsbox { position: relative; background: color-mix(in srgb, var(--accent) 9%, var(--paper)); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); border-radius: 18px; padding: .9rem 1.1rem 1rem; margin: .4rem 0 1.4rem; box-shadow: 0 6px 18px rgb(0 0 0 / .06); transform: rotate(-.4deg); }
+.nb-h { display: flex; justify-content: space-between; align-items: center; }
+.nb-tag { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+.nb-x { all: unset; cursor: pointer; padding: .2rem .4rem; color: var(--muted); }
+.nb-t { display: block; font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: .2rem 0 .3rem; }
+.newsbox ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; font-size: .95rem; }
+.nb-f { display: flex; gap: 1.2rem; align-items: center; margin: .7rem 0 0; font-weight: 700; }
+.abouthead { display: flex; gap: 2rem; flex-wrap: wrap; }
+.abouthead > div { display: grid; }
+.abouthead b { font-size: 1.3rem; }
+.releases { display: grid; gap: 1rem; }
+.release { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; }
+.release header { display: flex; justify-content: space-between; }
+.reltitle { margin: .2rem 0 .4rem; font-family: var(--display); font-weight: 400; font-size: 1.2rem; }
+.relpart h3 { margin: .6rem 0 .2rem; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.relpart ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .2rem; }

@@ -3,11 +3,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRecipes, sortRecipes, filterRecipes, timeBucket } from "@/components/useRecipes";
 import { Card, Pick } from "@/components/Card";
-import { api, lsGet, lsSet } from "@/lib/api";
+import { api, lsGet, lsSet, getName } from "@/lib/api";
 import { daysSince, mins, accentVar } from "@/lib/format";
 import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
+import NewsBox from "@/components/NewsBox";
 import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
 import { upcomingHoliday, holidaysOf } from "@/lib/holidays";
 
@@ -101,6 +102,11 @@ export default function Home() {
     { title: "Familjens favoriter", sub: "Fyra och fem stjärnor", list: all.filter((r) => (r.rating || 0) >= 4 && !shownIds.has(r.id)).sort((a, b) => b.rating - a.rating) },
   ].filter((x) => x.list.length >= 2).map((x) => ({ ...x, list: x.list.slice(0, 6) }));
   const now = new Date();
+  const [who, setWho] = useState("");
+  useEffect(() => { setWho(getName()); }, []);
+  const hour = now.getHours();
+  const greeting = `${hour < 5 ? "God natt" : hour < 10 ? "God morgon" : hour < 17 ? "Hej" : "God kväll"}${who ? `, ${who.split(" ")[0]}` : ""}.`;
+  const onMenu = menu?.items?.find((i) => i.recipeId && i.day === now.toISOString().slice(0, 10)) || null;
   const dayName = now.toLocaleDateString("sv-SE", { weekday: "long", day: "numeric", month: "long" });
   const filtering = q || Object.values(f).some(Boolean);
   const activeFilters = Object.values(f).filter(Boolean).length;
@@ -146,11 +152,14 @@ export default function Home() {
       )}
 
       {!filtering && recipes && (
+        <>
         <div className="home-hero">
           <span className="kicker">{dayName}</span>
-          <h1>{weekday ? "Vad blir det i kväll?" : "Helg. Tid för något gott."}</h1>
-          <p className="muted">{all.length} recept i lådan.{seasonNow.length ? ` I säsong just nu: ${seasonNow.join(", ")}.` : ""}</p>
+          <h1>{greeting}</h1>
+          <p className="muted">{onMenu ? <>I kväll: <Link href={`/recept/${onMenu.recipeId}`}>{onMenu.title}</Link>. </> : weekday ? "Vad blir det i kväll? " : "Helg, tid för något gott. "}{feast && feast.days > 0 ? `${feast.days} dagar kvar till ${feast.name.toLowerCase()}. ` : ""}{seasonNow.length ? `I säsong just nu: ${seasonNow.join(", ")}.` : `${all.length} recept i lådan.`}</p>
         </div>
+        <NewsBox />
+        </>
       )}
 
       {!filtering && menu && (

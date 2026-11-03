@@ -1,4 +1,6 @@
 "use client";
+import { CURRENT } from "@/data/releases";
+import { dateSv } from "@/lib/format";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSettings } from "@/components/useSettings";
@@ -61,6 +63,11 @@ export default function Settings() {
         <div><button className="btn ghost" type="button" onClick={async () => { await fetch("/api/logout", { method: "POST" }); window.location.href = "/login"; }}>Logga ut på den här enheten</button></div>
       </div>
       <p className="hint">Näringsvärden beräknas med Livsmedelsverkets livsmedelsdatabas (CC BY 4.0).</p>
+      <div className="panel">
+        <h2 style={{ fontSize: "1.4rem" }}>Om Receptboken</h2>
+        <p className="hint">Version {CURRENT.version}, uppdaterad {dateSv(CURRENT.date)}. Vad som är nytt och vad som har rättats i varje version.</p>
+        <Link className="btn ghost" href="/om">Om Receptboken och versioner</Link>
+      </div>
     </div>
   );
 }
