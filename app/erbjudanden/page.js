@@ -27,6 +27,7 @@ export default function Offers() {
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(null);
   const [shop, setShop] = useState([]);
+  const [staples, setStaples] = useState([]);
   const [q, setQ] = useState("");
   const [store, setStore] = useState(null);
   const [cat, setCat] = useState(null);
@@ -34,9 +35,13 @@ export default function Offers() {
   useEffect(() => {
     api("/api/offers").then((d) => setStores(d.stores)).catch((e) => setErr(e.message));
     api("/api/shopping").then((d) => setShop(d.items)).catch(() => {});
+    api("/api/staples").then((d) => setStaples(d.staples || [])).catch(() => {});
   }, []);
   const all = useMemo(() => flatOffers(stores), [stores]);
   const onList = shop.filter((i) => !i.done).map((i) => ({ i, o: matchOffer(i.name, all) })).filter((x) => x.o);
+  const listed = new Set(shop.filter((i) => !i.done).map((i) => i.name.toLowerCase()));
+  const onBase = staples.filter((s) => !listed.has(s.name.toLowerCase())).map((s) => ({ s, o: matchOffer(s.name, all) })).filter((x) => x.o);
+  const addBase = (s) => api("/api/staples", { method: "POST", json: { toShopping: [s.id] } }).then(() => { setShop((x) => [...x, { id: "n" + s.id, name: s.name, done: false }]); toast(`${s.name} ligger i inköpslistan`); }).catch((e) => toast(e.message));
   const good = useMemo(() => recipesOnOffer((recipes || []).filter((r) => !r.allergens?.hits?.length && /huvud/i.test(r.type || "Huvudrätt")), all).slice(0, 6), [recipes, all]);
   const cats = [...new Set(all.filter((o) => !foodOnly || o.food).map((o) => o.category))].sort((a, b) => a.localeCompare(b, "sv"));
   const list = all.filter((o) => (!foodOnly || o.food) && (!store || o.storeKey === store) && (!cat || o.category === cat) && (!q || `${o.name} ${o.brand} ${(o.ingredients || []).join(" ")}`.toLowerCase().includes(q.toLowerCase())));
@@ -47,7 +52,7 @@ export default function Offers() {
       <div className="hero">
         <span className="kicker">Veckans erbjudanden</span>
         <h1>Erbjudanden</h1>
-        <p className="muted" style={{ margin: 0 }}>Hämtas från butikernas sidor en gång om dagen. Varor på er inköpslista och recept som passar visas först.</p>
+        <p className="muted" style={{ margin: 0 }}>Hämtas från butikernas sidor en gång om dagen. Varor på er inköpslista och i baslistan, och recept som passar, visas först.</p>
       </div>
       {err && <div className="empty">{err}</div>}
       {!stores && !err && <div className="empty"><span className="spinner" />Hämtar erbjudanden. Första gången tar det en stund, Claude läser igenom butikernas sidor …</div>}
@@ -64,6 +69,14 @@ export default function Offers() {
           {onList.length > 0 && (
             <section className="bsec"><h2>På er inköpslista</h2>
               <div className="offlist">{onList.map(({ i, o }) => <div key={i.id}><span className="muted">{i.name}</span><Offer o={o} showStore /></div>)}</div>
+            </section>
+          )}
+
+          {onBase.length > 0 && (
+            <section className="bsec"><h2>I er baslista</h2><p className="hint">Sådant ni brukar handla som är billigare just nu.</p>
+              <div className="offlist">{onBase.map(({ s, o }) => (
+                <div key={s.id} className="offbase"><span className="muted">{s.name}</span><Offer o={o} showStore /><button type="button" className="btn ghost small" onClick={() => addBase(s)}>Lägg i inköpslistan</button></div>
+              ))}</div>
             </section>
           )}
 

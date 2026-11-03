@@ -1044,3 +1044,7 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .festq b { font-size: 1.4rem; }
 .festcands li button { all: unset; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .6rem; align-items: center; width: 100%; padding: .55rem 0; border-top: 1px solid var(--line); }
 .festcands .plus { width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--paper); font-weight: 700; }
+.strow .tag.deal { background: color-mix(in srgb, #E30613 12%, var(--paper)); color: #B5050F; white-space: nowrap; }
+@media (prefers-color-scheme: dark) { .strow .tag.deal { color: #FF8A8A; } }
+.offbase { display: grid; gap: .3rem; }
+.offbase .btn { justify-self: start; }

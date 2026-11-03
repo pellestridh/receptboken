@@ -3,11 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { useApp } from "@/components/Providers";
 import { AISLE_ORDER } from "@/lib/aisles";
+import { matchOffer } from "@/lib/offerMatch";
 
 const GROUPS = AISLE_ORDER.filter((a) => !["Baslistan", "Skafferi", "Egna varor"].includes(a));
 
 // Baslistan: det ni brukar handla. Bocka i det som behövs och lägg i inköpslistan.
-export default function Staples({ shopping = [], onAdded }) {
+export default function Staples({ shopping = [], onAdded, offers = [] }) {
   const { toast } = useApp();
   const [d, setD] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -19,6 +20,8 @@ export default function Staples({ shopping = [], onAdded }) {
   const staples = d?.staples || [];
   const onList = useMemo(() => new Set(shopping.filter((i) => !i.done).map((i) => i.name.toLowerCase())), [shopping]);
   const chosen = staples.filter((s) => s.selected && !onList.has(s.name.toLowerCase()));
+  const deal = useMemo(() => Object.fromEntries(staples.map((s) => [s.id, offers.length ? matchOffer(s.name, offers) : null]).filter(([, o]) => o)), [staples, offers]);
+  const deals = staples.filter((s) => deal[s.id]);
 
   const toggle = (s) => {
     setD((x) => ({ ...x, staples: x.staples.map((y) => (y.id === s.id ? { ...y, selected: !y.selected } : y)) }));
@@ -60,6 +63,9 @@ export default function Staples({ shopping = [], onAdded }) {
         </div>
       )}
 
+      {deals.length > 0 && !edit && (
+        <p className="offbanner"><b>{deals.length} {deals.length === 1 ? "vara" : "varor"}</b> i baslistan är på erbjudande: {deals.slice(0, 4).map((x) => x.name.toLowerCase()).join(", ")}{deals.length > 4 ? " med flera" : ""}.</p>
+      )}
       {!d && <div className="empty">Hämtar …</div>}
       {d && !staples.length && <div className="empty">Baslistan är tom. Skriv det ni brukar handla ovan, flera på en gång med kommatecken.</div>}
 
@@ -82,6 +88,7 @@ export default function Staples({ shopping = [], onAdded }) {
                   <button type="button" role="checkbox" aria-checked={!!s.selected && !there} disabled={there} onClick={() => toggle(s)}>
                     <span className="ck" aria-hidden="true">{s.selected && !there ? "✓" : ""}</span>
                     <span className="nm">{s.name}</span>
+                    {deal[s.id] && <span className="tag deal" title={`${deal[s.id].name}, ${deal[s.id].store}`}>{deal[s.id].price} · {String(deal[s.id].store || "").split(" ").slice(0, 2).join(" ")}</span>}
                     {there ? <span className="tag">I listan</span> : sort === "az" ? <span className="muted gr">{s.aisle}</span> : null}
                   </button>
                 </li>

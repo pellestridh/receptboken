@@ -57,7 +57,7 @@ export default function Shopping() {
         <button type="button" role="tab" aria-selected={tab === "lista"} onClick={() => setTab("lista")}>Inköpslistan{items ? ` (${open})` : ""}</button>
         <button type="button" role="tab" aria-selected={tab === "bas"} onClick={() => setTab("bas")}>Baslistan</button>
       </div>
-      {tab === "bas" ? <Staples shopping={list} onAdded={load} /> : <>
+      {tab === "bas" ? <Staples shopping={list} onAdded={load} offers={offers} /> : <>
       <form className="addrow" onSubmit={add}>
         <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Lägg till en egen vara" autoComplete="off" />
         <button className="btn" type="submit">Lägg till</button>
