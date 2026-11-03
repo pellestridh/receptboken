@@ -191,6 +191,16 @@ for (const s of statements) await sql(s);
   }
 }
 
+// Engångsåterställning av administratörskoden (Pelle glömde den 2026-11-03). Nästa gång väljs en ny kod.
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_admin_reset_1'`);
+  if (!done) {
+    await sql(`delete from settings where key = 'adminHash'`);
+    await sql(`insert into settings (key, value) values ('migr_admin_reset_1', 'true'::jsonb) on conflict (key) do nothing`);
+    console.log("[migrate] Administratörskoden återställd.");
+  }
+}
+
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
 if (count === 0) {
   const seed = JSON.parse(readFileSync(new URL("../data/seed.json", import.meta.url), "utf8"));
