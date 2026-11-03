@@ -201,6 +201,22 @@ for (const s of statements) await sql(s);
   }
 }
 
+// Engångsrättning: recept som fått Fläsk, Nötkött och så vidare som bas utan att ha den råvaran.
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_base_fix_1'`);
+  if (!done) {
+    const { fixBase, ingredientNames } = await import("../lib/baseFix.js");
+    const rows = await sql(`select id, base, body from recipes where deleted_at is null`);
+    let n = 0;
+    for (const r of rows) {
+      const nb = fixBase(r.base, ingredientNames(r.body));
+      if (nb !== r.base) { await sql(`update recipes set base = $2, body = jsonb_set(body, '{base}', to_jsonb($2::text)) where id = $1`, [r.id, nb]); n++; }
+    }
+    await sql(`insert into settings (key, value) values ('migr_base_fix_1', 'true'::jsonb) on conflict (key) do nothing`);
+    console.log(`[migrate] Huvudråvara rättad för ${n} recept.`);
+  }
+}
+
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
 if (count === 0) {
   const seed = JSON.parse(readFileSync(new URL("../data/seed.json", import.meta.url), "utf8"));
