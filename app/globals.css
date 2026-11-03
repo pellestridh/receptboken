@@ -985,3 +985,12 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .plainlist { list-style: none; padding: 0; margin: 0 0 .8rem; display: grid; gap: .35rem; }
 .deeper summary { cursor: pointer; font-family: var(--display); font-size: 1.2rem; }
 .deeper[open] summary { margin-bottom: .8rem; }
+.pairgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .7rem; margin-top: .5rem; }
+.paircard { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: .8rem .9rem; display: grid; gap: .45rem; align-content: start; }
+.paircard h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.15rem; }
+.paircard p, .pairrow p { margin: 0; font-size: .9rem; }
+.pairlist { display: grid; margin-top: .4rem; }
+.pairrow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: .3rem 1rem; padding: .7rem 0; border-top: 1px solid var(--line); align-items: start; }
+.pairrow > b { font-weight: 700; }
+.pairrow p { grid-column: 1 / -1; }
+@media (max-width: 600px) { .pairrow { grid-template-columns: 1fr; } }

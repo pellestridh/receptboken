@@ -16,6 +16,7 @@ import { WINE_TREE, CHEESE_BOTH, DESSERT_BOTH } from "@/data/wineExtra";
 import { SCHOOL } from "@/data/school";
 import { beerProfile } from "@/data/beerSchool";
 import { EXPERTS, METHOD } from "@/data/experts";
+import { DISH_PAIRS } from "@/data/pairings";
 
 const VIEWS = [["lar", "Lär dig"], ["karta", "Kartan"], ["stilar", "Stilarna"], ["mat", "Till maten"], ["provat", "Provat"]];
 const OLD = { kort: "stilar", trad: "stilar", ost: "mat", dessert: "mat" };
@@ -60,12 +61,41 @@ function School({ kind }) {
 }
 
 function Principles({ kind }) {
+  const beer = kind === "beer";
   return (
     <section className="dsec prose">
       <h2>Så tänker ni</h2>
       <p className="lead">{METHOD.intro}</p>
       <ol className="method">{METHOD.steps.map((x, i) => <li key={x.t}><span className="mn">{i + 1}</span><div><b>{x.t}</b><p>{typeof x.d === "string" ? x.d : x.d[kind]}</p></div></li>)}</ol>
       <p className="hint">{METHOD.after}</p>
+      <h2>Till maträtterna</h2>
+      <p className="hint">{beer ? "Två eller tre ölstilar" : "Två eller tre druvor"} per sorts rätt. Tryck för att läsa mer.</p>
+      <div className="pairgrid">{DISH_PAIRS.map((d) => (
+        <div key={d.dish} className="paircard">
+          <h3>{d.dish}</h3>
+          <div className="blinks">{d[kind].map((k) => (beer ? <BeerLink key={k} k={k} /> : <WineLink key={k} k={k} />))}</div>
+          <p className="muted">{d.why[kind]}</p>
+        </div>
+      ))}</div>
+
+      <h2>Till osten</h2>
+      <div className="pairlist">{CHEESE_BOTH.map((x) => (
+        <div key={x.cheese} className="pairrow">
+          <b>{x.cheese}{x.own && <span className="owntag">Er favorit</span>}</b>
+          <span className="blinks">{beer ? x.beers.map((k) => <BeerLink key={k} k={k} />) : <WineLink k={x.wineKey} label={x.wine} />}</span>
+          <p className="muted">{beer ? x.why : x.whyWine}</p>
+        </div>
+      ))}</div>
+
+      <h2>Till desserten</h2>
+      <p className="hint">Oftast ska drycken vara sötare än desserten, annars smakar den surt och tunt. Undantaget är beska som kontrast, som Double IPA mot crème brûlée.</p>
+      <div className="pairlist">{DESSERT_BOTH.map((x) => (
+        <div key={x.dessert} className="pairrow">
+          <b>{x.dessert}</b>
+          <span className="blinks">{beer ? x.beers.map((k) => <BeerLink key={k} k={k} />) : <WineLink k={x.wineKey} label={x.wine} />}</span>
+        </div>
+      ))}</div>
+
       <h2>Så tänker experterna</h2>
       <div className="experts">{EXPERTS[kind].map((e) => (
         <div key={e.name} className="expert">
@@ -75,17 +105,6 @@ function Principles({ kind }) {
           {e.sources.length > 0 && <p className="srcs muted">Läs mer: {e.sources.map(([t, h]) => <a key={h} href={h} target="_blank" rel="noopener noreferrer">{t}</a>)}</p>}
         </div>
       ))}</div>
-      <h2>Ost och dessert, öl och vin</h2>
-      <p className="hint">Samma ost eller dessert med ett vin och en öl, så att ni kan jämföra.</p>
-      <div className="both">
-        <div className="both-h"><span /><span>Vin</span><span>Öl</span></div>
-        {CHEESE_BOTH.map((x) => (
-          <div key={x.cheese} className={"both-r" + (x.own ? " own" : "")}><b>{x.cheese}{x.own && <span className="owntag">Er favorit</span>}</b><WineLink k={x.wineKey} label={x.wine} /><span className="blinks">{x.beers.map((k) => <BeerLink key={k} k={k} />)}</span><p>{x.why}</p></div>
-        ))}
-        {DESSERT_BOTH.map((x) => (
-          <div key={x.dessert} className="both-r dess"><b>{x.dessert}</b><WineLink k={x.wineKey} label={x.wine} /><span className="blinks">{x.beers.map((k) => <BeerLink key={k} k={k} />)}</span></div>
-        ))}
-      </div>
     </section>
   );
 }
