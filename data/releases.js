@@ -9,6 +9,13 @@ export const RELEASES = [
       "Logga en provning till ett recept och tryck Varför passade det, så förklarar Claude.",
       "Erbjudanden bevakar nu också baslistan.",
     ],
+    newsFixed: [
+      "I säsong visar bara rätter där säsongsråvaran är huvudsaken, och vitkål och andra kålsorter räknas nu.",
+      "Rätter utan kött som felaktigt fått Fläsk eller annat kött som huvudråvara har rättats.",
+      "Pastry sour och andra syrliga öl visar syra och rimligare sötma.",
+      "Taleggio är borttagen och era egna ostfavoriter är med.",
+    ],
+    rev: 2,
     nytt: [
       "Fest och buffé: åtgång per rätt för buffé, mingel, tilltugg och sittande middag, dryck efter antal timmar och allt till inköpslistan.",
       "Högtid som eget fack i receptlådan, märkning vid granskning och en rad på startsidan inför varje högtid.",
@@ -26,10 +33,14 @@ export const RELEASES = [
       "I säsong kräver att säsongsråvaran bär rätten, inte bara finns som garnering. Vitkål och fler kålsorter är med.",
       "Huvudråvaran kontrolleras mot ingredienserna, så en rätt utan kött får inte heta Fläsk.",
       "Bättre svenska i dryckesdelen.",
+      "Ölkartan: tryck på en stil så öppnas kortet direkt. Stilkorten är kortare, utan IBU och EBC.",
+      "Dryckesförslagen följer experternas principer och förklaras på vardaglig svenska.",
     ],
     rattat: [
       "Recept som felaktigt fått Fläsk eller annat kött som huvudråvara har rättats.",
       "Administratörskoden för hushåll återställdes en gång.",
+      "Syrliga öl fick syraklocka och rimligare sötma.",
+      "Taleggio togs bort ur ostförslagen.",
     ] },
   { version: "1.3", date: "2026-11-02", title: "Erbjudanden och en riktig baslista",
     news: [],

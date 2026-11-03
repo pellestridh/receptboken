@@ -1065,3 +1065,4 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .reltitle { margin: .2rem 0 .4rem; font-family: var(--display); font-weight: 400; font-size: 1.2rem; }
 .relpart h3 { margin: .6rem 0 .2rem; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .relpart ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .2rem; }
+.nb-s { display: block; margin: .7rem 0 .25rem; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
