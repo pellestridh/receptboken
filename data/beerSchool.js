@@ -76,7 +76,7 @@ export const BEER_LESSONS = [
     body: [
       { h: "Lager", t: "Underjäst och svalt jäst: ren och krispig. Från ljus lager, pilsner och helles till märzen, dunkel, schwarzbier och bock." },
       { h: "Pale ale och bitter", t: "Humle och malt i balans: engelsk bitter, amerikansk pale ale, amber ale och blonde ale." },
-      { h: "IPA", t: "Humlen i fokus. Engelsk IPA är jordig, West Coast besk och kådig, New England saftig och nästan utan beska." },
+      { h: "IPA", t: "Humlen i fokus. Engelsk IPA är jordig, West Coast besk och kådig, New England juicig och nästan utan beska." },
       { h: "Veteöl", t: "Hefeweizen, dunkelweizen och weizenbock. Banan och kryddnejlika från jästen." },
       { h: "Belgiska och franska stilar", t: "Witbier, blonde, dubbel, tripel, quadrupel och saison. Jästen ger frukt och kryddor." },
       { h: "Starka ales, stout och porter", t: "Barley wine och strong ale, dry stout, imperial stout och porter. Malt, rostning och torkad frukt." },

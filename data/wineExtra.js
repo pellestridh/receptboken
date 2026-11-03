@@ -59,7 +59,7 @@ export const WINE_TREE = [
     N("Fylliga och runda", null, [], [N("Chardonnay", "chardonnay", ["Chablis, oekad", "Meursault, ekad"]), N("Chenin blanc", "chenin", ["Vouvray"]), N("Pinot gris", "pinot-gris", ["Alsace"])]),
   ] },
   { n: "Rött", tone: "rott", c: [
-    N("Lätta och saftiga", null, [], [N("Pinot noir", "pinot-noir", ["Bourgogne", "Spätburgunder"]), N("Gamay", "gamay", ["Morgon", "Fleurie"])]),
+    N("Lätta och bäriga", null, [], [N("Pinot noir", "pinot-noir", ["Bourgogne", "Spätburgunder"]), N("Gamay", "gamay", ["Morgon", "Fleurie"])]),
     N("Medelfylliga och friska", null, [], [N("Sangiovese", "sangiovese", ["Chianti", "Brunello"]), N("Barbera", "barbera", ["Barbera d'Asti"]), N("Tempranillo", "tempranillo", ["Rioja", "Ribera del Duero"]), N("Merlot", "merlot", ["Saint-Émilion"])]),
     N("Kryddiga och generösa", null, [], [N("Grenache", "grenache", ["Côtes du Rhône", "Châteauneuf-du-Pape"]), N("Syrah och shiraz", "syrah", ["Crozes-Hermitage", "Barossa"]), N("Zinfandel och primitivo", "zinfandel", ["Puglia", "Kalifornien"])]),
     N("Kraftiga och strama", null, [], [N("Cabernet sauvignon", "cabernet", ["Bordeaux", "Napa"]), N("Nebbiolo", "nebbiolo", ["Barolo", "Barbaresco"]), N("Malbec", "malbec", ["Mendoza", "Cahors"])]),
