@@ -1081,3 +1081,5 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .festform > .fld { min-width: 0; }
 .pizza .steps { list-style: decimal; }
 .pizza .steps li { padding-left: .2rem; }
+.readmore { list-style: none; padding: 0; margin: .4rem 0 0; display: grid; gap: .7rem; }
+.readmore li { display: grid; gap: .15rem; }

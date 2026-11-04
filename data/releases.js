@@ -4,16 +4,19 @@ export const RELEASES = [
   { version: "1.5", date: "2026-11-04", title: "Pizzadeg",
     news: [
       "Pizzadeg under Mer: Pelles degkalkylator för dagjäst och napolitansk pizza. Välj antal pizzor och vikt, så räknas mjöl, vatten, jäst och salt ut.",
-      "Instruktioner både för köksassistent och för hand, med vik-tekniken och hur man bollar degen.",
+      "Instruktioner både för köksassistent och för hand, med vik-tekniken och hur man bollar degen, och gräddningstider för ugn och pizzaugn.",
     ],
     nytt: [
       "Degkalkylator med samma uträkning som på ettgotland.se: dagjäst (8 timmar i kylen) och napolitansk (48–72 timmar).",
       "Napolitansk med vanligt vetemjöl drar av 10 % av vattnet.",
       "Knådning för hand med vik-tekniken, och förklaring av att bolla degen.",
       "Mjöl och jäst till inköpslistan.",
+      "Val mellan ugn med stål och pizzaugn, med gräddningstider för båda.",
+      "Storleksguide: hur stor pizzan blir efter degbollens vikt.",
+      "Vill du lära dig mer: länkar till Degskolan på pizzalovers.se och AVPN-receptet på italienskpizza.se.",
     ],
     battre: [],
-    rattat: [] },
+    rattat: ["Rätt jästmängd för napolitansk deg."] },
   { version: "1.4", date: "2026-11-03", title: "Fest, högtider och en enklare dryckesdel",
     news: [
       "Fest och buffé under Mer: välj gäster och rätter, så räknar appen ut hur mycket ni ska laga och hur mycket dryck som går åt.",

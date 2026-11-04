@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { useApp } from "@/components/Providers";
-import { DOUGHS, TECHNIQUES, doughFor } from "@/data/pizza";
+import { DOUGHS, TECHNIQUES, OVENS, READ_MORE, doughFor, sizeFor } from "@/data/pizza";
 
 const g = (x) => `${String(x.toFixed(1)).replace(".", ",")} g`;
 
@@ -21,14 +21,14 @@ function Stepper({ label, value, set, step = 1, min = 1, unit }) {
 
 export default function Pizza() {
   const { toast } = useApp();
-  const [s, setS] = useState({ count: 4, weight: 280, kind: "dag", flour: "tipo00", knead: "hand" });
+  const [s, setS] = useState({ count: 4, weight: 280, kind: "dag", flour: "tipo00", knead: "hand", oven: "ugn" });
   useEffect(() => { const v = lsGet("rb-pizza", null); if (v) setS((x) => ({ ...x, ...v })); }, []);
   useEffect(() => { lsSet("rb-pizza", s); }, [s]);
   const set = (k, v) => setS((x) => ({ ...x, [k]: v }));
   const D = DOUGHS[s.kind];
   const r = doughFor(s);
   const toShop = () => api("/api/shopping", { method: "POST", json: { items: [
-    { name: s.kind === "napoli" && s.flour === "tipo00" ? "Tipo 00-mjöl" : "Vetemjöl", unit: "g", q: r.mjol, pantry: true, from: "Pizzadeg" },
+    { name: s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00-mjöl", unit: "g", q: r.mjol, pantry: true, from: "Pizzadeg" },
     { name: "Torrjäst", unit: "g", q: r.jast, pantry: true, from: "Pizzadeg" },
     { name: "Durumvetemjöl", unit: "", q: null, pantry: true, from: "Pizzadeg" },
   ] } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
@@ -45,6 +45,10 @@ export default function Pizza() {
       <div className="panel festform">
         <Stepper label="Antal pizzor" value={s.count} set={(v) => set("count", v)} />
         <Stepper label="Gram per degboll" value={s.weight} set={(v) => set("weight", v)} step={10} min={100} />
+        <p className="hint wide">{s.weight} g blir en pizza på {sizeFor(s.weight)}. Riktmärke: 200 g ger 22–24 cm, 250 g är standard och 280 g ger 28–35 cm.</p>
+        <div className="fld wide"><span>Ugn</span>
+          <div className="frow">{Object.entries(OVENS).map(([k, o]) => <button key={k} type="button" className="chip" aria-pressed={s.oven === k} onClick={() => set("oven", k)}>{o.name}</button>)}</div>
+        </div>
         {s.kind === "napoli" && (
           <div className="fld wide"><span>Mjöl</span>
             <div className="frow">{[["tipo00", "Tipo 00"], ["vete", "Vanligt vetemjöl"]].map(([k, l]) => <button key={k} type="button" className="chip" aria-pressed={s.flour === k} onClick={() => set("flour", k)}>{l}</button>)}</div>
@@ -56,7 +60,7 @@ export default function Pizza() {
       <section className="bsec">
         <h2>Det här behöver du</h2>
         <div className="doughres">
-          <div><span>{s.kind === "napoli" && s.flour === "tipo00" ? "Mjöl, Tipo 00" : "Vetemjöl"}</span><b>{g(r.mjol)}</b></div>
+          <div><span>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Mjöl, Tipo 00"}</span><b>{g(r.mjol)}</b></div>
           <div><span>Vatten{s.kind === "napoli" ? ", kallt" : ""}</span><b>{g(r.vatten)}</b></div>
           <div><span>{D.yeastName}</span><b>{g(r.jast)}</b></div>
           <div><span>Salt</span><b>{g(r.salt)}</b></div>
@@ -72,7 +76,16 @@ export default function Pizza() {
       </section>
 
       <section className="bsec">
+        <h2>Gräddning i {OVENS[s.oven].name.toLowerCase()}</h2>
+        <ul className="ticks">{OVENS[s.oven].tips.map((t) => <li key={t}>{t}</li>)}</ul>
+      </section>
+
+      <section className="bsec">
         {TECHNIQUES.map((x) => <div key={x.t} className="card2 tech"><h3>{x.t}</h3><p>{x.d}</p></div>)}
+      </section>
+      <section className="bsec">
+        <h2>Vill du lära dig mer</h2>
+        <ul className="readmore">{READ_MORE.map((x) => <li key={x.h}><a href={x.h} target="_blank" rel="noopener noreferrer"><b>{x.t}</b></a><span className="muted">{x.d}</span></li>)}</ul>
       </section>
     </div>
   );

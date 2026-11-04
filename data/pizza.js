@@ -21,7 +21,7 @@ export const DOUGHS = {
     after: [
       "Olja in en skål eller burk med lock och lägg i degen. Låt jäsa cirka 8 timmar i kylen som håller cirka 7 grader.",
       "Ta ut degen, dela den i lika många bitar som pizzor och bolla dem. Lägg på bänken eller en oljad plåt, täck med plastfolie eller en fuktig handduk och låt vila någon timme.",
-      "Baka ut pizzorna med rikligt med durumvetemjöl. Toppa och grädda tills de fått fin färg.",
+      "Baka ut pizzorna med rikligt med durumvetemjöl. Toppa och grädda, se tiderna för er ugn nedanför.",
     ],
   },
   napoli: {
@@ -44,7 +44,7 @@ export const DOUGHS = {
     after: [
       "Olja en behållare med lufttätt lock, eller täck med plastfilm, och lägg i degen. Låt jäsa i kylen (4–7 grader) i minst 48 timmar, helst 72.",
       "Ta ut degen, dela den i lika många bitar som pizzor och bolla dem. Låt ligga i rumstemperatur 2–4 timmar innan du bakar.",
-      "Baka ut och toppa med precis vad som helst.",
+      "Baka ut med durumvetemjöl och toppa med precis vad som helst. Se tiderna för er ugn nedanför.",
     ],
   },
 };
@@ -63,3 +63,19 @@ export function doughFor({ count = 1, weight = 280, kind = "dag", flour = "tipo0
   if (kind === "napoli" && flour === "vete") vatten *= 0.9;
   return { mjol: r1(mjol), vatten: r1(vatten), jast: r1(mjol * D.yeast), salt: r1(mjol * 0.02963) };
 }
+
+// Ugnarna, med Pelles gräddningstider.
+export const OVENS = {
+  ugn: { name: "Ugn med stål", tips: ["Värm ugnen med pizzastålet till 300 grader, så att stålet hinner bli riktigt varmt.", "Grädda cirka 4 minuter."] },
+  pizzaugn: { name: "Pizzaugn", tips: ["Värm stenen till 400–450 grader.", "Grädda 1–1,5 minuter: kortare tid på sommaren, lite längre när det är kallt ute. Vrid pizzan efter halva tiden så att den gräddas jämnt."] },
+};
+
+// Degbollens vikt och pizzans storlek, efter AVPN.
+export const SIZES = [[200, "22–24 cm"], [250, "cirka 30 cm, standard"], [280, "28–35 cm"]];
+export function sizeFor(w) { return w < 225 ? "22–24 cm" : w < 265 ? "cirka 30 cm" : "28–35 cm"; }
+
+// Vill du lära dig mer.
+export const READ_MORE = [
+  { t: "Degskolan på pizzalovers.se", h: "https://pizzalovers.se/category/degskolan/", d: "Över tjugo guider: kalljäsning i 24, 48 och 72 timmar, poolish och biga, surdegspizza, bulkjäsning och hur mycket salt som behövs." },
+  { t: "Napolitansk pizzadeg enligt AVPN, italienskpizza.se", h: "https://italienskpizza.se/napolitansk-pizzadeg/", d: "De traditionella reglerna från Neapel: lägre vattenhalt, väldigt lite jäst och vedugn på 450 grader." },
+];
