@@ -22,7 +22,8 @@ function More({ active }) {
         <span className="moremenu" role="menu">
           <Link role="menuitem" href="/nytt"><b>Nytt recept</b><span>Länk, foto eller fil</span></Link>
           <Link role="menuitem" href="/erbjudanden"><b>Erbjudanden</b><span>Veckans priser och recept som passar</span></Link>
-          <Link role="menuitem" href="/pizza"><b>Pizzadeg</b><span>Degkalkylator för dagjäst och napolitansk</span></Link>
+          <a role="menuitem" href="/pizza?vy=kvall"><b>Pizzakväll</b><span>Pizzatavlan: välj pizzor, deg och pålägg räknas ut</span></a>
+          <a role="menuitem" href="/pizza"><b>Pizzadeg</b><span>Degkalkylator för dagjäst och napolitansk</span></a>
           <Link role="menuitem" href="/fest"><b>Fest och buffé</b><span>Hur mycket ska vi laga till gästerna?</span></Link>
           <Link role="menuitem" href="/inspiration"><b>Inspiration</b><span>Recept från de andra hushållen</span></Link>
           <Link role="menuitem" href="/installningar"><b>Inställningar</b><span>Allergier, hushåll, namn och utloggning</span></Link>

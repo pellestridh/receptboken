@@ -9,6 +9,7 @@ import { useSettings } from "@/components/useSettings";
 import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
 import NewsBox from "@/components/NewsBox";
+import PizzaTeaser from "@/components/PizzaTeaser";
 import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
 import { upcomingHoliday, holidaysOf } from "@/lib/holidays";
 
@@ -162,6 +163,8 @@ export default function Home() {
         </>
       )}
 
+      {!filtering && now.getDay() === 5 && <PizzaTeaser recipes={all} big />}
+
       {!filtering && menu && (
         <>
           <div className="section-h"><h2>På menyn</h2><Link href="/meny" className="muted">{menu.title} ›</Link></div>
@@ -223,6 +226,8 @@ export default function Home() {
           <div className="rail">{longAgo.map((r) => <Pick key={r.id} r={r} note={`Senast för ${daysSince(r.lastCooked)} dagar sedan`} />)}</div>
         </>
       )}
+
+      {!filtering && now.getDay() !== 5 && <PizzaTeaser recipes={all} />}
 
       {!filtering && inspo.map((x) => (
         <div key={x.title}>

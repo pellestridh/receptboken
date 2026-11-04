@@ -1112,3 +1112,13 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .chalk-list li.own .chalk-no { color: #A8D8B9; }
 .chalk-total { text-align: right; margin: .8rem 0 0; font-size: 1.5rem; color: #F6E7A8; }
 @media (max-width: 600px) { .chalk { padding: 10px; } .chalk-in { padding: 1.1rem .8rem 1rem; } .chalk-name { font-size: 1.45rem; } .chalk-desc { font-size: 1.1rem; } }
+/* Pizzakväll på startsidan */
+.pzteaser { display: grid; gap: .3rem; margin: .6rem 0 1.4rem; padding: 1rem 1.2rem; border-radius: 10px; text-decoration: none; color: #F3F0E6; font-family: "Caveat", cursive;
+  background: radial-gradient(ellipse at 20% 10%, rgb(255 255 255 / .07), transparent 55%), #2A302C; border: 8px solid #7a4d2a; box-shadow: 0 6px 18px rgb(0 0 0 / .18), inset 0 0 30px rgb(0 0 0 / .5); }
+.pzt-h { font-family: "Cabin Sketch", "Caveat", cursive; font-size: 1.7rem; color: #F6E7A8; line-height: 1.1; }
+.pzteaser.big .pzt-h { font-size: 2.2rem; }
+.pzteaser ul { list-style: none; margin: .2rem 0; padding: 0; display: grid; gap: .1rem; font-size: 1.45rem; }
+.pzteaser li.more { font-size: 1.15rem; opacity: .75; }
+.pzt-s { font-size: 1.25rem; opacity: .85; }
+.pzt-go { justify-self: end; font-size: 1.35rem; color: #F8B4B4; font-weight: 700; }
+.pzteaser li.more { text-align: left; }

@@ -41,6 +41,7 @@ export default function Pizza() {
     if (q.get("vy") === "kvall") setView("kvall");
   }, []);
   useEffect(() => { lsSet("rb-pizzakvall", night); }, [night]);
+  useEffect(() => { const f = () => setView(new URLSearchParams(window.location.search).get("vy") === "kvall" ? "kvall" : "deg"); window.addEventListener("popstate", f); return () => window.removeEventListener("popstate", f); }, []);
   useEffect(() => { lsSet("rb-pizza", s); }, [s]);
   const set = (k, v) => setS((x) => ({ ...x, [k]: v }));
   const D = DOUGHS[s.kind];
