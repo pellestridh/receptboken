@@ -64,6 +64,7 @@ export default function Pizza() {
   const [cart, setCart] = useState(null);
   const [busy, setBusy] = useState(false);
   const [eat, setEat] = useState("19:00");
+  const [eatDay, setEatDay] = useState(0); // dagar från i dag
   const HOME = /mjöl|olivolja|olja|salt|flingsalt|torrjäst|jäst|socker|peppar/i;
   const buildCart = async () => {
     setBusy(true);
@@ -104,13 +105,15 @@ export default function Pizza() {
   useEffect(() => { setCart(null); }, [total, s.kind, s.weight]);
   // Tidsplan bakåt från när ni vill äta.
   const plan = (() => {
-    const [h, m] = eat.split(":").map(Number); const at = new Date(); at.setHours(h || 19, m || 0, 0, 0);
-    const t = (min) => { const d = new Date(at.getTime() - min * 60000); return d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }); };
-    const day = (hours) => { const d = new Date(at.getTime() - hours * 3600000); return d.toLocaleDateString("sv-SE", { weekday: "long" }); };
+    const [h, m] = eat.split(":").map(Number); const at = new Date(); at.setDate(at.getDate() + eatDay); at.setHours(h || 19, m || 0, 0, 0);
+    const today = new Date().toDateString();
+    const wd = (d) => (d.toDateString() === today ? "i dag" : d.toLocaleDateString("sv-SE", { weekday: "long" }));
+    const t = (min) => { const d = new Date(at.getTime() - min * 60000); const hm = d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }); return eatDay ? `${wd(d)} ${hm}` : hm; };
+    const day = (hours) => wd(new Date(at.getTime() - hours * 3600000));
     const ovenMin = s.oven === "pizzaugn" ? 30 : 45;
     return s.kind === "napoli"
-      ? [[`${day(72)} eller ${day(48)}`, "Gör degen, 2–3 dygn i kylen."], [t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["Under dagen", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [eat, "Baka och ät."]]
-      : [[t(10 * 60), "Gör degen senast nu, cirka 8 timmar i kylen."], [t(75), "Ta ut degen, dela och bolla den. Låt vila under handduk."], ["Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [eat, "Baka och ät."]];
+      ? [[at.getTime() - 48 * 3600000 < Date.now() ? "Hinner inte" : at.getTime() - 72 * 3600000 < Date.now() ? `Senast ${day(48)}` : `${day(72)} eller ${day(48)}`, at.getTime() - 48 * 3600000 < Date.now() ? "Napolitansk deg behöver minst 48 timmar i kylen. Välj en senare dag, eller dagjäst deg." : "Gör degen, 2–3 dygn i kylen."], [t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["Under dagen", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [t(0), "Baka och ät."]]
+      : [[at.getTime() - 9 * 3600000 < Date.now() ? "Nu" : t(10 * 60), at.getTime() - 9 * 3600000 < Date.now() ? "Gör degen så fort som möjligt. Kortare tid i kylen ger en mindre luftig deg." : "Gör degen, senast då. Den ska stå cirka 8 timmar i kylen."], [t(75), "Ta ut degen, dela och bolla den. Låt vila under handduk."], ["Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [t(0), "Baka och ät."]];
   })();
   const toShop = () => api("/api/shopping", { method: "POST", json: { items: doughItems(r) } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
 
@@ -163,6 +166,9 @@ export default function Pizza() {
             <>
               <section className="bsec pzstep">
                 <h2><span className="pzsn">2</span>Planera</h2>
+                <div className="fld"><span>Vilken dag</span>
+                  <div className="frow">{Array.from({ length: 8 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); const l = i === 0 ? "I dag" : i === 1 ? "I morgon" : d.toLocaleDateString("sv-SE", { weekday: "long" }).replace(/^./, (c) => c.toUpperCase()); return <button key={i} type="button" className="chip" aria-pressed={eatDay === i} onClick={() => setEatDay(i)}>{l}</button>; })}</div>
+                </div>
                 <label className="fld"><span>Vi vill äta klockan</span><input className="tin" type="time" value={eat} onChange={(e) => setEat(e.target.value)} style={{ maxWidth: "9rem" }} /></label>
                 <ol className="pztime">{plan.map(([when, what]) => <li key={what}><b>{when}</b><span>{what}</span></li>)}</ol>
                 <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>

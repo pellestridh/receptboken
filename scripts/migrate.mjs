@@ -236,6 +236,15 @@ for (const s of statements) await sql(s);
   }
 }
 
+// Rosmarin: "plockade blad" i stället för "nålarna".
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_pizza_fix_1'`);
+  if (!done) {
+    await sql(`update recipes set body = replace(body::text, '"nålarna"', '"plockade blad"')::jsonb where id like 'pz-%'`);
+    await sql(`insert into settings (key, value) values ('migr_pizza_fix_1', 'true'::jsonb) on conflict (key) do nothing`);
+  }
+}
+
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
 if (count === 0) {
   const seed = JSON.parse(readFileSync(new URL("../data/seed.json", import.meta.url), "utf8"));

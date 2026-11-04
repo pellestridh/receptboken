@@ -46,7 +46,7 @@ export const PIZZA_MENU = [
     [{ name: "prosciutto", q: 40, unit: "g" }, { name: "ruccola", q: 1, unit: "näve" }],
     "Lägg prosciutton löst över pizzan och toppa med ruccola."),
   P(7, "Bianca patate", "Vit pizza med ricotta, mozzarella och parmesan, tunna skivor potatis och rosmarin.", "Vegetariskt", false,
-    [{ name: "potatis", q: 1, unit: "liten", note: "mandoliniskivad, papperstunn" }, { name: "rosmarin", q: 1, unit: "kvist", note: "nålarna" }, { name: "flingsalt", q: 1, unit: "nypa", pantry: true }],
+    [{ name: "potatis", q: 1, unit: "liten", note: "mandoliniskivad, papperstunn" }, { name: "rosmarin", q: 1, unit: "kvist", note: "plockade blad" }, { name: "flingsalt", q: 1, unit: "nypa", pantry: true }],
     [], null),
   P(8, "Bianca spinaci", "Vit pizza med ricotta, mozzarella och parmesan, spenat, vitlök och chiliolja.", "Vegetariskt", false,
     [{ name: "färsk spenat", q: 40, unit: "g" }, { name: "vitlök", q: 1, unit: "klyfta", note: "tunt skivad" }],
