@@ -84,7 +84,7 @@ export default function Shopping() {
       ))}
       {list.length > 0 && (
         <div className="arow">
-          <button className="btn ghost" type="button" onClick={() => clear("done")}>Ta bort avbockade</button>
+          <button className="btn ghost" type="button" onClick={() => clear("done")}>Ta bort avbockade nu</button>
           {armed
             ? <button className="link" type="button" onClick={() => clear("all")}>Tryck igen för att tömma hela listan</button>
             : <button className="link" type="button" onClick={() => { setArmed(true); setTimeout(() => setArmed(false), 4000); }}>Töm hela listan</button>}

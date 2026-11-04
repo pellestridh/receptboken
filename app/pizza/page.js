@@ -90,6 +90,12 @@ export default function Pizza() {
       setCart(rows);
     } catch (e) { toast(e.message); } finally { setBusy(false); }
   };
+  const done = async () => {
+    for (const x of chosen) { try { await api(`/api/notes/${x.r.id}`, { method: "POST", json: { action: "cooked" } }); } catch {} }
+    setNight({ free: 0, list: {} }); setCart(null); setAdded(0);
+    toast("Hoppas det smakade. Tavlan är tom till nästa gång.");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const flip = (i) => setCart((c) => c.map((x, j) => (j === i ? { ...x, buy: !x.buy } : x)));
   const cartToShop = async () => {
     const buy = cart.filter((x) => x.buy);
@@ -126,7 +132,7 @@ export default function Pizza() {
 
       {view === "kvall" ? (
         <>
-          <p className="lead"><span className="pzsn">1</span>Välj pizzor på tavlan. Sedan planerar ni tiden, handlar och bakar, steg för steg nedanför.</p>
+          <p className="lead"><span className="pzsn">1</span>Välj pizzor på tavlan. Sedan handlar ni, planerar dagen och degen, och bakar, steg för steg nedanför.</p>
           <section className="chalk" aria-label="Pizzatavlan">
             <div className="chalk-in">
               <h2 className="chalk-h">Pizzakväll</h2>
@@ -166,22 +172,12 @@ export default function Pizza() {
           {total > 0 && (
             <>
               <section className="bsec pzstep">
-                <h2><span className="pzsn">2</span>Planera</h2>
-                <div className="fld"><span>Vilken dag</span>
-                  <div className="frow">{Array.from({ length: 8 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); const l = i === 0 ? "I dag" : i === 1 ? "I morgon" : d.toLocaleDateString("sv-SE", { weekday: "long" }).replace(/^./, (c) => c.toUpperCase()); return <button key={i} type="button" className="chip" aria-pressed={eatDay === i} onClick={() => setEatDay(i)}>{l}</button>; })}</div>
-                </div>
-                <label className="fld"><span>Vi vill äta klockan</span><input className="tin" type="time" value={eat} onChange={(e) => setEat(e.target.value)} style={{ maxWidth: "9rem" }} /></label>
-                <ol className="pztime">{plan.map(([when, what]) => <li key={what}><b>{when}</b><span>{what}</span></li>)}</ol>
-                <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
-              </section>
-
-              <section className="bsec pzstep">
-                <h2><span className="pzsn">3</span>Handla</h2>
+                <h2><span className="pzsn">2</span>Handla</h2>
                 {!cart && added > 0 ? (
                   <div className="pzdone"><b>✓ {added} {added === 1 ? "vara ligger" : "varor ligger"} i inköpslistan.</b> <Link href="/inkop">Visa inköpslistan ›</Link> <button type="button" className="link" onClick={() => { setAdded(0); buildCart(); }}>Ändra</button></div>
                 ) : !cart ? (
                   <>
-                    <p className="muted">Se allt som behövs till kvällen och bocka av det ni redan har hemma.</p>
+                    <p className="muted">Se allt som behövs till pizzorna, bocka av det ni redan har hemma och lägg resten i inköpslistan.</p>
                     <p className="arow"><button className="btn" type="button" disabled={busy} onClick={buildCart}>{busy ? "Räknar …" : "Visa allt som behövs"}</button></p>
                   </>
                 ) : (
@@ -207,6 +203,16 @@ export default function Pizza() {
               </section>
 
               <section className="bsec pzstep">
+                <h2><span className="pzsn">3</span>Pizzakvällen och degen</h2>
+                <div className="fld"><span>Vilken dag</span>
+                  <div className="frow">{Array.from({ length: 8 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); const l = i === 0 ? "I dag" : i === 1 ? "I morgon" : d.toLocaleDateString("sv-SE", { weekday: "long" }).replace(/^./, (c) => c.toUpperCase()); return <button key={i} type="button" className="chip" aria-pressed={eatDay === i} onClick={() => setEatDay(i)}>{l}</button>; })}</div>
+                </div>
+                <label className="fld"><span>Vi vill äta klockan</span><input className="tin" type="time" value={eat} onChange={(e) => setEat(e.target.value)} style={{ maxWidth: "9rem" }} /></label>
+                <ol className="pztime">{plan.map(([when, what]) => <li key={what}><b>{when}</b><span>{what}</span></li>)}</ol>
+                <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
+              </section>
+
+              <section className="bsec pzstep">
                 <h2><span className="pzsn">4</span>Baka</h2>
                 <div className="pzbake">
                   <div className="pzb-dough">
@@ -225,6 +231,8 @@ export default function Pizza() {
                   </ul>
                   <p className="pzb-oven"><b>{OVENS[s.oven].name}:</b> {OVENS[s.oven].tips.join(" ")}</p>
                 </div>
+                <p className="arow"><button className="btn" type="button" onClick={done}>Vi har bakat, töm tavlan</button></p>
+                <p className="hint">Pizzorna räknas som lagade och tavlan blir tom till nästa pizzakväll.</p>
               </section>
             </>
           )}
