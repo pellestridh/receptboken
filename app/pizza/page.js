@@ -47,9 +47,9 @@ export default function Pizza() {
   const r = doughFor(s);
   const pizzas = (recipes || []).filter((x) => dishesOf(x).includes("pizza"));
   // Tavlan: pizzorna i den ordning de lades till, så att numren står fast.
-  const menu = [...pizzas].sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
-  const DOUGHWORDS = /^(vetemjöl|mjöl|tipo|durum|vatten|jäst|torrjäst|färsk jäst|salt|socker|strösocker|pizzadeg)/i;
-  const topsOf = (x) => { const t = String(x.ingredients || "").split(",").map((w) => w.trim()).filter((w) => w && !DOUGHWORDS.test(w)); const u = [...new Set(t.map((w) => w.toLowerCase()))]; return u.length ? u.join(", ").replace(/^./, (c) => c.toUpperCase()) : "Pelles pålägg"; };
+  const menu = [...pizzas].sort((a, b) => (a.pizzaNo ?? 999) - (b.pizzaNo ?? 999) || String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
+  const DOUGHWORDS = /^(vetemjöl|mjöl|tipo|durum|vatten|jäst|torrjäst|färsk jäst|salt|flingsalt|socker|strösocker|pizzadeg|tomatsås|mozzarella|parmesan|olivolja)/i;
+  const topsOf = (x) => { const t = String(x.ingredients || "").split(",").map((w) => w.trim()).filter((w) => w && !DOUGHWORDS.test(w)); const u = [...new Set(t.map((w) => w.toLowerCase()))]; const white = /(^|, )ricotta/.test(String(x.ingredients || "").toLowerCase()); const v = u.filter((w) => w !== "ricotta"); const txt = v.join(", "); return white ? `Vit: ${txt}` : (txt ? txt.replace(/^./, (c) => c.toUpperCase()) : "Pelles pålägg"); };
   const chosen = Object.entries(night.list).map(([id, n]) => ({ r: pizzas.find((x) => x.id === id) || (recipes || []).find((x) => x.id === id), n })).filter((x) => x.r && x.n > 0);
   const total = chosen.reduce((a, x) => a + x.n, 0) + (night.free || 0);
   const nd = doughFor({ ...s, count: Math.max(1, total) });
@@ -62,7 +62,10 @@ export default function Pizza() {
   const nightToShop = async () => {
     try {
       const items = [...doughItems(nd)];
-      for (const x of chosen) { const d = await api(`/api/recipes/${x.r.id}`); items.push(...toppingItems(d.recipe, x.n)); }
+      let red = 0;
+      for (const x of chosen) { const d = await api(`/api/recipes/${x.r.id}`); items.push(...toppingItems(d.recipe, x.n)); if ((d.recipe.groups || []).some((g) => (g.items || []).some((i) => /tomatsås/i.test(i.name)))) red += x.n; }
+      const sauce = (recipes || []).find((y) => /^tomatsås till pizza/i.test(y.title));
+      if (red && sauce) { const d = await api(`/api/recipes/${sauce.id}`); items.push(...toppingItems(d.recipe, red)); }
       await api("/api/shopping", { method: "POST", json: { items } });
       toast("Deg och pålägg ligger i inköpslistan");
     } catch (e) { toast(e.message); }
@@ -81,7 +84,7 @@ export default function Pizza() {
           <section className="chalk" aria-label="Pizzatavlan">
             <div className="chalk-in">
               <h2 className="chalk-h">Pizzakväll</h2>
-              <p className="chalk-sub">Välj hur många av varje</p>
+              <p className="chalk-sub">Alla med tomatsås, mozzarella och parmesan. Bianca är vit, med ricotta.</p>
               {!menu.length && <p className="chalk-empty">Inga pizzor på tavlan än. Lägg till pizzarecept så hamnar de här.</p>}
               <ol className="chalk-list">
                 {menu.map((x, i) => {

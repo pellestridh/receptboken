@@ -217,6 +217,25 @@ for (const s of statements) await sql(s);
   }
 }
 
+// Pelles pizzameny och tomatsåsen, en gång, i hushållet hem. Recept som redan finns med samma namn lämnas orörda.
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_pizza_menu_1'`);
+  if (!done) {
+    const { PIZZA_MENU, TOMATO_SAUCE } = await import("../data/pizzaRecipes.js");
+    let n = 0;
+    for (const r of [TOMATO_SAUCE, ...PIZZA_MENU]) {
+      const [have] = await sql(`select 1 from recipes where hh = 'hem' and lower(title) = lower($1) and deleted_at is null`, [r.title]);
+      if (have) continue;
+      const id = "pz-" + r.title.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+      await sql(`insert into recipes (id,title,kitchen,type,base,minutes,servings,accent,source_name,source_url,body,hh) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,null,$10,'hem') on conflict (id) do nothing`,
+        [id, r.title, r.kitchen, r.type, r.base, r.minutes, r.servings, r.accent, r.source?.name || null, JSON.stringify(r)]);
+      n++;
+    }
+    await sql(`insert into settings (key, value) values ('migr_pizza_menu_1', 'true'::jsonb) on conflict (key) do nothing`);
+    console.log(`[migrate] La in ${n} pizzarecept.`);
+  }
+}
+
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
 if (count === 0) {
   const seed = JSON.parse(readFileSync(new URL("../data/seed.json", import.meta.url), "utf8"));
