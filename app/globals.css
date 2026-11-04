@@ -1066,3 +1066,18 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .relpart h3 { margin: .6rem 0 .2rem; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .relpart ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .2rem; }
 .nb-s { display: block; margin: .7rem 0 .25rem; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+/* Pizzadeg */
+.doughres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+.doughres > div { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: .7rem .8rem; display: grid; gap: .2rem; }
+.doughres span { font-size: .8rem; color: var(--muted); }
+.doughres b { font-size: 1.35rem; }
+@media (max-width: 600px) { .doughres { grid-template-columns: 1fr 1fr; } }
+.pizza .steps { padding-left: 1.3rem; display: grid; gap: .55rem; margin-top: .8rem; }
+.pizza .tech { margin-bottom: .7rem; }
+.pizza .festform .hint.wide { grid-column: 1 / -1; margin: 0; }
+.stepper { min-width: 0; }
+.stepper input { flex: 1 1 auto; min-width: 0; width: 100%; max-width: 5rem; }
+.stepper button { flex: none; width: 2.2rem; height: 2.2rem; }
+.festform > .fld { min-width: 0; }
+.pizza .steps { list-style: decimal; }
+.pizza .steps li { padding-left: .2rem; }
