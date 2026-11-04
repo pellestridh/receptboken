@@ -219,7 +219,7 @@ for (const s of statements) await sql(s);
 
 // Pelles pizzameny och tomatsåsen, en gång, i hushållet hem. Recept som redan finns med samma namn lämnas orörda.
 {
-  const [done] = await sql(`select 1 from settings where key = 'migr_pizza_menu_1'`);
+  const [done] = await sql(`select 1 from settings where key = 'migr_pizza_menu_2'`);
   if (!done) {
     const { PIZZA_MENU, TOMATO_SAUCE } = await import("../data/pizzaRecipes.js");
     let n = 0;
@@ -231,7 +231,7 @@ for (const s of statements) await sql(s);
         [id, r.title, r.kitchen, r.type, r.base, r.minutes, r.servings, r.accent, r.source?.name || null, JSON.stringify(r)]);
       n++;
     }
-    await sql(`insert into settings (key, value) values ('migr_pizza_menu_1', 'true'::jsonb) on conflict (key) do nothing`);
+    await sql(`insert into settings (key, value) values ('migr_pizza_menu_2', 'true'::jsonb) on conflict (key) do nothing`);
     console.log(`[migrate] La in ${n} pizzarecept.`);
   }
 }

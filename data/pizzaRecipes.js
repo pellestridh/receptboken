@@ -52,6 +52,9 @@ export const PIZZA_MENU = [
     [{ name: "färsk spenat", q: 40, unit: "g" }, { name: "vitlök", q: 1, unit: "klyfta", note: "tunt skivad" }],
     [{ name: "chiliolja", q: 1, unit: "tsk" }],
     "Ringla över chiliolja."),
+  P(9, "Valtellina", "Bresaola, hyvlad parmesan, rostade pinjenötter, citron och ruccola. Bresaola är lufttorkat nötkött från Valtellina i Lombardiet.", "Nötkött", true, [],
+    [{ name: "bresaola", q: 40, unit: "g" }, { name: "parmesan", q: 10, unit: "g", note: "hyvlad" }, { name: "pinjenötter", q: 1, unit: "msk", note: "rostade" }, { name: "citron", q: 0.25, unit: "st", note: "saften" }, { name: "ruccola", q: 1, unit: "näve" }],
+    "Rosta pinjenötterna i torr panna medan pizzan gräddas. Lägg på bresaolan, toppa med ruccola, hyvla över parmesan, strö över pinjenötterna och pressa över citron."),
 ];
 
 export const TOMATO_SAUCE = {
