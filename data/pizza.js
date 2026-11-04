@@ -79,3 +79,14 @@ export const READ_MORE = [
   { t: "Degskolan på pizzalovers.se", h: "https://pizzalovers.se/category/degskolan/", d: "Över tjugo guider: kalljäsning i 24, 48 och 72 timmar, poolish och biga, surdegspizza, bulkjäsning och hur mycket salt som behövs." },
   { t: "Napolitansk pizzadeg enligt AVPN, italienskpizza.se", h: "https://italienskpizza.se/napolitansk-pizzadeg/", d: "De traditionella reglerna från Neapel: lägre vattenhalt, väldigt lite jäst och vedugn på 450 grader." },
 ];
+
+// Pizzarecept: degen i receptet byts mot kalkylatorn, resten är pålägg per pizza.
+export const isDoughGroup = (g) => /deg\b|degen|pizzadeg|^deg/i.test(String(g?.name || ""));
+export function toppingItems(recipe, pizzas) {
+  const per = (recipe.servings || 1);
+  const f = pizzas / per;
+  return (recipe.groups || []).filter((g) => !isDoughGroup(g)).flatMap((g) => g.items || [])
+    .filter((it) => it.shop !== false)
+    .map((it) => ({ name: it.name, unit: it.unit || "", amt: it.amt || "", pantry: !!it.pantry, from: recipe.title,
+      q: it.q == null ? null : it.q * f, q2: it.q2 == null ? null : it.q2 * f }));
+}

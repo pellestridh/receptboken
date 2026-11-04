@@ -1084,3 +1084,6 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .readmore { list-style: none; padding: 0; margin: .4rem 0 0; display: grid; gap: .7rem; }
 .readmore li { display: grid; gap: .15rem; }
 #sasong { scroll-margin-top: 5rem; }
+.pizzanote { background: color-mix(in srgb, var(--accent) 8%, var(--paper)); border-radius: 12px; padding: .6rem .8rem; font-size: .95rem; }
+.pzn { min-width: 1.6rem; text-align: center; font-size: 1.15rem; }
+.pzh { margin: 1.2rem 0 .2rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }

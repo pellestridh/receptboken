@@ -1,12 +1,14 @@
 // Versionshistoriken. Den översta är den aktuella. "news" är de punkter som visas i nyhetsrutan på startsidan,
 // skrivna för användaren. Nytt, Bättre och Rättat visas under Om Receptboken.
 export const RELEASES = [
-  { version: "1.5", date: "2026-11-04", title: "Pizzadeg",
+  { version: "1.5", date: "2026-11-04", title: "Pizzadeg och pizzakväll",
     news: [
       "Pizzadeg under Mer: Pelles degkalkylator för dagjäst och napolitansk pizza. Välj antal pizzor och vikt, så räknas mjöl, vatten, jäst och salt ut.",
+      "Pizzakväll: välj pizzor och hur många av varje, så räknas degen ut för alla och påläggen per pizza, och allt kan läggas i inköpslistan.",
       "Instruktioner både för köksassistent och för hand, med vik-tekniken och hur man bollar degen, och gräddningstider för ugn och pizzaugn.",
     ],
     nytt: [
+      "Pizzakväll: deg för det totala antalet, pålägg per pizza från era pizzarecept och egen topping utan recept. Pizzarecepten har en länk dit.",
       "Degkalkylator med samma uträkning som på ettgotland.se: dagjäst (8 timmar i kylen) och napolitansk (48–72 timmar).",
       "Napolitansk med vanligt vetemjöl drar av 10 % av vattnet.",
       "Knådning för hand med vik-tekniken, och förklaring av att bolla degen.",
@@ -16,7 +18,7 @@ export const RELEASES = [
       "Vill du lära dig mer: länkar till Degskolan på pizzalovers.se och AVPN-receptet på italienskpizza.se.",
     ],
     battre: [],
-    rattat: ["Rätt jästmängd för napolitansk deg."] },
+    rattat: ["Rätt jästmängd för napolitansk deg."], rev: 2 },
   { version: "1.4", date: "2026-11-03", title: "Fest, högtider och en enklare dryckesdel",
     news: [
       "Fest och buffé under Mer: välj gäster och rätter, så räknar appen ut hur mycket ni ska laga och hur mycket dryck som går åt.",

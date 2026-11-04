@@ -13,6 +13,7 @@ import { useApp } from "@/components/Providers";
 import { api, getName } from "@/lib/api";
 import { accentVar, dateSv, mins } from "@/lib/format";
 import { shoppingItems } from "@/lib/shopping";
+import { dishesOf } from "@/lib/dishes";
 
 // Tillbehör, bröd och såser får inga egna dryckesförslag. Förrätter och desserter får.
 const isSide = (r) => /tillbehör|bröd|sås|garnityr|dressing/i.test(r.type || "") ||
@@ -106,6 +107,7 @@ export default function RecipePage({ params }) {
         </div>
       </header>
 
+      {dishesOf(r).includes("pizza") && <p className="pizzanote">Bakar ni den här? <Link href={`/pizza?vy=kvall&pizza=${r.id}&antal=${servings}`}>Planera pizzakvällen</Link> så räknas degen ut för {servings} {servings === 1 ? "pizza" : "pizzor"} med Pelles kalkylator.</p>}
       <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
 
       {isSide(r) && !showDrinks ? (
