@@ -156,7 +156,7 @@ export default function Home() {
         <div className="home-hero">
           <span className="kicker">{dayName}</span>
           <h1>{greeting}</h1>
-          <p className="muted">{onMenu ? <>I kväll: <Link href={`/recept/${onMenu.recipeId}`}>{onMenu.title}</Link>. </> : weekday ? "Vad blir det i kväll? " : "Helg, tid för något gott. "}{feast && feast.days > 0 ? `${feast.days} dagar kvar till ${feast.name.toLowerCase()}. ` : ""}{seasonNow.length ? `I säsong just nu: ${seasonNow.join(", ")}.` : `${all.length} recept i lådan.`}</p>
+          <p className="muted">{onMenu ? <>I kväll: <Link href={`/recept/${onMenu.recipeId}`}>{onMenu.title}</Link>. </> : weekday ? "Vad blir det i kväll? " : "Helg, tid för något gott. "}{feast && feast.days > 0 ? `${feast.days} dagar kvar till ${feast.name.toLowerCase()}. ` : ""}{inSeason.length ? <a href="#sasong">{(() => { const n = Math.min(3, inSeason.length); const w = ["", "En rätt", "Två rätter", "Tre rätter"][n]; const r = seasonNow.slice(0, 2); return `${w} i säsong: ${r.join(r.length > 1 ? " och " : "")}`; })()} ›</a> : `${all.length} recept i lådan.`}</p>
         </div>
         <NewsBox />
         </>
@@ -213,7 +213,7 @@ export default function Home() {
       )}
       {!filtering && inSeason.length > 0 && (
         <>
-          <div className="section-h"><h2>I säsong i {MONTHS[month]}</h2><span className="muted">Råvarorna är som bäst nu</span></div>
+          <div className="section-h" id="sasong"><h2>I säsong i {MONTHS[month]}</h2><span className="muted">Råvarorna är som bäst nu</span></div>
           <div className="rail">{inSeason.slice(0, 3).map(({ r, hits }) => <Pick key={r.id} r={r} note={hits.slice(0, 2).map((h) => h[0].toUpperCase() + h.slice(1)).join(" och ") + " · " + mins(r.minutes)} badge="Säsong" />)}</div>
         </>
       )}
