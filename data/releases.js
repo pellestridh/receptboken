@@ -15,7 +15,7 @@ export const RELEASES = [
       "Mjöl och jäst till inköpslistan.",
       "Pizzakväll på startsidan, stor på fredagar, och en egen rad i Mer-menyn.",
       "Pizzakvällen steg för steg: välj pizzor, handla (bocka av det ni har hemma), välj dag och få en tidsplan för degen, baka. Efteråt töms tavlan.",
-      "Inköpslistan städar sig själv: avbockade varor försvinner efter 12 timmar.",
+      "Inköpslistan städar sig själv: när nya varor läggs till från en meny, ett recept eller pizzakvällen försvinner det som redan är avbockat.",
       "Er smak i dryck under Inställningar: skriv vad ni gillar, så följer dryckesförslagen det. Hemma: kraftigt rött till pizza.",
       "Pelles pizzameny med nio pizzor, mängder per pizza, och Tomatsås till pizza. Pizzakvällen räknar tomatsåsen för de röda pizzorna.",
       "Val mellan ugn med stål och pizzaugn, med gräddningstider för båda.",
@@ -23,7 +23,7 @@ export const RELEASES = [
       "Vill du lära dig mer: länkar till Degskolan på pizzalovers.se och AVPN-receptet på italienskpizza.se.",
     ],
     battre: [],
-    rattat: ["Rätt jästmängd för napolitansk deg.", "Varningen Kan innehålla cashew eller pistage visas bara för färdiga produkter där nötter brukar ingå, inte för ost, chark och vanliga råvaror.", "Dryckesförslagen visar inte färgen två gånger.", "Pizzarecepten länkar till tomatsåsen."], rev: 9 },
+    rattat: ["Rätt jästmängd för napolitansk deg.", "Varningen Kan innehålla cashew eller pistage visas bara för färdiga produkter där nötter brukar ingå, inte för ost, chark och vanliga råvaror.", "Dryckesförslagen visar inte färgen två gånger.", "Pizzarecepten länkar till tomatsåsen."], rev: 10 },
   { version: "1.4", date: "2026-11-03", title: "Fest, högtider och en enklare dryckesdel",
     news: [
       "Fest och buffé under Mer: välj gäster och rätter, så räknar appen ut hur mycket ni ska laga och hur mycket dryck som går åt.",
