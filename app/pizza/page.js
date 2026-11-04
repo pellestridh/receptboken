@@ -10,7 +10,7 @@ import { DOUGHS, TECHNIQUES, OVENS, READ_MORE, doughFor, sizeFor, toppingItems }
 import { useRecipes } from "@/components/useRecipes";
 import { dishesOf } from "@/lib/dishes";
 
-const g = (x) => `${String(x.toFixed(1)).replace(".", ",")} g`;
+const g = (x) => `${String(Math.round(x * 10) / 10).replace(".", ",")} g`;
 
 function Stepper({ label, value, set, step = 1, min = 1, unit }) {
   return (
@@ -63,6 +63,7 @@ export default function Pizza() {
   // Handla: alla varor till kvällen som en checklista. Det som brukar finnas hemma är avbockat från början.
   const [cart, setCart] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [added, setAdded] = useState(0);
   const [eat, setEat] = useState("19:00");
   const [eatDay, setEatDay] = useState(0); // dagar från i dag
   const HOME = /mjöl|olivolja|olja|salt|flingsalt|torrjäst|jäst|socker|peppar/i;
@@ -98,11 +99,11 @@ export default function Pizza() {
       const home = new Set(lsGet("rb-pizza-hemma", []));
       for (const x of cart) { const n = x.name.toLowerCase(); if (x.buy) home.delete(n); else if (!(x.pantry || HOME.test(x.name))) home.add(n); }
       lsSet("rb-pizza-hemma", [...home]);
-      toast(`${buy.length} ${buy.length === 1 ? "vara" : "varor"} ligger i inköpslistan`);
+      setAdded(buy.length);
       setCart(null);
     } catch (e) { toast(e.message); }
   };
-  useEffect(() => { setCart(null); }, [total, s.kind, s.weight]);
+  useEffect(() => { setCart(null); setAdded(0); }, [total, s.kind, s.weight]);
   // Tidsplan bakåt från när ni vill äta.
   const plan = (() => {
     const [h, m] = eat.split(":").map(Number); const at = new Date(); at.setDate(at.getDate() + eatDay); at.setHours(h || 19, m || 0, 0, 0);
@@ -176,7 +177,9 @@ export default function Pizza() {
 
               <section className="bsec pzstep">
                 <h2><span className="pzsn">3</span>Handla</h2>
-                {!cart ? (
+                {!cart && added > 0 ? (
+                  <div className="pzdone"><b>✓ {added} {added === 1 ? "vara ligger" : "varor ligger"} i inköpslistan.</b> <Link href="/inkop">Visa inköpslistan ›</Link> <button type="button" className="link" onClick={() => { setAdded(0); buildCart(); }}>Ändra</button></div>
+                ) : !cart ? (
                   <>
                     <p className="muted">Se allt som behövs till kvällen och bocka av det ni redan har hemma.</p>
                     <p className="arow"><button className="btn" type="button" disabled={busy} onClick={buildCart}>{busy ? "Räknar …" : "Visa allt som behövs"}</button></p>
@@ -205,15 +208,23 @@ export default function Pizza() {
 
               <section className="bsec pzstep">
                 <h2><span className="pzsn">4</span>Baka</h2>
-                <div className="doughres">
-                  <div><span>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Mjöl, Tipo 00"}</span><b>{g(nd.mjol)}</b></div>
-                  <div><span>Vatten</span><b>{g(nd.vatten)}</b></div>
-                  <div><span>{D.yeastName}</span><b>{g(nd.jast)}</b></div>
-                  <div><span>Salt</span><b>{g(nd.salt)}</b></div>
+                <div className="pzbake">
+                  <div className="pzb-dough">
+                    <span className="pzb-l">Degen till {total} {total === 1 ? "pizza" : "pizzor"}</span>
+                    <dl>
+                      <div><dt>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00"}</dt><dd>{g(nd.mjol)}</dd></div>
+                      <div><dt>Vatten</dt><dd>{g(nd.vatten)}</dd></div>
+                      <div><dt>{D.yeastName}</dt><dd>{g(nd.jast)}</dd></div>
+                      <div><dt>Salt</dt><dd>{g(nd.salt)}</dd></div>
+                    </dl>
+                    <button type="button" className="link" onClick={() => setView("deg")}>Så gör ni degen ›</button>
+                  </div>
+                  <ul className="pzb-list">
+                    {chosen.map((x) => <li key={x.r.id}><span className="pzb-n">{x.n}×</span><Link href={`/recept/${x.r.id}`}>{x.r.pizzaNo ? `${x.r.pizzaNo}. ` : ""}{x.r.title}</Link></li>)}
+                    {night.free > 0 && <li><span className="pzb-n">{night.free}×</span><span>Egen topping</span></li>}
+                  </ul>
+                  <p className="pzb-oven"><b>{OVENS[s.oven].name}:</b> {OVENS[s.oven].tips.join(" ")}</p>
                 </div>
-                <p className="hint">Degen för {total} {total === 1 ? "pizza" : "pizzor"}. <button type="button" className="link" onClick={() => setView("deg")}>Så gör ni degen ›</button></p>
-                <ul className="plainlist pzbake">{chosen.map((x) => <li key={x.r.id}><Link href={`/recept/${x.r.id}`}>{x.r.pizzaNo ? `${x.r.pizzaNo}. ` : ""}{x.r.title}</Link> <span className="muted">× {x.n}</span></li>)}{night.free > 0 && <li>Egen topping <span className="muted">× {night.free}</span></li>}</ul>
-                <p className="hint">{OVENS[s.oven].tips.join(" ")}</p>
               </section>
             </>
           )}

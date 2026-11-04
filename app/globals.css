@@ -1128,3 +1128,21 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .pztime b { font-variant-numeric: tabular-nums; }
 .pzcart h3 { margin: .8rem 0 .2rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-family: var(--body); font-weight: 700; }
 .pzbake { margin-top: .8rem; font-size: 1.05rem; }
+/* Pizzakväll steg 4 */
+.pzdone { background: color-mix(in srgb, var(--accent) 10%, var(--paper)); border-radius: 12px; padding: .8rem 1rem; display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: baseline; }
+.pzbake { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.pzb-dough { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); display: grid; gap: .5rem; }
+.pzb-l { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.pzb-dough dl { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+.pzb-dough dt { font-size: .85rem; color: var(--muted); }
+.pzb-dough dd { margin: 0; font-family: var(--display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.pzb-dough .link { justify-self: start; }
+.pzb-list { list-style: none; margin: 0; padding: .4rem 1.1rem; }
+.pzb-list li { display: flex; gap: .8rem; align-items: baseline; padding: .5rem 0; border-top: 1px dashed var(--line); font-size: 1.05rem; }
+.pzb-list li:first-child { border-top: 0; }
+.pzb-list a { color: var(--ink); text-decoration: none; font-weight: 600; }
+.pzb-list a:hover { text-decoration: underline; }
+.pzb-n { font-family: var(--display); color: var(--accent); min-width: 2rem; }
+.pzb-oven { margin: 0; padding: .8rem 1.1rem; background: color-mix(in srgb, var(--accent) 6%, var(--paper)); border-top: 1px solid var(--line); font-size: .95rem; }
+@media (max-width: 600px) { .pzb-dough dl { grid-template-columns: 1fr 1fr; } }
+.doughres b { font-family: var(--display); font-weight: 400; font-variant-numeric: tabular-nums; }
