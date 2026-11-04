@@ -1,6 +1,6 @@
 // Pelles pizzadegar, samma uträkning som på ettgotland.se.
 // Mjölet är 60 % av degbollens vikt, vattnet 65 % av mjölet och saltet knappt 3 % av mjölet.
-// Jästen skiljer: dagjäst 1,1 % torrjäst, napolitansk 0,24 %.
+// Jästen skiljer: dagjäst 1,1 % torrjäst, napolitansk cirka 0,215 %.
 
 export const DOUGHS = {
   dag: {
@@ -25,7 +25,7 @@ export const DOUGHS = {
     ],
   },
   napoli: {
-    name: "Napolitansk pizza", short: "Napolitansk", yeast: 0.0024, yeastName: "Torrjäst",
+    name: "Napolitansk pizza", short: "Napolitansk", yeast: 0.00215, yeastName: "Torrjäst",
     rise: "Minst 48 timmar i kylen (4–7 °C), helst 72 timmar. Sedan 2–4 timmar i rumstemperatur som bollar.",
     intro: "Lång kalljäsning ger en luftig, smakrik kant. En klassisk napolitansk pizza väger 230–260 g.",
     flourNote: "Får du inte tag på Tipo 00 går det bra med vanligt vetemjöl, men dra då av 10 % av vattnet eftersom det inte binder lika mycket vatten.",
