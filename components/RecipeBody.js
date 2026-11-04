@@ -1,11 +1,19 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { amtText, stepItem } from "@/lib/format";
 import { lsGet, lsSet } from "@/lib/api";
 import { useApp } from "@/components/Providers";
 
 // Ingredienser och moment. interactive = bockbara rader och timers (kökläge).
-export default function RecipeBody({ recipe, factor = 1, interactive = false, id }) {
+// "se receptet X" i en anteckning blir en länk när receptet finns i samlingen.
+function Note({ note, recipes }) {
+  const m = String(note).match(/^(.*?)se receptet (.+)$/i);
+  const hit = m && (recipes || []).find((r) => r.title.toLowerCase() === m[2].trim().toLowerCase());
+  return hit ? <small>{m[1]}<Link href={`/recept/${hit.id}`}>se receptet {hit.title}</Link></small> : <small>{note}</small>;
+}
+
+export default function RecipeBody({ recipe, factor = 1, interactive = false, id, recipes }) {
   const { timers, toggleTimer, timerText } = useApp();
   const key = `rb-checks-${id}`;
   const [ck, setCk] = useState({ i: {}, s: {} });
@@ -32,7 +40,7 @@ export default function RecipeBody({ recipe, factor = 1, interactive = false, id
               <ul className="ing">
                 {g.items.map((it, ii) => {
                   const k = `${gi}-${ii}`;
-                  const txt = (<><span className="amt">{amtText(it, factor)}</span><span>{it.name}{it.note && <small>{it.note}</small>}</span></>);
+                  const txt = (<><span className="amt">{amtText(it, factor)}</span><span>{it.name}{it.note && <Note note={it.note} recipes={recipes} />}</span></>);
                   return (
                     <li key={k}>
                       {interactive ? (

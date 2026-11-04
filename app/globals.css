@@ -1122,3 +1122,9 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .pzt-s { font-size: 1.25rem; opacity: .85; }
 .pzt-go { justify-self: end; font-size: 1.35rem; color: #F8B4B4; font-weight: 700; }
 .pzteaser li.more { text-align: left; }
+.pzsn { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--accent); color: var(--paper); font-family: var(--body); font-size: .95rem; font-weight: 700; margin-right: .5rem; vertical-align: 3px; }
+.pztime { list-style: none; padding: 0; margin: .8rem 0 .4rem; display: grid; gap: .1rem; }
+.pztime li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .8rem; padding: .5rem 0; border-top: 1px solid var(--line); }
+.pztime b { font-variant-numeric: tabular-nums; }
+.pzcart h3 { margin: .8rem 0 .2rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-family: var(--body); font-weight: 700; }
+.pzbake { margin-top: .8rem; font-size: 1.05rem; }

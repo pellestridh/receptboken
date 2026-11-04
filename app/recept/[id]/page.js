@@ -108,7 +108,7 @@ export default function RecipePage({ params }) {
       </header>
 
       {dishesOf(r).includes("pizza") && <p className="pizzanote">Bakar ni den här? <Link href={`/pizza?vy=kvall&pizza=${r.id}&antal=${servings}`}>Planera pizzakvällen</Link> så räknas degen ut för {servings} {servings === 1 ? "pizza" : "pizzor"} med Pelles kalkylator.</p>}
-      <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} />
+      <RecipeBody recipe={r} factor={servings / r.servings} interactive id={id} recipes={all} />
 
       {isSide(r) && !showDrinks ? (
         <section className="rsec"><h2>Att dricka till</h2>

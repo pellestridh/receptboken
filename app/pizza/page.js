@@ -60,17 +60,58 @@ export default function Pizza() {
     { name: "Torrjäst", unit: "g", q: d.jast, pantry: true, from: "Pizzadeg" },
     { name: "Durumvetemjöl", unit: "", q: null, pantry: true, from: "Pizzadeg" },
   ];
-  const nightToShop = async () => {
+  // Handla: alla varor till kvällen som en checklista. Det som brukar finnas hemma är avbockat från början.
+  const [cart, setCart] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [eat, setEat] = useState("19:00");
+  const HOME = /mjöl|olivolja|olja|salt|flingsalt|torrjäst|jäst|socker|peppar/i;
+  const buildCart = async () => {
+    setBusy(true);
     try {
-      const items = [...doughItems(nd)];
-      let red = 0;
-      for (const x of chosen) { const d = await api(`/api/recipes/${x.r.id}`); items.push(...toppingItems(d.recipe, x.n)); if ((d.recipe.groups || []).some((g) => (g.items || []).some((i) => /tomatsås/i.test(i.name)))) red += x.n; }
+      const parts = [["Degen", doughItems(nd)]];
+      let red = 0; const tops = [];
+      for (const x of chosen) { const d = await api(`/api/recipes/${x.r.id}`); tops.push(...toppingItems(d.recipe, x.n)); if ((d.recipe.groups || []).some((gr) => (gr.items || []).some((i) => /tomatsås/i.test(i.name)))) red += x.n; }
       const sauce = (recipes || []).find((y) => /^tomatsås till pizza/i.test(y.title));
-      if (red && sauce) { const d = await api(`/api/recipes/${sauce.id}`); items.push(...toppingItems(d.recipe, red)); }
-      await api("/api/shopping", { method: "POST", json: { items } });
-      toast("Deg och pålägg ligger i inköpslistan");
+      if (red && sauce) { const d = await api(`/api/recipes/${sauce.id}`); parts.push([`Tomatsås till ${red} ${red === 1 ? "pizza" : "pizzor"}`, toppingItems(d.recipe, red)]); }
+      parts.push(["Pålägg", tops]);
+      const home = new Set(lsGet("rb-pizza-hemma", []));
+      const rows = [];
+      for (const [group, list] of parts) {
+        const m = new Map();
+        for (const it of list) {
+          const k = `${it.name.toLowerCase()}|${it.unit || ""}`;
+          const o = m.get(k);
+          if (o) { o.q = o.q != null && it.q != null ? o.q + it.q : o.q ?? it.q; } else m.set(k, { ...it });
+        }
+        for (const it of m.values()) { if (it.q != null && /^(burk|st|förp|paket|påse|klyfta)$/i.test(it.unit || "")) it.q = Math.ceil(it.q - 0.05); rows.push({ ...it, group, buy: !(it.pantry || HOME.test(it.name) || home.has(it.name.toLowerCase())) }); }
+      }
+      setCart(rows);
+    } catch (e) { toast(e.message); } finally { setBusy(false); }
+  };
+  const flip = (i) => setCart((c) => c.map((x, j) => (j === i ? { ...x, buy: !x.buy } : x)));
+  const cartToShop = async () => {
+    const buy = cart.filter((x) => x.buy);
+    try {
+      await api("/api/shopping", { method: "POST", json: { items: buy.map(({ group, buy: _b, ...it }) => it) } });
+      // Kom ihåg det ni har hemma till nästa gång.
+      const home = new Set(lsGet("rb-pizza-hemma", []));
+      for (const x of cart) { const n = x.name.toLowerCase(); if (x.buy) home.delete(n); else if (!(x.pantry || HOME.test(x.name))) home.add(n); }
+      lsSet("rb-pizza-hemma", [...home]);
+      toast(`${buy.length} ${buy.length === 1 ? "vara" : "varor"} ligger i inköpslistan`);
+      setCart(null);
     } catch (e) { toast(e.message); }
   };
+  useEffect(() => { setCart(null); }, [total, s.kind, s.weight]);
+  // Tidsplan bakåt från när ni vill äta.
+  const plan = (() => {
+    const [h, m] = eat.split(":").map(Number); const at = new Date(); at.setHours(h || 19, m || 0, 0, 0);
+    const t = (min) => { const d = new Date(at.getTime() - min * 60000); return d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }); };
+    const day = (hours) => { const d = new Date(at.getTime() - hours * 3600000); return d.toLocaleDateString("sv-SE", { weekday: "long" }); };
+    const ovenMin = s.oven === "pizzaugn" ? 30 : 45;
+    return s.kind === "napoli"
+      ? [[`${day(72)} eller ${day(48)}`, "Gör degen, 2–3 dygn i kylen."], [t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["Under dagen", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [eat, "Baka och ät."]]
+      : [[t(10 * 60), "Gör degen senast nu, cirka 8 timmar i kylen."], [t(75), "Ta ut degen, dela och bolla den. Låt vila under handduk."], ["Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [eat, "Baka och ät."]];
+  })();
   const toShop = () => api("/api/shopping", { method: "POST", json: { items: doughItems(r) } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
 
   return (
@@ -81,7 +122,7 @@ export default function Pizza() {
 
       {view === "kvall" ? (
         <>
-          <p className="lead">Välj vilka pizzor ni ska baka och hur många av varje. Degen räknas ut för alla, påläggen per pizza.</p>
+          <p className="lead"><span className="pzsn">1</span>Välj pizzor på tavlan. Sedan planerar ni tiden, handlar och bakar, steg för steg nedanför.</p>
           <section className="chalk" aria-label="Pizzatavlan">
             <div className="chalk-in">
               <h2 className="chalk-h">Pizzakväll</h2>
@@ -119,17 +160,56 @@ export default function Pizza() {
             </div>
           </section>
           {total > 0 && (
-            <section className="bsec">
-              <h2>Degen för {total} {total === 1 ? "pizza" : "pizzor"}</h2>
-              <div className="doughres">
-                <div><span>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Mjöl, Tipo 00"}</span><b>{g(nd.mjol)}</b></div>
-                <div><span>Vatten</span><b>{g(nd.vatten)}</b></div>
-                <div><span>{D.yeastName}</span><b>{g(nd.jast)}</b></div>
-                <div><span>Salt</span><b>{g(nd.salt)}</b></div>
-              </div>
-              <p className="hint">{D.name}, {s.weight} g per degboll, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
-              <p className="arow"><button className="btn" type="button" onClick={nightToShop}>Lägg deg och pålägg i inköpslistan</button></p>
-            </section>
+            <>
+              <section className="bsec pzstep">
+                <h2><span className="pzsn">2</span>Planera</h2>
+                <label className="fld"><span>Vi vill äta klockan</span><input className="tin" type="time" value={eat} onChange={(e) => setEat(e.target.value)} style={{ maxWidth: "9rem" }} /></label>
+                <ol className="pztime">{plan.map(([when, what]) => <li key={what}><b>{when}</b><span>{what}</span></li>)}</ol>
+                <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
+              </section>
+
+              <section className="bsec pzstep">
+                <h2><span className="pzsn">3</span>Handla</h2>
+                {!cart ? (
+                  <>
+                    <p className="muted">Se allt som behövs till kvällen och bocka av det ni redan har hemma.</p>
+                    <p className="arow"><button className="btn" type="button" disabled={busy} onClick={buildCart}>{busy ? "Räknar …" : "Visa allt som behövs"}</button></p>
+                  </>
+                ) : (
+                  <>
+                    <p className="hint">Bockade varor läggs i inköpslistan. Mjöl, olja, salt och jäst är avbockade, liksom det ni sa att ni hade hemma förra gången.</p>
+                    {[...new Set(cart.map((x) => x.group))].map((gr) => (
+                      <div key={gr} className="pzcart">
+                        <h3>{gr}</h3>
+                        <ul className="stlist">{cart.map((x, i) => x.group !== gr ? null : (
+                          <li key={i} className={"strow" + (x.buy ? " on" : "")}>
+                            <button type="button" role="checkbox" aria-checked={x.buy} onClick={() => flip(i)}>
+                              <span className="ck" aria-hidden="true">{x.buy ? "✓" : ""}</span>
+                              <span className="nm">{x.name}</span>
+                              <span className="muted gr">{x.q != null ? `${String(Math.round(x.q * 10) / 10).replace(".", ",")} ${x.unit || ""}` : x.amt || ""}</span>
+                            </button>
+                          </li>
+                        ))}</ul>
+                      </div>
+                    ))}
+                    <p className="arow"><button className="btn" type="button" onClick={cartToShop}>Lägg {cart.filter((x) => x.buy).length} varor i inköpslistan</button> <button className="link" type="button" onClick={() => setCart(null)}>Avbryt</button></p>
+                  </>
+                )}
+              </section>
+
+              <section className="bsec pzstep">
+                <h2><span className="pzsn">4</span>Baka</h2>
+                <div className="doughres">
+                  <div><span>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Mjöl, Tipo 00"}</span><b>{g(nd.mjol)}</b></div>
+                  <div><span>Vatten</span><b>{g(nd.vatten)}</b></div>
+                  <div><span>{D.yeastName}</span><b>{g(nd.jast)}</b></div>
+                  <div><span>Salt</span><b>{g(nd.salt)}</b></div>
+                </div>
+                <p className="hint">Degen för {total} {total === 1 ? "pizza" : "pizzor"}. <button type="button" className="link" onClick={() => setView("deg")}>Så gör ni degen ›</button></p>
+                <ul className="plainlist pzbake">{chosen.map((x) => <li key={x.r.id}><Link href={`/recept/${x.r.id}`}>{x.r.pizzaNo ? `${x.r.pizzaNo}. ` : ""}{x.r.title}</Link> <span className="muted">× {x.n}</span></li>)}{night.free > 0 && <li>Egen topping <span className="muted">× {night.free}</span></li>}</ul>
+                <p className="hint">{OVENS[s.oven].tips.join(" ")}</p>
+              </section>
+            </>
           )}
         </>
       ) : (
