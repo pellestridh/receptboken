@@ -1,4 +1,7 @@
 "use client";
+import "@fontsource/caveat/latin-500.css";
+import "@fontsource/caveat/latin-700.css";
+import "@fontsource/cabin-sketch/latin-700.css";
 import { useEffect, useState } from "react";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { useApp } from "@/components/Providers";
@@ -43,6 +46,10 @@ export default function Pizza() {
   const D = DOUGHS[s.kind];
   const r = doughFor(s);
   const pizzas = (recipes || []).filter((x) => dishesOf(x).includes("pizza"));
+  // Tavlan: pizzorna i den ordning de lades till, så att numren står fast.
+  const menu = [...pizzas].sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
+  const DOUGHWORDS = /^(vetemjöl|mjöl|tipo|durum|vatten|jäst|torrjäst|färsk jäst|salt|socker|strösocker|pizzadeg)/i;
+  const topsOf = (x) => { const t = String(x.ingredients || "").split(",").map((w) => w.trim()).filter((w) => w && !DOUGHWORDS.test(w)); const u = [...new Set(t.map((w) => w.toLowerCase()))]; return u.length ? u.join(", ").replace(/^./, (c) => c.toUpperCase()) : "Pelles pålägg"; };
   const chosen = Object.entries(night.list).map(([id, n]) => ({ r: pizzas.find((x) => x.id === id) || (recipes || []).find((x) => x.id === id), n })).filter((x) => x.r && x.n > 0);
   const total = chosen.reduce((a, x) => a + x.n, 0) + (night.free || 0);
   const nd = doughFor({ ...s, count: Math.max(1, total) });
@@ -71,27 +78,41 @@ export default function Pizza() {
       {view === "kvall" ? (
         <>
           <p className="lead">Välj vilka pizzor ni ska baka och hur många av varje. Degen räknas ut för alla, påläggen per pizza.</p>
-          <section className="bsec">
-            <h2>Pizzorna</h2>
-            <ul className="festlist">
-              {chosen.map((x) => (
-                <li key={x.r.id}>
-                  <div><Link href={`/recept/${x.r.id}`}><b>{x.r.title}</b></Link><span className="muted">Pålägg för {x.n}</span></div>
-                  <span className="stepper"><button type="button" aria-label="Färre" onClick={() => setN(x.r.id, x.n - 1)}>−</button><b className="pzn">{x.n}</b><button type="button" aria-label="Fler" onClick={() => setN(x.r.id, x.n + 1)}>+</button></span>
-                  <span />
+          <section className="chalk" aria-label="Pizzatavlan">
+            <div className="chalk-in">
+              <h2 className="chalk-h">Pizzakväll</h2>
+              <p className="chalk-sub">Välj hur många av varje</p>
+              {!menu.length && <p className="chalk-empty">Inga pizzor på tavlan än. Lägg till pizzarecept så hamnar de här.</p>}
+              <ol className="chalk-list">
+                {menu.map((x, i) => {
+                  const n = night.list[x.id] || 0;
+                  return (
+                    <li key={x.id} className={n ? "on" : ""}>
+                      <span className="chalk-no">{i + 1}.</span>
+                      <div className="chalk-t">
+                        <Link href={`/recept/${x.id}`} className="chalk-name">{x.title}</Link>
+                        <span className="chalk-desc">{topsOf(x)}</span>
+                      </div>
+                      <span className="chalk-n">
+                        {n > 0 && <button type="button" aria-label={`Färre ${x.title}`} onClick={() => setN(x.id, n - 1)}>−</button>}
+                        {n > 0 && <b>{n}</b>}
+                        <button type="button" aria-label={`Fler ${x.title}`} onClick={() => setN(x.id, n + 1)}>+</button>
+                      </span>
+                    </li>
+                  );
+                })}
+                <li className={"own" + (night.free ? " on" : "")}>
+                  <span className="chalk-no">★</span>
+                  <div className="chalk-t"><span className="chalk-name">Egen topping</span><span className="chalk-desc">Bara deg, var och en toppar själv</span></div>
+                  <span className="chalk-n">
+                    {night.free > 0 && <button type="button" aria-label="Färre egna" onClick={() => setNight((y) => ({ ...y, free: Math.max(0, (y.free || 0) - 1) }))}>−</button>}
+                    {night.free > 0 && <b>{night.free}</b>}
+                    <button type="button" aria-label="Fler egna" onClick={() => setNight((y) => ({ ...y, free: (y.free || 0) + 1 }))}>+</button>
+                  </span>
                 </li>
-              ))}
-              <li>
-                <div><b>Egen topping</b><span className="muted">Bara deg, ni toppar själva</span></div>
-                <span className="stepper"><button type="button" aria-label="Färre" onClick={() => setNight((y) => ({ ...y, free: Math.max(0, (y.free || 0) - 1) }))}>−</button><b className="pzn">{night.free || 0}</b><button type="button" aria-label="Fler" onClick={() => setNight((y) => ({ ...y, free: (y.free || 0) + 1 }))}>+</button></span>
-                <span />
-              </li>
-            </ul>
-            {pizzas.filter((x) => !night.list[x.id]).length > 0 && <>
-              <h3 className="pzh">Lägg till från era recept</h3>
-              <ul className="festcands">{pizzas.filter((x) => !night.list[x.id]).map((x) => <li key={x.id}><button type="button" onClick={() => setN(x.id, 1)}><span className="plus">+</span><b>{x.title}</b><span className="muted">{x.kitchen}</span></button></li>)}</ul>
-            </>}
-            {!pizzas.length && <p className="muted">Ni har inga pizzarecept än. Lägg till ett, eller räkna bara deg med Egen topping.</p>}
+              </ol>
+              {total > 0 && <p className="chalk-total">Totalt {total} {total === 1 ? "pizza" : "pizzor"}</p>}
+            </div>
           </section>
           {total > 0 && (
             <section className="bsec">
