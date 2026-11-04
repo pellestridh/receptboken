@@ -19,6 +19,7 @@ export default function Settings() {
   const [allergies, setAllergies] = useState([]);
   const [who, setWho] = useState("");
   const [what, setWhat] = useState("");
+  const [taste, setTaste] = useState(null);
   useEffect(() => { if (settings.allergies) setAllergies(settings.allergies); }, [settings.allergies]);
   const saveAllergies = (list) => save({ allergies: list }).then(() => toast("Allergierna är sparade. Recepten kontrolleras om.")).catch((e) => toast(e.message));
 
@@ -63,6 +64,12 @@ export default function Settings() {
         <div><button className="btn ghost" type="button" onClick={async () => { await fetch("/api/logout", { method: "POST" }); window.location.href = "/login"; }}>Logga ut på den här enheten</button></div>
       </div>
       <p className="hint">Näringsvärden beräknas med Livsmedelsverkets livsmedelsdatabas (CC BY 4.0).</p>
+      <div className="panel">
+        <h2 style={{ fontSize: "1.4rem" }}>Er smak i dryck</h2>
+        <p className="hint">Skriv med egna ord vad ni gillar, så följer Claude det när drycker föreslås, även när det går emot de vanliga råden. Gäller nya förslag.</p>
+        <textarea className="tin" rows={3} value={taste ?? settings.drinkTaste ?? ""} onChange={(e) => setTaste(e.target.value)} placeholder="Till exempel: kraftigt rött till pizza, gärna belgisk öl till ost" />
+        <p className="arow"><button className="btn ghost" type="button" disabled={taste == null} onClick={() => save({ drinkTaste: taste }).then(() => { toast("Sparat. Nya dryckesförslag följer er smak."); setTaste(null); }).catch((e) => toast(e.message))}>Spara</button></p>
+      </div>
       <div className="panel">
         <h2 style={{ fontSize: "1.4rem" }}>Om Receptboken</h2>
         <p className="hint">Version {CURRENT.version}, uppdaterad {dateSv(CURRENT.date)}. Vad som är nytt och vad som har rättats i varje version.</p>
