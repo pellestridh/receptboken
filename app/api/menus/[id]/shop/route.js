@@ -22,8 +22,9 @@ export async function POST(req, { params }) {
       const rows = await sql(`select name, aisle from staples where id = any($1) and hh = $2`, [staples, hh()]);
       all.push(...rows.map((s) => ({ name: s.name, unit: "", q: null, amt: "", aisle: s.aisle || aisleFor(s.name), from: "Baslistan" })));
     }
-    const list = await addShopping(all);
-    return ok({ items: list, added: all.length });
+    const info = {};
+    const list = await addShopping(all, info);
+    return ok({ items: list, added: all.length, covered: info.covered || [] });
   } catch (e) {
     return fail(e);
   }

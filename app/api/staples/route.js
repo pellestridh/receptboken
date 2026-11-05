@@ -52,7 +52,7 @@ export async function POST(req) {
     if (b.selectNone) await sql(`update staples set selected = false where hh = $1`, [H]);
     if (Array.isArray(b.toShopping) && b.toShopping.length) {
       const rows = (await list()).filter((s) => b.toShopping.includes(s.id));
-      await addShopping(rows.map((s) => ({ name: s.name, unit: "", q: null, aisle: s.aisle, from: "Baslistan" })));
+      await addShopping(rows.map((s) => ({ name: s.name, unit: "", q: null, aisle: s.aisle, from: "Baslistan" })), { noCover: true });
       await sql(`update staples set selected = false where id = any($1) and hh = $2`, [b.toShopping, H]);
     }
     return ok(await reply());

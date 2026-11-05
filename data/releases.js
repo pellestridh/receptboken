@@ -1,6 +1,22 @@
 // Versionshistoriken. Den översta är den aktuella. "news" är de punkter som visas i nyhetsrutan på startsidan,
 // skrivna för användaren. Nytt, Bättre och Rättat visas under Om Receptboken.
 export const RELEASES = [
+  { version: "1.6", date: "2026-11-05", title: "Kvar hemma",
+    news: [
+      "Kvar hemma, en ny flik i Inköp: när ni bockar av en vara räknar appen ut vad som blir kvar av förpackningen, till exempel 110 g ricotta, och hur länge det håller.",
+      "Det som finns hemma räknas av nästa gång ni lägger varor i inköpslistan, så ni inte köper det igen.",
+      "Använd snart på startsidan, med rätter ur er samling som passar.",
+      "Lägg själv in sådant som tomatsås i frysen.",
+    ],
+    nytt: [
+      "Förpackningsstorlekar och hållbarhet för vanliga varor: mejeri, kött, chark, grönt och öppnade burkar.",
+      "Rester räknas ut automatiskt när en vara bockas av, och tas bort om man ångrar.",
+      "Inköpslistan drar av det som finns hemma, från recept, matsedlar, pizzakvällen och Fest och buffé.",
+      "Kvar hemma med kyl och frys, Frys, Tina och Slut, och förslag på recept som använder resten.",
+      "Pizzakvällens handla-steg visar vad som finns hemma.",
+    ],
+    battre: ["Flikarna i Inköp heter Listan, Baslistan och Kvar hemma."],
+    rattat: [] },
   { version: "1.5", date: "2026-11-04", title: "Pizzadeg och pizzakväll",
     news: [
       "Pizzadeg under Mer: Pelles degkalkylator för dagjäst och napolitansk pizza. Välj antal pizzor och vikt, så räknas mjöl, vatten, jäst och salt ut.",

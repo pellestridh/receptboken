@@ -1146,3 +1146,18 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .pzb-oven { margin: 0; padding: .8rem 1.1rem; background: color-mix(in srgb, var(--accent) 6%, var(--paper)); border-top: 1px solid var(--line); font-size: .95rem; }
 @media (max-width: 600px) { .pzb-dough dl { grid-template-columns: 1fr 1fr; } }
 .doughres b { font-family: var(--display); font-weight: 400; font-variant-numeric: tabular-nums; }
+.instock { display: block; color: var(--accent); font-weight: 700; font-size: .8rem; }
+/* Kvar hemma */
+.pnadd { display: grid; grid-template-columns: minmax(0, 2fr) 5rem 6rem auto auto; gap: .5rem; align-items: center; margin: .6rem 0 1rem; }
+.pnf { display: flex; gap: .3rem; align-items: center; font-size: .9rem; white-space: nowrap; }
+@media (max-width: 600px) { .pnadd { grid-template-columns: 1fr 1fr 1fr; } .pnadd > input:first-child { grid-column: 1 / -1; } }
+.pnh { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-family: var(--body); font-weight: 700; margin: 1.2rem 0 .3rem; }
+.pnlist { list-style: none; margin: 0; padding: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
+.pnrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .8rem; padding: .75rem 1rem; border-top: 1px solid var(--line); }
+.pnrow:first-child { border-top: 0; }
+.pn-t { display: grid; gap: .15rem; }
+.pn-w { font-size: .85rem; color: var(--muted); }
+.pnrow.soon .pn-w { color: #B5050F; font-weight: 700; }
+.pn-s { font-size: .9rem; }
+.pn-a { display: flex; gap: .9rem; align-items: start; }
+.usesoon ul { list-style: none; margin: 0 0 1.2rem; padding: .7rem 1rem; background: color-mix(in srgb, #E30613 6%, var(--paper)); border-radius: 14px; display: grid; gap: .45rem; }

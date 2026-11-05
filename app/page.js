@@ -10,6 +10,7 @@ import { allergyKey } from "@/components/Allergens";
 import Box from "@/components/Box";
 import NewsBox from "@/components/NewsBox";
 import PizzaTeaser from "@/components/PizzaTeaser";
+import { UseSoon } from "@/components/Pantry";
 import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
 import { upcomingHoliday, holidaysOf } from "@/lib/holidays";
 
@@ -162,6 +163,8 @@ export default function Home() {
         <NewsBox />
         </>
       )}
+
+      {!filtering && recipes && <UseSoon recipes={all} />}
 
       {!filtering && now.getDay() === 5 && <PizzaTeaser recipes={all} big />}
 

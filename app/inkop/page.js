@@ -5,6 +5,8 @@ import { amtText } from "@/lib/format";
 import { AISLE_ORDER } from "@/lib/aisles";
 import { useApp } from "@/components/Providers";
 import Staples from "@/components/Staples";
+import Pantry from "@/components/Pantry";
+import { useRecipes } from "@/components/useRecipes";
 import Link from "next/link";
 import { flatOffers, matchOffer } from "@/lib/offerMatch";
 
@@ -14,6 +16,8 @@ export default function Shopping() {
   const [custom, setCustom] = useState("");
   const [armed, setArmed] = useState(false);
   const [tab, setTab] = useState("lista");
+  const { recipes } = useRecipes();
+  useEffect(() => { if (new URLSearchParams(window.location.search).get("vy") === "hemma") setTab("hemma"); }, []);
   const [offers, setOffers] = useState([]);
   useEffect(() => { api("/api/offers").then((d) => setOffers(flatOffers(d.stores))).catch(() => {}); }, []);
 
@@ -54,10 +58,11 @@ export default function Shopping() {
         <p className="muted" style={{ margin: 0 }}>{items ? `${open} varor kvar att handla. Listan är gemensam och sorterad efter butikens avdelningar.` : "Hämtar listan …"}</p>
       </div>
       <div className="boxseg shoptabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === "lista"} onClick={() => setTab("lista")}>Inköpslistan{items ? ` (${open})` : ""}</button>
+        <button type="button" role="tab" aria-selected={tab === "lista"} onClick={() => setTab("lista")}>Listan{items ? ` (${open})` : ""}</button>
         <button type="button" role="tab" aria-selected={tab === "bas"} onClick={() => setTab("bas")}>Baslistan</button>
+        <button type="button" role="tab" aria-selected={tab === "hemma"} onClick={() => setTab("hemma")}>Kvar hemma</button>
       </div>
-      {tab === "bas" ? <Staples shopping={list} onAdded={load} offers={offers} /> : <>
+      {tab === "hemma" ? <Pantry recipes={recipes} /> : tab === "bas" ? <Staples shopping={list} onAdded={load} offers={offers} /> : <>
       <form className="addrow" onSubmit={add}>
         <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Lägg till en egen vara" autoComplete="off" />
         <button className="btn" type="submit">Lägg till</button>

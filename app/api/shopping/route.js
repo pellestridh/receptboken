@@ -18,7 +18,8 @@ export async function POST(req) {
       if (name) await db()(`insert into shopping_items (id,name,aisle,hh) values ($1,$2,'Egna varor',$3)`, [rid(), name, hh()]);
       return ok({ items: await listShopping() });
     }
-    return ok({ items: await addShopping(b.items) });
+    const info = {};
+    return ok({ items: await addShopping(b.items, info), covered: info.covered || [] });
   } catch (e) {
     return fail(e);
   }

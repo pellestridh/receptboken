@@ -69,7 +69,7 @@ export default function RecipePage({ params }) {
         try { const d = await api(`/api/recipes/${p.id}`); items.push(...shoppingItems(d.recipe)); } catch {}
       }
     }
-    try { await api("/api/shopping", { method: "POST", json: { items } }); toast(withPairs ? "Hela middagen ligger i inköpslistan" : `${r.title} ligger i inköpslistan`); }
+    try { const d = await api("/api/shopping", { method: "POST", json: { items } }); const c = d.covered?.length ? ` Finns hemma: ${[...new Set(d.covered)].slice(0, 3).join(", ")}.` : ""; toast((withPairs ? "Hela middagen ligger i inköpslistan." : `${r.title} ligger i inköpslistan.`) + c); }
     catch (e) { toast(e.message); }
   }
   async function notesAction(json) {

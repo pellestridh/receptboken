@@ -156,6 +156,17 @@ statements.push(
     error text,
     fetched_at timestamptz
   )`,
+  `create table if not exists pantry (
+    id text primary key,
+    hh text not null default 'hem',
+    name text not null,
+    q numeric,
+    unit text,
+    use_by timestamptz,
+    frozen boolean not null default false,
+    shop_id text,
+    created_at timestamptz not null default now()
+  )`,
   `create table if not exists households (
     id text primary key,
     name text not null,

@@ -77,6 +77,8 @@ export default function Pizza() {
       if (red && sauce) { const d = await api(`/api/recipes/${sauce.id}`); parts.push([`Tomatsås till ${red} ${red === 1 ? "pizza" : "pizzor"}`, toppingItems(d.recipe, red)]); }
       parts.push(["Pålägg", tops]);
       const home = new Set(lsGet("rb-pizza-hemma", []));
+      let stock = []; try { stock = (await api("/api/pantry")).items || []; } catch {}
+      const inStock = (n) => stock.find((p) => p.name.toLowerCase() === n.toLowerCase() || p.name.toLowerCase().includes(n.toLowerCase()) || n.toLowerCase().includes(p.name.toLowerCase()));
       const rows = [];
       for (const [group, list] of parts) {
         const m = new Map();
@@ -85,7 +87,7 @@ export default function Pizza() {
           const o = m.get(k);
           if (o) { o.q = o.q != null && it.q != null ? o.q + it.q : o.q ?? it.q; } else m.set(k, { ...it });
         }
-        for (const it of m.values()) { if (it.q != null && /^(burk|st|förp|paket|påse|klyfta)$/i.test(it.unit || "")) it.q = Math.ceil(it.q - 0.05); rows.push({ ...it, group, buy: !(it.pantry || HOME.test(it.name) || home.has(it.name.toLowerCase())) }); }
+        for (const it of m.values()) { if (it.q != null && /^(burk|st|förp|paket|påse|klyfta)$/i.test(it.unit || "")) it.q = Math.ceil(it.q - 0.05); const st = inStock(it.name); rows.push({ ...it, group, stock: st ? `${st.frozen ? "I frysen" : "Hemma"}${st.q != null ? `: ${String(st.q).replace(".", ",")} ${st.unit}` : ""}` : null, buy: !(it.pantry || HOME.test(it.name) || home.has(it.name.toLowerCase()) || st) }); }
       }
       setCart(rows);
     } catch (e) { toast(e.message); } finally { setBusy(false); }
@@ -190,7 +192,7 @@ export default function Pizza() {
                           <li key={i} className={"strow" + (x.buy ? " on" : "")}>
                             <button type="button" role="checkbox" aria-checked={x.buy} onClick={() => flip(i)}>
                               <span className="ck" aria-hidden="true">{x.buy ? "✓" : ""}</span>
-                              <span className="nm">{x.name}</span>
+                              <span className="nm">{x.name}{x.stock && <small className="instock">{x.stock}</small>}</span>
                               <span className="muted gr">{x.q != null ? `${String(Math.round(x.q * 10) / 10).replace(".", ",")} ${x.unit || ""}` : x.amt || ""}</span>
                             </button>
                           </li>
