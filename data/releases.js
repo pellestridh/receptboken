@@ -9,10 +9,11 @@ export const RELEASES = [
     ],
     nytt: ["Flikrad med ikoner längst ner på telefonen.", "Tips om att lägga appen på hemskärmen, och installera direkt på Android.", "Genvägar från appikonen."],
     newsFixed: [
+      "Byt namn på ett recept: tryck på Byt namn vid rubriken.",
       "Vinförslagen håller sig till er prisklass, 100–250 kronor flaskan, och bara till Systembolagets fasta sortiment. Ungefärligt pris visas vid vinet. Prisklassen ändrar ni under Inställningar.",
     ],
     battre: ["Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
-    rattat: ["Vinförslag som var för dyra eller hade utgått byts automatiskt mot vin i er prisklass när ni öppnar receptet. Viner ni gett tummen upp står kvar."], rev: 2 },
+    rattat: ["Byt namn på ett recept direkt vid rubriken.", "Vinförslag som var för dyra eller hade utgått byts automatiskt mot vin i er prisklass när ni öppnar receptet. Viner ni gett tummen upp står kvar."], rev: 3 },
   { version: "1.7", date: "2026-11-05", title: "Snabbval, nivå och er smakprofil",
     news: [
       "Snabbval under sökfältet: Middag, Under 30 min, Vegetariskt, Enkelt, Pizza och Bakat.",

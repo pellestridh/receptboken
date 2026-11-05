@@ -27,6 +27,7 @@ export default function RecipePage({ params }) {
   const [error, setError] = useState("");
   const [serv, setServ] = useState(null);
   const [showDrinks, setShowDrinks] = useState(false);
+  const [naming, setNaming] = useState(null);
   const [note, setNote] = useState("");
   const [wake, setWake] = useState(null);
   const wantWake = useRef(false);
@@ -83,11 +84,25 @@ export default function RecipePage({ params }) {
     catch { toast("Skärmen kunde inte hållas tänd just nu"); }
   }
 
+  async function rename(e) {
+    e.preventDefault();
+    try {
+      const d = await api(`/api/recipes/${id}`, { method: "PATCH", json: { title: naming } });
+      setData((x) => ({ ...x, recipe: { ...x.recipe, title: d.title } }));
+      setNaming(null); toast("Namnet är ändrat");
+    } catch (err) { toast(err.message); }
+  }
+
   return (
     <article className="r" style={{ "--rc": accentVar(r.accent) }}>
       <RecipeImage id={id} image={r.image} hasSource={!!r.source?.url} onChange={(img) => setData((x) => ({ ...x, recipe: { ...x.recipe, image: img || undefined } }))} />
       <header className="rhead">
-        <h1>{r.title}</h1>
+        {naming != null ? (
+          <form className="rename" onSubmit={rename}>
+            <input className="tin" value={naming} onChange={(e) => setNaming(e.target.value)} autoFocus aria-label="Receptets namn" maxLength={120} />
+            <span className="arow"><button className="btn" type="submit" disabled={!naming.trim() || naming.trim() === r.title}>Spara</button><button className="link" type="button" onClick={() => setNaming(null)}>Avbryt</button></span>
+          </form>
+        ) : <h1>{r.title} <button className="link renamebtn" type="button" onClick={() => setNaming(r.title)}>Byt namn</button></h1>}
         {r.lede && <p className="lede">{r.lede}</p>}
         <div className="tags">
           {[r.kitchen, r.type, r.base, mins(r.minutes), r.difficulty ? r.difficulty[0].toUpperCase() + r.difficulty.slice(1) : null, ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}

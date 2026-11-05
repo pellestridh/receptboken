@@ -23,7 +23,16 @@ export async function GET(_req, { params }) {
 
 export async function PATCH(req, { params }) {
   try {
-    const { recipe } = await body(req);
+    const b = await body(req);
+    // Bara nytt namn: ändra rubriken utan att röra resten av receptet.
+    if (!b.recipe && typeof b.title === "string") {
+      const title = b.title.replace(/\s+/g, " ").trim().slice(0, 120);
+      if (!title) throw new Error("Skriv ett namn på receptet.");
+      await ownRecipe(params.id);
+      await db()(`update recipes set title = $2, body = jsonb_set(body, '{title}', to_jsonb($2::text)), updated_at = now() where id = $1`, [params.id, title]);
+      return ok({ id: params.id, title });
+    }
+    const { recipe } = b;
     if (!recipe?.title) throw new Error("Receptet saknar rubrik.");
     await ownRecipe(params.id);
     await saveRecipe(params.id, recipe);

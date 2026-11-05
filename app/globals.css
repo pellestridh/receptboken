@@ -1231,3 +1231,9 @@ body { overscroll-behavior-y: none; }
 .installtip { position: fixed; left: 12px; right: 12px; bottom: calc(5rem + env(safe-area-inset-bottom)); z-index: 40; background: var(--ink); color: var(--paper); border-radius: 16px; padding: .9rem 1rem; box-shadow: 0 12px 30px rgb(0 0 0 / .3); display: grid; gap: .3rem; font-size: .95rem; }
 .installtip b { font-size: 1rem; }
 .installtip button { all: unset; cursor: pointer; justify-self: end; font-weight: 700; color: var(--accent-soft, #cfe6dd); }
+
+/* Byt namn på ett recept direkt i rubriken. */
+.rhead h1 .renamebtn { font: inherit; font-family: var(--body); font-size: .85rem; font-weight: 400; vertical-align: middle; margin-left: .4rem; opacity: .7; }
+.rename { display: grid; gap: .5rem; margin-bottom: .6rem; }
+.rename .tin { font-family: var(--display); font-size: 1.6rem; }
+@media print { .renamebtn { display: none; } }
