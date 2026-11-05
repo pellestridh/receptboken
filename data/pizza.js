@@ -5,7 +5,7 @@
 export const DOUGHS = {
   dag: {
     name: "Dagjäst pizza", short: "Dagjäst", yeast: 0.011, yeastName: "Torrjäst",
-    rise: "Cirka 8 timmar i kylen (cirka 7 °C), sedan någon timme som bollar.",
+    rise: "Cirka 8 timmar i kylen (cirka 7 °C), sedan cirka 2 timmar som bollar i rumstemperatur.",
     intro: "Pelles vanliga deg. Görs på morgonen och bakas på kvällen.",
     machine: [
       "Ha vattnet och jästen i köksassistenten och kör tills jästen löst sig.",
@@ -20,7 +20,7 @@ export const DOUGHS = {
     ],
     after: [
       "Olja in en skål eller burk med lock och lägg i degen. Låt jäsa cirka 8 timmar i kylen som håller cirka 7 grader.",
-      "Ta ut degen, dela den i lika många bitar som pizzor och bolla dem. Lägg på bänken eller en oljad plåt, täck med plastfolie eller en fuktig handduk och låt vila någon timme.",
+      "Ta ut degen, dela den i lika många bitar som pizzor och bolla dem. Lägg på bänken eller en oljad plåt, täck med plastfolie eller en fuktig handduk och låt vila cirka 2 timmar, så att degen hinner få rumstemperatur.",
       "Baka ut pizzorna med rikligt med durumvetemjöl. Toppa och grädda, se tiderna för er ugn nedanför.",
     ],
   },
