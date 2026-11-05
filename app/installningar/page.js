@@ -20,6 +20,7 @@ export default function Settings() {
   const [who, setWho] = useState("");
   const [what, setWhat] = useState("");
   const [taste, setTaste] = useState(null);
+  const [fav, setFav] = useState({ kind: "wine", name: "", note: "" });
   useEffect(() => { if (settings.allergies) setAllergies(settings.allergies); }, [settings.allergies]);
   const saveAllergies = (list) => save({ allergies: list }).then(() => toast("Allergierna är sparade. Recepten kontrolleras om.")).catch((e) => toast(e.message));
 
@@ -69,6 +70,19 @@ export default function Settings() {
         <p className="hint">Skriv med egna ord vad ni gillar, så följer Claude det när drycker föreslås, även när det går emot de vanliga råden. Gäller nya förslag.</p>
         <textarea className="tin" rows={3} value={taste ?? settings.drinkTaste ?? ""} onChange={(e) => setTaste(e.target.value)} placeholder="Till exempel: kraftigt rött till pizza, gärna belgisk öl till ost" />
         <p className="arow"><button className="btn ghost" type="button" disabled={taste == null} onClick={() => save({ drinkTaste: taste }).then(() => { toast("Sparat. Nya dryckesförslag följer er smak."); setTaste(null); }).catch((e) => toast(e.message))}>Spara</button></p>
+        <h3 className="favh">Viner och öl ni gillar</h3>
+        <p className="hint">Claude lär sig er smakprofil av dem, till exempel att ni gillar kraftiga röda från Italien. Förslagen blir i samma anda, men det blir inte samma flaskor varje gång.</p>
+        {["wine", "beer"].map((k) => { const list = (settings.favDrinks || []).filter((f) => f.kind === k); return list.length ? (
+          <div key={k} className="favgroup"><b>{k === "wine" ? "Vin" : "Öl"}</b><ul className="nlist">{list.map((f) => (
+            <li key={f.name}>{f.name}{f.note ? <span className="muted">, {f.note}</span> : null} <button className="link" type="button" onClick={() => save({ favDrinks: (settings.favDrinks || []).filter((x) => x !== f) }).catch((e) => toast(e.message))}>Ta bort</button></li>
+          ))}</ul></div>
+        ) : null; })}
+        <form className="favadd" onSubmit={(e) => { e.preventDefault(); if (!fav.name.trim()) return; save({ favDrinks: [...(settings.favDrinks || []), fav] }).then(() => setFav({ kind: fav.kind, name: "", note: "" })).catch((er) => toast(er.message)); }}>
+          <div className="boxseg small" role="tablist">{[["wine", "Vin"], ["beer", "Öl"]].map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={fav.kind === k} onClick={() => setFav({ ...fav, kind: k })}>{l}</button>)}</div>
+          <input className="tin" value={fav.name} onChange={(e) => setFav({ ...fav, name: e.target.value })} placeholder={fav.kind === "wine" ? "Till exempel Masi Costasera Amarone" : "Till exempel Westmalle Tripel"} />
+          <input className="tin" value={fav.note} onChange={(e) => setFav({ ...fav, note: e.target.value })} placeholder="Varför, valfritt" />
+          <button className="btn" type="submit" disabled={!fav.name.trim()}>Lägg till</button>
+        </form>
       </div>
       <div className="panel">
         <h2 style={{ fontSize: "1.4rem" }}>Om Receptboken</h2>

@@ -90,7 +90,7 @@ export default function RecipePage({ params }) {
         <h1>{r.title}</h1>
         {r.lede && <p className="lede">{r.lede}</p>}
         <div className="tags">
-          {[r.kitchen, r.type, r.base, mins(r.minutes), ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}
+          {[r.kitchen, r.type, r.base, mins(r.minutes), r.difficulty ? r.difficulty[0].toUpperCase() + r.difficulty.slice(1) : null, ...(r.tags || [])].filter(Boolean).map((t, i) => <span className="tag" key={i}>{t}</span>)}
           {r.nutrition?.kcal && r.nutrition.kcal <= settings.lightKcal && <span className="tag light-tag">Lätt</span>}
           <Allergens id={id} allergens={r.allergens} allergies={settings.allergies} onChange={(al) => setData((x) => ({ ...x, recipe: { ...x.recipe, allergens: al } }))} />
         </div>

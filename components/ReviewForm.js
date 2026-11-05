@@ -9,7 +9,7 @@ import { HOLIDAYS, holidaysOf } from "@/lib/holidays";
 export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, saveLabel = "Spara i Receptboken", busy, dupWarning }) {
   const [m, setM] = useState({
     title: recipe.title || "", kitchen: recipe.kitchen || "", type: recipe.type || "", base: recipe.base || "",
-    minutes: recipe.minutes || "", servings: recipe.servings || "", source: recipe.source?.name || "",
+    minutes: recipe.minutes || "", servings: recipe.servings || "", source: recipe.source?.name || "", difficulty: recipe.difficulty || "",
   });
   const [armed, setArmed] = useState(false);
   const [dishes, setDishes] = useState(() => dishesOf(recipe));
@@ -25,6 +25,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
     if (dishes.length) d.dishes = dishes; else delete d.dishes;
     d.holidays = hol;
     d.kitchen = m.kitchen.trim(); d.type = m.type.trim(); d.base = m.base.trim();
+    if (m.difficulty) d.difficulty = m.difficulty;
     const mn = parseInt(m.minutes, 10); if (mn > 0) d.minutes = mn;
     const sv = parseInt(m.servings, 10);
     if (sv > 0 && sv !== d.servings) {
@@ -66,6 +67,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
         <label className="fld"><span>Del av måltiden</span><input className="tin" list="l-type" value={m.type} onChange={set("type")} />{list("l-type", "type")}</label>
         <label className="fld"><span>Bas</span><input className="tin" list="l-base" value={m.base} onChange={set("base")} />{list("l-base", "base")}</label>
         <label className="fld"><span>Minuter totalt</span><input className="tin" type="number" min="1" inputMode="numeric" value={m.minutes} onChange={set("minutes")} /></label>
+        <div className="fld"><span>Nivå</span><div className="frow">{[["enkel", "Enkel"], ["medel", "Medel"], ["avancerad", "Avancerad"]].map(([v, l]) => <button key={v} type="button" className="chip" aria-pressed={m.difficulty === v} onClick={() => setM({ ...m, difficulty: v })}>{l}</button>)}</div></div>
         <label className="fld"><span>Antal {recipe.servingsUnit || "portioner"}</span><input className="tin" type="number" min="1" inputMode="numeric" value={m.servings} onChange={set("servings")} /></label>
         <div className="fld wide"><span>Typ av rätt, en eller två (styr korten i Receptlådan)</span>
           <div className="frow">{DISHES.map((x) => <button key={x.key} type="button" className="chip" aria-pressed={dishes.includes(x.key)} onClick={() => toggleDish(x.key)}>{x.name}</button>)}</div>

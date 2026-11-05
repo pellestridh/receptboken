@@ -1,6 +1,19 @@
 // Versionshistoriken. Den översta är den aktuella. "news" är de punkter som visas i nyhetsrutan på startsidan,
 // skrivna för användaren. Nytt, Bättre och Rättat visas under Om Receptboken.
 export const RELEASES = [
+  { version: "1.7", date: "2026-11-05", title: "Snabbval, nivå och er smakprofil",
+    news: [
+      "Snabbval under sökfältet: Middag, Under 30 min, Vegetariskt, Enkelt, Pizza och Bakat.",
+      "Varje recept har en nivå, Enkel, Medel eller Avancerad, som går att filtrera på.",
+      "Lägg in viner och öl ni gillar under Inställningar, så lär sig Claude er smakprofil.",
+    ],
+    nytt: [
+      "Snabbval under sökfältet.",
+      "Nivå på recepten: Claude sätter den för befintliga och nya recept, och den går att ändra vid granskning.",
+      "Era favoritviner och favoritöl som smakprofil för dryckesförslagen, per hushåll.",
+    ],
+    battre: [],
+    rattat: [] },
   { version: "1.6", date: "2026-11-05", title: "Kvar hemma",
     news: [
       "Kvar hemma, en ny flik i Inköp: när ni bockar av en vara räknar appen ut vad som blir kvar av förpackningen, till exempel 110 g ricotta, och hur länge det håller.",

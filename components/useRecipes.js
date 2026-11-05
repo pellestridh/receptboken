@@ -1,4 +1,5 @@
 "use client";
+import { dishesOf } from "@/lib/dishes";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 
@@ -32,6 +33,19 @@ export function sortRecipes(list, sort) {
 
 export const timeBucket = (r) => ((r.minutes || 0) <= 40 ? "Vardag, högst 40 min" : "Lite längre");
 
+// Snabbval under sökfältet.
+const main = (r) => /huvud/i.test(r.type || "Huvudrätt");
+const veg = (r) => /veg/i.test(r.base || "");
+export const QUICK = {
+  middag: (r) => main(r) && !dishesOf(r).includes("pizza"),
+  snabbt: (r) => main(r) && (r.minutes || 999) <= 30 && !dishesOf(r).includes("pizza"),
+  veg: (r) => veg(r) && main(r),
+  enkelt: (r) => r.difficulty === "enkel",
+  pizza: (r) => dishesOf(r).includes("pizza"),
+  bakat: (r) => dishesOf(r).some((d) => d === "brod" || d === "dessert"),
+};
+export const QUICK_LABEL = [["middag", "Middag"], ["snabbt", "Under 30 min"], ["veg", "Vegetariskt"], ["enkelt", "Enkelt"], ["pizza", "Pizza"], ["bakat", "Bakat och dessert"]];
+
 export function filterRecipes(list, f, q) {
   q = (q || "").trim().toLowerCase();
   return list.filter((r) => {
@@ -39,6 +53,8 @@ export function filterRecipes(list, f, q) {
     if (f.type && r.type !== f.type) return false;
     if (f.base && r.base !== f.base) return false;
     if (f.time && timeBucket(r) !== f.time) return false;
+    if (f.level && (r.difficulty || "medel") !== f.level) return false;
+    if (f.quick && !QUICK[f.quick]?.(r)) return false;
     if (q) {
       const hay = `${r.title} ${r.short} ${(r.tags || []).join(" ")} ${r.ingredients} ${r.kitchen} ${r.base}`.toLowerCase();
       if (!hay.includes(q)) return false;

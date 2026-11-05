@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRecipes, sortRecipes, filterRecipes, timeBucket } from "@/components/useRecipes";
+import { useRecipes, sortRecipes, filterRecipes, timeBucket, QUICK_LABEL } from "@/components/useRecipes";
 import { Card, Pick } from "@/components/Card";
 import { api, lsGet, lsSet, getName } from "@/lib/api";
 import { daysSince, mins, accentVar } from "@/lib/format";
@@ -77,7 +77,7 @@ export default function Home() {
   }, [recipes, settings.allergies, reload]);
   const classifying = useRef(false);
   useEffect(() => {
-    if (!recipes || classifying.current || !recipes.some((r) => r.dishes == null || r.holidays == null)) return;
+    if (!recipes || classifying.current || !recipes.some((r) => r.dishes == null || r.holidays == null || r.difficulty == null)) return;
     classifying.current = true;
     (async () => {
       for (let i = 0; i < 12; i++) {
@@ -131,12 +131,14 @@ export default function Home() {
           Filter{activeFilters ? ` · ${activeFilters}` : ""}
         </button>
       </div>
+      {recipes && <div className="quick">{QUICK_LABEL.map(([k, l]) => <button key={k} type="button" className="chip" aria-pressed={f.quick === k} onClick={() => setFilter("quick", k)}>{l}</button>)}</div>}
       {showFilters && recipes && (
         <div className="filters panel">
           {facet("kitchen", "Kök", uniq("kitchen"))}
           {facet("type", "Typ", uniq("type"))}
           {facet("base", "Bas", uniq("base"))}
           {facet("time", "Tid", times)}
+          <div className="frow"><span className="flabel">Nivå</span>{[["enkel", "Enkel"], ["medel", "Medel"], ["avancerad", "Avancerad"]].map(([v, l]) => <button key={v} type="button" className="chip" aria-pressed={f.level === v} onClick={() => setFilter("level", v)}>{l}</button>)}</div>
           <div className="frow"><span className="flabel">Kost</span>
             {["Glutenfri", "Laktosfri"].map((v) => <button key={v} type="button" className="chip" aria-pressed={f.diet === v} onClick={() => setFilter("diet", v)}>{v}</button>)}
             <button type="button" className="chip" aria-pressed={!!f.light} onClick={() => setFilter("light", true)}>Lätt, under {settings.lightKcal} kcal</button>

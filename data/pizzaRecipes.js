@@ -15,7 +15,7 @@ const steps = (red, after) => [
 
 const P = (no, title, short, base, red, top, afterList, afterText) => ({
   pizzaNo: no, title, short, lede: short, kitchen: "Italienskt", type: "Huvudrätt", base, minutes: 20, servings: 1, servingsUnit: "pizzor",
-  accent: red ? "ember" : "dijon", tags: ["Pizza"], dishes: ["pizza"], holidays: [], pairsWith: [], source: { name: "Pelles pizzameny" },
+  accent: red ? "ember" : "dijon", difficulty: "medel", tags: ["Pizza"], dishes: ["pizza"], holidays: [], pairsWith: [], source: { name: "Pelles pizzameny" },
   groups: [
     { name: red ? "Botten" : "Botten, bianca", items: red ? RED : WHITE },
     ...(top.length ? [{ name: "Topping", items: top }] : []),
@@ -60,7 +60,7 @@ export const PIZZA_MENU = [
 export const TOMATO_SAUCE = {
   title: "Tomatsås till pizza", short: "Enkel råmixad tomatsås. Räcker till cirka 4 pizzor.", lede: "Enkel råmixad tomatsås till pizza. 3–4 msk per pizza.",
   kitchen: "Italienskt", type: "Tillbehör och bröd", base: "Vegetariskt", minutes: 5, servings: 4, servingsUnit: "pizzor",
-  accent: "ember", tags: ["Pizza"], dishes: ["tillbehor"], holidays: [], pairsWith: [], source: { name: "Pelles pizzameny" },
+  accent: "ember", difficulty: "enkel", tags: ["Pizza"], dishes: ["tillbehor"], holidays: [], pairsWith: [], source: { name: "Pelles pizzameny" },
   groups: [{ name: "Såsen", items: [
     { name: "körsbärstomater eller hela San Marzano-tomater", q: 1, unit: "burk", note: "400 g" },
     { name: "basilika", q: 4, q2: 5, unit: "blad" },

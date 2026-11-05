@@ -27,6 +27,7 @@ export async function POST(req) {
         .map((x) => ({ ...x, key: x.url.replace(/^https:\/\/(www\.)?/, "").replace(/[^a-z0-9]+/gi, "-").replace(/-+$/, "").slice(0, 60) }));
       await writeSetting("stores", list);
     }
+    if (Array.isArray(b.favDrinks)) await writeSetting("favDrinks", b.favDrinks.map((f) => ({ kind: f.kind === "beer" ? "beer" : "wine", name: String(f.name || "").trim().slice(0, 100), note: String(f.note || "").trim().slice(0, 100) })).filter((f) => f.name).slice(0, 60));
     if (typeof b.drinkTaste === "string") await writeSetting("drinkTaste", b.drinkTaste.trim().slice(0, 800));
     if (typeof b.shareInspiration === "boolean") await writeSetting("shareInspiration", b.shareInspiration);
     for (const pk of ["wineProgress", "beerProgress"]) if (b[pk] && typeof b[pk] === "object") {
