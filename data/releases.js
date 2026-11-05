@@ -16,7 +16,7 @@ export const RELEASES = [
       "Pizzakvällens handla-steg visar vad som finns hemma.",
       "Pizzakvällens tidsplan har instruktionerna vid varje tid: mängder och hur man gör degen, hur man bollar, tomatsåsen. Baka handlar bara om att baka.",
     ],
-    battre: ["Flikarna i Inköp heter Listan, Baslistan och Kvar hemma."],
+    battre: ["Flikarna i Inköp heter Listan, Baslistan och Kvar hemma.", "Pizza räknas inte som snabb vardagsmat: den föreslås inte måndag till torsdag, inte i veckomenyn och inte under Inte provat än."],
     rattat: [], rev: 2 },
   { version: "1.5", date: "2026-11-04", title: "Pizzadeg och pizzakväll",
     news: [

@@ -13,6 +13,7 @@ import PizzaTeaser from "@/components/PizzaTeaser";
 import { UseSoon } from "@/components/Pantry";
 import { drawers as makeDrawers, seasonal, MONTHS, kitchenName } from "@/lib/box";
 import { upcomingHoliday, holidaysOf } from "@/lib/holidays";
+import { isPizza } from "@/lib/dishes";
 
 function seeded(seed) {
   let s = seed;
@@ -24,6 +25,9 @@ function tonight(list) {
   const weekday = d.getDay() >= 1 && d.getDay() <= 4;
   const rnd = seeded(d.getFullYear() * 1000 + d.getMonth() * 40 + d.getDate());
   list = list.filter((r) => !r.allergens?.hits?.length);
+  // Pizza föreslås bara fredag till söndag, och då i pizzakvällen.
+  list = list.filter((r) => !isPizza(r) || d.getDay() === 5 || d.getDay() === 6 || d.getDay() === 0);
+  if (weekday) list = list.filter((r) => !isPizza(r));
   let pool = list.filter((r) => (r.type || "Huvudrätt") === "Huvudrätt" && daysSince(r.lastCooked) > 10);
   if (weekday) { const quick = pool.filter((r) => (r.minutes || 0) <= 45); if (quick.length >= 3) pool = quick; }
   if (pool.length < 3) pool = list.filter((r) => (r.type || "Huvudrätt") === "Huvudrätt");
@@ -100,7 +104,7 @@ export default function Home() {
   const seasonNow = [...new Set(inSeason.flatMap((x) => x.hits))].slice(0, 3);
   const shownIds = new Set([...picks, ...longAgo].map((r) => r.id));
   const inspo = [
-    { title: "Inte provat än", sub: "Sparade men aldrig lagade", list: all.filter((r) => !r.timesCooked && !shownIds.has(r.id) && (r.type || "Huvudrätt") === "Huvudrätt").sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))) },
+    { title: "Inte provat än", sub: "Sparade men aldrig lagade", list: all.filter((r) => !r.timesCooked && !isPizza(r) && !shownIds.has(r.id) && (r.type || "Huvudrätt") === "Huvudrätt").sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))) },
     { title: "Familjens favoriter", sub: "Fyra och fem stjärnor", list: all.filter((r) => (r.rating || 0) >= 4 && !shownIds.has(r.id)).sort((a, b) => b.rating - a.rating) },
   ].filter((x) => x.list.length >= 2).map((x) => ({ ...x, list: x.list.slice(0, 6) }));
   const now = new Date();
