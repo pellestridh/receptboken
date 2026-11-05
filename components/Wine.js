@@ -91,7 +91,7 @@ export function WineLog({ kind = "wine", initial = {}, recipeId, recipeTitle, on
     setBusy(true); setErr("");
     try {
       const d = await api("/api/wine-notes", { method: "POST", json: { ...f, kind, recipeId: recipeId || null, grape: item?.key, author: getName() } });
-      setDone({ dims: f.dims, item });
+      setDone({ dims: f.dims, item, rating: f.rating, name: f.wine.trim(), style: f.style, color: f.color });
       onSaved?.(d.notes);
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   }
@@ -100,6 +100,9 @@ export function WineLog({ kind = "wine", initial = {}, recipeId, recipeTitle, on
     <div className="wlog">
       <h2>Sparat</h2>
       <p className="muted">Betyget används när Claude föreslår {beer ? "öl" : "vin"} till nya recept.</p>
+      {done.rating >= 4 && !done.faved && <p className="favask">Gillade ni {done.name}? <button type="button" className="btn ghost" onClick={() => api("/api/wine-notes", { method: "POST", json: { action: "fav", kind, name: done.name, style: done.style, color: done.color, on: true } }).then((d) => { setDone({ ...done, faved: true }); onSaved?.(d.notes); }).catch(() => {})}>♡ Lägg till under Gillar</button></p>}
+      {done.faved && <p className="favask">♥ {done.name} ligger under Gillar.</p>}
+      {done.rating > 0 && done.rating <= 2 && <p className="hint">Noterat. Claude undviker liknande {beer ? "öl" : "viner"} framöver{recipeId ? ", och vid förslaget kan ni trycka Byt förslag" : ""}.</p>}
       {done.item && <Calibrate kind={kind} dims={done.dims} item={done.item} />}
       {done.item && <p><Link href={done.item.href}>Läs om {done.item.name} ›</Link></p>}
       <div className="arow"><button className="btn" type="button" onClick={onCancel}>Klar</button></div>
@@ -212,6 +215,7 @@ export function profileOf(kind, notes, candidates) {
   }
   const by = {};
   for (const n of mine) {
+    if (!n.rating) continue;
     const it = itemFor(kind, `${n.style || ""} ${n.wine}`, n.grape);
     if (!it) continue;
     const x = (by[it.key] ||= { it, n: 0, sum: 0 });

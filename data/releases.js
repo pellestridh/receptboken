@@ -5,12 +5,14 @@ export const RELEASES = [
     news: [
       "Snabbval under sökfältet: Middag, Under 30 min, Vegetariskt, Enkelt, Pizza och Bakat.",
       "Varje recept har en nivå, Enkel, Medel eller Avancerad, som går att filtrera på.",
-      "Lägg in viner och öl ni gillar under Inställningar, så lär sig Claude er smakprofil.",
+      "Våra viner och Våra öl under Dryck: bläddra bland allt ni provat och gillar, med snabbval för Gillar, Provat och Inte för oss.",
     ],
     nytt: [
       "Snabbval under sökfältet.",
       "Nivå på recepten: Claude sätter den för befintliga och nya recept, och den går att ändra vid granskning.",
-      "Era favoritviner och favoritöl som smakprofil för dryckesförslagen, per hushåll.",
+      "Våra viner och Våra öl: ett kort per dryck med betyg, provningar och recept, filter på färg eller stil, och Gillar med ett tryck.",
+      "Dryckesförslagen väljer först det som passar rätten, och sedan bland det som passar det som ligger närmast er smak.",
+      "Ett högt betyg frågar om drycken ska läggas under Gillar.",
     ],
     battre: [],
     rattat: [] },

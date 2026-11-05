@@ -8,6 +8,7 @@ import { useSettings } from "@/components/useSettings";
 import BeerMap from "@/components/BeerMap";
 import WineMap from "@/components/WineMap";
 import BeerTree from "@/components/BeerTree";
+import Cellar from "@/components/Cellar";
 import { StyleRow, Glass } from "@/components/BeerBits";
 import { WineLog, WineNote, ProfileBars, swatch, profileOf } from "@/components/Wine";
 import { STYLES, FAMILIES, ALE_INTRO, styleByKey } from "@/data/beer";
@@ -117,39 +118,6 @@ function Styles({ kind }) {
   );
 }
 
-function Tasted({ kind }) {
-  const { toast } = useApp();
-  const [notes, setNotes] = useState(null);
-  const [logging, setLogging] = useState(false);
-  const [sort, setSort] = useState("new");
-  useEffect(() => { api(`/api/wine-notes?typ=${kind}`).then((d) => setNotes(d.notes)).catch(() => setNotes([])); }, [kind]);
-  const beer = kind === "beer";
-  const cands = beer ? STYLES.map((s) => ({ key: s.key, name: s.name, p: beerProfile(s), href: `/dryck/ol/${s.key}` })) : GRAPES.map((g) => ({ key: g.key, name: g.name, p: g.p, href: `/dryck/vin/druva/${g.key}` }));
-  const prof = notes ? profileOf(kind, notes, cands) : null;
-  const list = (notes || []).slice().sort((a, b) => sort === "best" ? (b.rating || 0) - (a.rating || 0) : 0);
-  const del = (id) => api(`/api/wine-notes/${id}`, { method: "DELETE" }).then(() => setNotes((n) => n.filter((x) => x.id !== id))).catch((e) => toast(e.message));
-  return (
-    <section className="dsec">
-      <div className="section-h" style={{ margin: 0 }}><h2>{beer ? "Provade öl" : "Provade viner"}</h2><button className="btn" type="button" onClick={() => setLogging(true)}>{beer ? "Logga en öl" : "Logga ett vin"}</button></div>
-      {logging && <div className="panel"><WineLog kind={kind} onSaved={(n) => setNotes(n)} onCancel={() => setLogging(false)} /></div>}
-      {notes && !notes.length && !logging && <div className="empty">Inget loggat än. Logga här, eller direkt från ett recept under Att dricka till.</div>}
-      {notes?.length > 1 && <div className="frow">{[["new", "Senaste"], ["best", "Bäst betyg"]].map(([v, l]) => <button key={v} type="button" className="chip" aria-pressed={sort === v} onClick={() => setSort(v)}>{l}</button>)}</div>}
-      <div className="wnotes">{list.map((n) => <WineNote key={n.id} n={n} onDelete={del} />)}</div>
-      <h2 style={{ marginTop: "1rem" }}>Er smakprofil</h2>
-      {!prof?.liked ? <p className="muted">Profilen byggs av det ni gett fyra eller fem stjärnor och där ni fyllt i Känn efter.</p> : (
-        <div className="duo">
-          <div className="card2"><h3>Det ni gillar</h3><ProfileBars p={prof.avg} kind={kind} /><p className="hint">Av {prof.liked} med högt betyg.</p></div>
-          <div className="card2">
-            <h3>{beer ? "Era stilar" : "Era druvor"}</h3>
-            {prof.ranked.length ? <ul className="glist">{prof.ranked.slice(0, 5).map((x) => <li key={x.it.key}><Link href={x.it.href}>{x.it.name}</Link> <span className="muted">{x.avg.toFixed(1).replace(".", ",")} av 5, {x.n} st</span></li>)}</ul> : <p className="muted">Inga igenkända än.</p>}
-            {prof.suggest.length > 0 && <><h3 style={{ marginTop: ".8rem" }}>Prova härnäst</h3><p>{prof.suggest.map((c, i) => <span key={c.key}>{i > 0 && ", "}<Link href={c.href}>{c.name}</Link></span>)}</p><p className="hint">Liknar profilen men har inte provats.</p></>}
-          </div>
-        </div>
-      )}
-    </section>
-  );
-}
-
 function Drinks() {
   const params = useSearchParams();
   const router = useRouter();
@@ -173,7 +141,7 @@ function Drinks() {
         {[["ol", "Öl"], ["vin", "Vin"]].map(([t, l]) => <button key={t} type="button" role="tab" aria-selected={typ === t} onClick={() => go(t, view)}>{l}</button>)}
       </div>
       <div className="boxseg vtabs" role="tablist">
-        {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => go(typ, v)}>{l}</button>)}
+        {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => go(typ, v)}>{v === "provat" ? (kind === "beer" ? "Våra öl" : "Våra viner") : l}</button>)}
       </div>
 
       {view === "lar" && <School kind={kind} />}
@@ -185,7 +153,7 @@ function Drinks() {
       )}
       {view === "stilar" && <Styles kind={kind} />}
       {view === "mat" && <Principles kind={kind} />}
-      {view === "provat" && <Tasted kind={kind} />}
+      {view === "provat" && <Cellar kind={kind} />}
     </div>
   );
 }

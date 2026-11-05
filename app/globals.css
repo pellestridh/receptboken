@@ -1180,3 +1180,24 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .quick { display: flex; gap: .4rem; overflow-x: auto; padding: .1rem 0 .7rem; scrollbar-width: none; }
 .quick::-webkit-scrollbar { display: none; }
 .quick .chip { flex: none; }
+/* Våra viner och öl */
+.cl-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: .5rem; margin-bottom: .8rem; }
+@media (max-width: 600px) { .cl-filters { grid-template-columns: 1fr 1fr; } .cl-filters input { grid-column: 1 / -1; } }
+.clgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .6rem; }
+.clcard { all: unset; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: start; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: .8rem .9rem; }
+.clcard.on, .clcard:hover { border-color: var(--accent); }
+.cl-sw { width: .9rem; height: 2.6rem; border-radius: 4px 4px 6px 6px; border: 1px solid rgb(0 0 0 / .2); }
+.cl-t { display: grid; gap: .15rem; min-width: 0; }
+.cl-t b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cl-t .muted { font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cl-m { display: flex; gap: .5rem; align-items: baseline; font-size: .85rem; }
+.cl-heart { color: #C2185B; font-style: normal; }
+.cl-star { color: #B8860B; font-weight: 700; }
+.cl-detail { margin-top: 1rem; }
+.cl-prof { margin-top: 1.6rem; }
+.cl-prof summary { cursor: pointer; list-style: none; }
+.cl-prof summary h2 { display: inline; }
+.favask { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.cellar .favadd { grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1.5fr) auto; }
+@media (max-width: 600px) { .cellar .favadd { grid-template-columns: 1fr; } }
+.cl-detail { grid-column: 1 / -1; margin: 0 0 .4rem; display: grid; gap: .6rem; padding: .8rem 1rem; } .cl-detail .arow { flex-wrap: wrap; gap: .4rem; margin: 0; } .cl-detail p { margin: 0; } .cl-dh { display: flex; justify-content: space-between; gap: 1rem; }

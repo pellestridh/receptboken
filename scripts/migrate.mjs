@@ -180,6 +180,7 @@ statements.push(
   `alter table staples add column if not exists aisle text`,
   `alter table wine_notes add column if not exists kind text not null default 'wine'`,
   `alter table wine_notes add column if not exists why jsonb`,
+  `alter table wine_notes add column if not exists fav boolean not null default false`,
   `alter table menus add column if not exists kcal_min int`,
   `alter table menus add column if not exists kcal_max int`
 );
