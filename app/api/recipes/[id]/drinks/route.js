@@ -2,6 +2,7 @@ import { ownRecipe, hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { generateDrinks, explainDrink } from "@/lib/drinks";
 import { ok, fail, body } from "@/lib/http";
+import { readSettings, budgetKey, DEFAULTS } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -38,6 +39,15 @@ export async function POST(req, { params }) {
       const fresh = await generateDrinks(recipe);
       fresh.own = recipe.drinks?.own || fresh.own;
       return ok({ drinks: await save(id, fresh) });
+    }
+
+    // Nytt vin när prisklassen har ändrats sedan förslaget gjordes. Öl, alkoholfritt och egna val står kvar.
+    if (b.action === "rewine") {
+      const s = await readSettings();
+      const key = budgetKey({ ...DEFAULTS.winePrice, ...(s.winePrice || {}) });
+      if (!recipe.drinks || recipe.drinks.budget === key || recipe.drinks.wine?.liked) return ok({ drinks: recipe.drinks || null });
+      const fresh = await generateDrinks(recipe);
+      return ok({ drinks: await save(id, { ...recipe.drinks, wine: fresh.wine, budget: fresh.budget }) });
     }
 
     const kind = KINDS.includes(b.kind) ? b.kind : null;

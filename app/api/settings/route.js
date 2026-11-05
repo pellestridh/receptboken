@@ -27,6 +27,11 @@ export async function POST(req) {
         .map((x) => ({ ...x, key: x.url.replace(/^https:\/\/(www\.)?/, "").replace(/[^a-z0-9]+/gi, "-").replace(/-+$/, "").slice(0, 60) }));
       await writeSetting("stores", list);
     }
+    if (b.winePrice && typeof b.winePrice === "object") {
+      const min = Math.max(0, Math.min(5000, Math.round(Number(b.winePrice.min) || 0)));
+      const max = Math.max(min + 20, Math.min(5000, Math.round(Number(b.winePrice.max) || 250)));
+      await writeSetting("winePrice", { min, max });
+    }
     if (typeof b.drinkTaste === "string") await writeSetting("drinkTaste", b.drinkTaste.trim().slice(0, 800));
     if (typeof b.shareInspiration === "boolean") await writeSetting("shareInspiration", b.shareInspiration);
     for (const pk of ["wineProgress", "beerProgress"]) if (b[pk] && typeof b[pk] === "object") {

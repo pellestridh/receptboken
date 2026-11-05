@@ -12,6 +12,7 @@ import { getName, setName } from "@/lib/api";
 export default function Settings() {
   const { toast } = useApp();
   const [settings, save] = useSettings();
+  const [price, setPrice] = useState(null);
   const [kcal, setKcal] = useState("");
   const [name, setN] = useState("");
   useEffect(() => { setKcal(String(settings.lightKcal)); }, [settings.lightKcal]);
@@ -69,6 +70,13 @@ export default function Settings() {
         <p className="hint">Skriv med egna ord vad ni gillar, så följer Claude det när drycker föreslås, även när det går emot de vanliga råden. Gäller nya förslag.</p>
         <textarea className="tin" rows={3} value={taste ?? settings.drinkTaste ?? ""} onChange={(e) => setTaste(e.target.value)} placeholder="Till exempel: kraftigt rött till pizza, gärna belgisk öl till ost" />
         <p className="arow"><button className="btn ghost" type="button" disabled={taste == null} onClick={() => save({ drinkTaste: taste }).then(() => { toast("Sparat. Nya dryckesförslag följer er smak."); setTaste(null); }).catch((e) => toast(e.message))}>Spara</button></p>
+        <h3 style={{ marginTop: ".6rem" }}>Prisklass för vin</h3>
+        <p className="hint">Vinförslagen håller sig inom det här, per flaska, och bara till Systembolagets fasta sortiment.</p>
+        <p className="arow">
+          <label className="fld" style={{ maxWidth: "7rem" }}><span>Från, kr</span><input className="tin" inputMode="numeric" value={price?.min ?? settings.winePrice?.min ?? 100} onChange={(e) => setPrice({ min: e.target.value, max: price?.max ?? settings.winePrice?.max ?? 250 })} /></label>
+          <label className="fld" style={{ maxWidth: "7rem" }}><span>Till, kr</span><input className="tin" inputMode="numeric" value={price?.max ?? settings.winePrice?.max ?? 250} onChange={(e) => setPrice({ min: price?.min ?? settings.winePrice?.min ?? 100, max: e.target.value })} /></label>
+          <button className="btn ghost" type="button" disabled={!price} onClick={() => save({ winePrice: price }).then(() => { toast("Sparat. Vinförslagen byts när ni öppnar ett recept."); setPrice(null); }).catch((e) => toast(e.message))}>Spara</button>
+        </p>
         <p className="hint">Viner och öl ni gillar lägger ni in under Dryck, i Våra viner och Våra öl.</p>
       </div>
       <div className="panel">

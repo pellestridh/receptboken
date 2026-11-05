@@ -8,6 +8,7 @@ import { styleFor } from "@/data/beer";
 import { grapeFor } from "@/data/wine";
 import Clocks from "@/components/Clocks";
 import { WineLog, WineNote } from "@/components/Wine";
+import { useSettings } from "@/components/useSettings";
 
 function Label({ kind, d, small }) {
   const l = label(kind, d);
@@ -76,7 +77,7 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
       {d && (
         <div className="sugg">
           <div className="lrow"><Label kind={kind} d={d} />{d.style && d.style !== d.name && <span className="style">{d.style}</span>}</div>
-          <b><Product name={d.name} kind={kind} /></b>
+          <b><Product name={d.name} kind={kind} /></b>{d.price ? <span className="muted dprice"> ca {d.price} kr</span> : null}
           {d.why && <p>{d.why}</p>}
           {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Clocks kind="beer" s={st} small noColor /> : null; })()}
           {kind === "wine" && (() => { const g = grapeFor(`${d.name} ${d.style || ""}`); return g ? <Clocks kind="wine" g={g} small noColor /> : null; })()}
@@ -84,13 +85,13 @@ function DrinkCard({ kind, d, own = [], busy, onAction, onTaste }) {
           {kind === "beer" && (() => { const st = styleFor(`${d.style} ${d.name}`); return st ? <Link className="stylelink" href={`/dryck/ol/${st.key}`}>Om {st.name.toLowerCase().startsWith("ipa") ? "IPA" : st.name.toLowerCase()} och mat ›</Link> : null; })()}
           {d.alternatives?.length > 0 && (
             <div className="alts"><span className="muted">Eller</span>{d.alternatives.map((a, i) => (
-              <span key={i} className="alt">{kind !== "nonAlcoholic" && <i className={"sw " + label(kind, { ...a, color: a.color }).tone} aria-hidden="true" />}<Product name={a.name} kind={kind} />{a.style && <small>{a.style}</small>}</span>
+              <span key={i} className="alt">{kind !== "nonAlcoholic" && <i className={"sw " + label(kind, { ...a, color: a.color }).tone} aria-hidden="true" />}<Product name={a.name} kind={kind} />{a.style && <small>{a.style}{a.price ? `, ca ${a.price} kr` : ""}</small>}</span>
             ))}</div>
           )}
         </div>
       )}
 
-      {busy ? <span className="muted"><span className="spinner" />Tänker om …</span>
+      {busy ? <span className="muted"><span className="spinner" />{kind === "wine" && !mode ? "Väljer vin i er prisklass …" : "Tänker om …"}</span>
         : mode === "swap" ? (
           <form className="dform" onSubmit={(e) => { e.preventDefault(); onAction({ action: "feedback", kind, verdict: "down", reason: text }); close(); }}>
             <input className="tin" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Vad var fel? (valfritt, hjälper nästa förslag)" />
@@ -152,6 +153,22 @@ export default function Drinks({ id, drinks: initial, onChange, title }) {
     generate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, initial]);
+
+  // Gamla vinförslag från innan prisklassen fanns, eller med en annan prisklass, byts ut i bakgrunden.
+  const [settings] = useSettings();
+  const rewined = useRef(false);
+  useEffect(() => {
+    const w = settings.winePrice;
+    if (!w || !usable(drinks) || rewined.current || busy) return;
+    if (drinks.budget === `${w.min}-${w.max}` || drinks.wine?.liked) return;
+    rewined.current = true;
+    setBusy("wine");
+    api(`/api/recipes/${id}/drinks`, { method: "POST", json: { action: "rewine" } })
+      .then((d) => { if (d.drinks) { setDrinks(d.drinks); onChange?.(d.drinks); } })
+      .catch(() => {})
+      .finally(() => setBusy(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.winePrice, drinks, id]);
 
   async function act(json) {
     setBusy(json.kind);

@@ -76,7 +76,7 @@ export default function Cellar({ kind }) {
       {adding === "log" && <div className="panel"><WineLog kind={kind} onSaved={(n) => setNotes(n)} onCancel={() => setAdding(null)} /></div>}
       {adding === "fav" && (
         <form className="panel favadd" onSubmit={addFav}>
-          <input className="tin" value={fav.name} onChange={(e) => setFav({ ...fav, name: e.target.value })} placeholder={beer ? "Till exempel Westmalle Tripel" : "Till exempel Masi Costasera Amarone"} autoFocus />
+          <input className="tin" value={fav.name} onChange={(e) => setFav({ ...fav, name: e.target.value })} placeholder={beer ? "Till exempel Westmalle Tripel" : "Till exempel Tommasi Ripasso"} autoFocus />
           <input className="tin" value={fav.style} onChange={(e) => setFav({ ...fav, style: e.target.value })} placeholder={beer ? "Stil, valfritt" : "Druva eller område, valfritt"} />
           <input className="tin" value={fav.note} onChange={(e) => setFav({ ...fav, note: e.target.value })} placeholder="Varför ni gillar den, valfritt" />
           <button className="btn" type="submit" disabled={!fav.name.trim()}>Spara</button>
