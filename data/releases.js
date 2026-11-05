@@ -1,6 +1,15 @@
 // Versionshistoriken. Den översta är den aktuella. "news" är de punkter som visas i nyhetsrutan på startsidan,
 // skrivna för användaren. Nytt, Bättre och Rättat visas under Om Receptboken.
 export const RELEASES = [
+  { version: "1.8", date: "2026-11-05", title: "Mer som en riktig app",
+    news: [
+      "På telefonen ligger Recept, Meny, Inköp, Dryck och Mer nu längst ner med ikoner, som i en vanlig app.",
+      "Lägg Receptboken på hemskärmen (Dela, Lägg till på hemskärmen) så öppnas den i helskärm utan Safari.",
+      "Tryck länge på ikonen på Android för genvägar till Inköpslistan, Matsedeln, Pizzakväll och Nytt recept.",
+    ],
+    nytt: ["Flikrad med ikoner längst ner på telefonen.", "Tips om att lägga appen på hemskärmen, och installera direkt på Android.", "Genvägar från appikonen."],
+    battre: ["Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
+    rattat: [] },
   { version: "1.7", date: "2026-11-05", title: "Snabbval, nivå och er smakprofil",
     news: [
       "Snabbval under sökfältet: Middag, Under 30 min, Vegetariskt, Enkelt, Pizza och Bakat.",

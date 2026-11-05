@@ -1201,3 +1201,33 @@ a.wine-soon { display: grid; gap: .3rem; text-decoration: none; }
 .cellar .favadd { grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1.5fr) auto; }
 @media (max-width: 600px) { .cellar .favadd { grid-template-columns: 1fr; } }
 .cl-detail { grid-column: 1 / -1; margin: 0 0 .4rem; display: grid; gap: .6rem; padding: .8rem 1rem; } .cl-detail .arow { flex-wrap: wrap; gap: .4rem; margin: 0; } .cl-detail p { margin: 0; } .cl-dh { display: flex; justify-content: space-between; gap: 1rem; }
+
+/* Appkänsla: flikrad längst ner på telefonen, som i en riktig app */
+html { -webkit-tap-highlight-color: transparent; }
+body { overscroll-behavior-y: none; }
+.nav, .tabs, .tab { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.ti { display: none; }
+.ti svg { width: 1.45rem; height: 1.45rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 700px) {
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; margin: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+    padding: .35rem max(8px, env(safe-area-inset-left)) calc(.35rem + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+    background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: saturate(1.6) blur(14px); -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    border-top: 1px solid var(--line); overflow: visible; }
+  .tab, .navmore > .tab { border: 0 !important; background: none !important; border-radius: 12px; padding: .25rem 0 .1rem !important; display: grid; justify-items: center; gap: .1rem; font-size: .68rem !important; font-weight: 700; color: var(--muted); }
+  .navmore { display: grid; }
+  .tab[aria-current="page"], .navmore > .tab[aria-current="page"], .navmore > .tab[aria-expanded="true"] { color: var(--accent) !important; }
+  .ti { display: block; line-height: 0; }
+  .tl { display: block; }
+  .moremenu { top: auto !important; bottom: calc(4.6rem + env(safe-area-inset-bottom)); }
+  .main { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
+  .navrow { min-height: 2.6rem; }
+  .brand, .brand.home { display: inline-flex; }
+  .brand span { display: inline; font-size: 1.15rem; }
+  .stickyact { bottom: calc(4.4rem + env(safe-area-inset-bottom)) !important; padding-bottom: .8rem !important; }
+  .dock { bottom: calc(4.4rem + env(safe-area-inset-bottom)); padding-bottom: .6rem; }
+}
+/* Installerad på hemskärmen: ingen webbläsarkänsla */
+@media (display-mode: standalone) { body { -webkit-user-select: none; } input, textarea, [contenteditable], .recipe, .rbody, p, li { -webkit-user-select: text; user-select: text; } }
+.installtip { position: fixed; left: 12px; right: 12px; bottom: calc(5rem + env(safe-area-inset-bottom)); z-index: 40; background: var(--ink); color: var(--paper); border-radius: 16px; padding: .9rem 1rem; box-shadow: 0 12px 30px rgb(0 0 0 / .3); display: grid; gap: .3rem; font-size: .95rem; }
+.installtip b { font-size: 1rem; }
+.installtip button { all: unset; cursor: pointer; justify-self: end; font-weight: 700; color: var(--accent-soft, #cfe6dd); }

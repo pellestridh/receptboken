@@ -17,7 +17,7 @@ function More({ active }) {
   }, [open]);
   return (
     <span className="navmore" ref={ref}>
-      <button type="button" className="tab add-tab" aria-current={active ? "page" : undefined} aria-expanded={open} aria-haspopup="menu" aria-label="Mer" onClick={() => setOpen(!open)}>+<span className="tlong"> Mer</span></button>
+      <button type="button" className="tab add-tab" aria-current={active ? "page" : undefined} aria-expanded={open} aria-haspopup="menu" aria-label="Mer" onClick={() => setOpen(!open)}><span className="ti" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>` }} /><span className="tl">Mer</span></button>
       {open && (
         <span className="moremenu" role="menu">
           <Link role="menuitem" href="/nytt"><b>Nytt recept</b><span>Länk, foto eller fil</span></Link>
@@ -48,10 +48,10 @@ export default function Nav() {
           <img src="/logo-240.png" alt="" width="40" height="40" className="logo" /><span>Receptboken</span>
         </Link>
         <div className="tabs">
-          <Link href="/" className="tab" aria-current={at("/") || at("/recept") ? "page" : undefined}>Recept</Link>
-          <Link href="/meny" className="tab" aria-current={at("/meny") ? "page" : undefined}>Meny</Link>
-          <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}>Inköp</Link>
-          <Link href="/dryck" className="tab" aria-current={at("/dryck") ? "page" : undefined}>Dryck</Link>
+          <Link href="/" className="tab" aria-current={at("/") || at("/recept") ? "page" : undefined}><span className="ti" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>` }} /><span className="tl">Recept</span></Link>
+          <Link href="/meny" className="tab" aria-current={at("/meny") ? "page" : undefined}><span className="ti" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>` }} /><span className="tl">Meny</span></Link>
+          <Link href="/inkop" className="tab" aria-current={at("/inkop") ? "page" : undefined}><span className="ti" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2 11h10l2-8H7"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>` }} /><span className="tl">Inköp</span></Link>
+          <Link href="/dryck" className="tab" aria-current={at("/dryck") ? "page" : undefined}><span className="ti" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0z"/><path d="M12 14v6M8 21h8"/></svg>` }} /><span className="tl">Dryck</span></Link>
           <More active={at("/nytt") || at("/pizza") || at("/fest") || at("/erbjudanden") || at("/inspiration") || at("/installningar")} />
         </div>
       </div>

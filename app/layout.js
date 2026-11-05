@@ -1,6 +1,7 @@
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Nav from "@/components/Nav";
+import InstallTip from "@/components/InstallTip";
 
 
 export const metadata = {
@@ -8,6 +9,7 @@ export const metadata = {
   description: "Familjens recept, matsedel och inköpslista",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Receptboken", statusBarStyle: "default" },
+  formatDetection: { telephone: false },
   icons: { icon: "/icon-192.png", apple: "/apple-touch-icon.png" },
 };
 
@@ -34,6 +36,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <Nav />
           <main className="wrap main">{children}</main>
+          <InstallTip />
         </Providers>
       </body>
     </html>
