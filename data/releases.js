@@ -14,9 +14,10 @@ export const RELEASES = [
       "Inköpslistan drar av det som finns hemma, från recept, matsedlar, pizzakvällen och Fest och buffé.",
       "Kvar hemma med kyl och frys, Frys, Tina och Slut, och förslag på recept som använder resten.",
       "Pizzakvällens handla-steg visar vad som finns hemma.",
+      "Pizzakvällens tidsplan har instruktionerna vid varje tid: mängder och hur man gör degen, hur man bollar, tomatsåsen. Baka handlar bara om att baka.",
     ],
     battre: ["Flikarna i Inköp heter Listan, Baslistan och Kvar hemma."],
-    rattat: [] },
+    rattat: [], rev: 2 },
   { version: "1.5", date: "2026-11-04", title: "Pizzadeg och pizzakväll",
     news: [
       "Pizzadeg under Mer: Pelles degkalkylator för dagjäst och napolitansk pizza. Välj antal pizzor och vikt, så räknas mjöl, vatten, jäst och salt ut.",

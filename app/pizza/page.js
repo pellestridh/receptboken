@@ -66,6 +66,7 @@ export default function Pizza() {
   const [added, setAdded] = useState(0);
   const [eat, setEat] = useState("19:00");
   const [eatDay, setEatDay] = useState(0); // dagar från i dag
+  const [open, setOpen] = useState(null);
   const HOME = /mjöl|olivolja|olja|salt|flingsalt|torrjäst|jäst|socker|peppar/i;
   const buildCart = async () => {
     setBusy(true);
@@ -113,6 +114,8 @@ export default function Pizza() {
   };
   useEffect(() => { setCart(null); setAdded(0); }, [total, s.kind, s.weight]);
   // Tidsplan bakåt från när ni vill äta.
+  const sauceRec = (recipes || []).find((y) => /^tomatsås till pizza/i.test(y.title));
+  const redCount = chosen.filter((x) => !/(^|, )ricotta/.test(String(x.r.ingredients || "").toLowerCase())).reduce((a, x) => a + x.n, 0);
   const plan = (() => {
     const [h, m] = eat.split(":").map(Number); const at = new Date(); at.setDate(at.getDate() + eatDay); at.setHours(h || 19, m || 0, 0, 0);
     const today = new Date().toDateString();
@@ -121,8 +124,8 @@ export default function Pizza() {
     const day = (hours) => wd(new Date(at.getTime() - hours * 3600000));
     const ovenMin = s.oven === "pizzaugn" ? 30 : 45;
     return s.kind === "napoli"
-      ? [[at.getTime() - 48 * 3600000 < Date.now() ? "Hinner inte" : at.getTime() - 72 * 3600000 < Date.now() ? `Senast ${day(48)}` : `${day(72)} eller ${day(48)}`, at.getTime() - 48 * 3600000 < Date.now() ? "Napolitansk deg behöver minst 48 timmar i kylen. Välj en senare dag, eller dagjäst deg." : "Gör degen, 2–3 dygn i kylen."], [t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["Under dagen", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [t(0), "Baka och ät."]]
-      : [[at.getTime() - 9 * 3600000 < Date.now() ? "Nu" : t(10 * 60), at.getTime() - 9 * 3600000 < Date.now() ? "Gör degen så fort som möjligt. Kortare tid i kylen ger en mindre luftig deg." : "Gör degen, senast då. Den ska stå cirka 8 timmar i kylen."], [t(75), "Ta ut degen, dela och bolla den. Låt vila under handduk."], ["Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], [t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], [t(0), "Baka och ät."]];
+      ? [["dough", at.getTime() - 48 * 3600000 < Date.now() ? "Hinner inte" : at.getTime() - 72 * 3600000 < Date.now() ? `Senast ${day(48)}` : `${day(72)} eller ${day(48)}`, at.getTime() - 48 * 3600000 < Date.now() ? "Napolitansk deg behöver minst 48 timmar i kylen. Välj en senare dag, eller dagjäst deg." : "Gör degen, 2–3 dygn i kylen."], ["ball", t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["sauce", "Under dagen", "Gör tomatsåsen och förbered påläggen."], ["oven", t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], ["bake", t(0), "Baka och ät."]]
+      : [["dough", at.getTime() - 9 * 3600000 < Date.now() ? "Nu" : t(10 * 60), at.getTime() - 9 * 3600000 < Date.now() ? "Gör degen så fort som möjligt. Kortare tid i kylen ger en mindre luftig deg." : "Gör degen, senast då. Den ska stå cirka 8 timmar i kylen."], ["ball", t(75), "Ta ut degen, dela och bolla den. Låt vila under handduk."], ["sauce", "Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], ["oven", t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], ["bake", t(0), "Baka och ät."]];
   })();
   const toShop = () => api("/api/shopping", { method: "POST", json: { items: doughItems(r) } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
 
@@ -205,12 +208,36 @@ export default function Pizza() {
               </section>
 
               <section className="bsec pzstep">
-                <h2><span className="pzsn">3</span>Pizzakvällen och degen</h2>
+                <h2><span className="pzsn">3</span>Planera dagen och degen</h2>
                 <div className="fld"><span>Vilken dag</span>
                   <div className="frow">{Array.from({ length: 8 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); const l = i === 0 ? "I dag" : i === 1 ? "I morgon" : d.toLocaleDateString("sv-SE", { weekday: "long" }).replace(/^./, (c) => c.toUpperCase()); return <button key={i} type="button" className="chip" aria-pressed={eatDay === i} onClick={() => setEatDay(i)}>{l}</button>; })}</div>
                 </div>
                 <label className="fld"><span>Vi vill äta klockan</span><input className="tin" type="time" value={eat} onChange={(e) => setEat(e.target.value)} style={{ maxWidth: "9rem" }} /></label>
-                <ol className="pztime">{plan.map(([when, what]) => <li key={what}><b>{when}</b><span>{what}</span></li>)}</ol>
+                <ol className="pztime">{plan.map(([k, when, what]) => (
+                  <li key={k} className={open === k ? "open" : ""}>
+                    <b>{when}</b>
+                    <div>
+                      <span>{what}</span>
+                      {k !== "oven" && <button type="button" className="link pzmore" onClick={() => setOpen(open === k ? null : k)}>{open === k ? "Dölj" : k === "dough" ? "Visa mängder och hur" : k === "ball" ? "Så bollar ni degen" : k === "sauce" ? "Tomatsåsen och påläggen" : "Så bakar ni"}</button>}
+                      {open === k && k === "dough" && (
+                        <div className="pzdet">
+                          <dl className="pzdl">
+                            <div><dt>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00"}</dt><dd>{g(nd.mjol)}</dd></div>
+                            <div><dt>Vatten{s.kind === "napoli" ? ", kallt" : ""}</dt><dd>{g(nd.vatten)}</dd></div>
+                            <div><dt>{D.yeastName}</dt><dd>{g(nd.jast)}</dd></div>
+                            <div><dt>Salt</dt><dd>{g(nd.salt)}</dd></div>
+                          </dl>
+                          <div className="boxseg small" role="tablist">{[["hand", "För hand"], ["machine", "Med köksassistent"]].map(([kk, l]) => <button key={kk} type="button" role="tab" aria-selected={s.knead === kk} onClick={() => set("knead", kk)}>{l}</button>)}</div>
+                          <ol className="pzsteps">{[...D[s.knead], D.after[0]].map((x) => <li key={x}>{x.replace("Se Vik-tekniken nedanför.", "Se vik-tekniken nedan.")}</li>)}</ol>
+                          {s.knead === "hand" && <p className="hint"><b>{TECHNIQUES[0].t}:</b> {TECHNIQUES[0].d}</p>}
+                        </div>
+                      )}
+                      {open === k && k === "ball" && <div className="pzdet"><p>{D.after[1]}</p><p className="hint"><b>{TECHNIQUES[1].t}:</b> {TECHNIQUES[1].d}</p></div>}
+                      {open === k && k === "sauce" && <div className="pzdet">{sauceRec ? <p>Tomatsås till {redCount} {redCount === 1 ? "pizza" : "pizzor"}: <Link href={`/recept/${sauceRec.id}`}>{sauceRec.title}</Link>. Plocka fram påläggen ur kylen, så att de inte är iskalla.</p> : <p>Plocka fram påläggen ur kylen.</p>}</div>}
+                      {open === k && k === "bake" && <div className="pzdet"><p>Se steg 4 nedanför.</p></div>}
+                    </div>
+                  </li>
+                ))}</ol>
                 <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
               </section>
 
@@ -218,20 +245,18 @@ export default function Pizza() {
                 <h2><span className="pzsn">4</span>Baka</h2>
                 <div className="pzbake">
                   <div className="pzb-dough">
-                    <span className="pzb-l">Degen till {total} {total === 1 ? "pizza" : "pizzor"}</span>
-                    <dl>
-                      <div><dt>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00"}</dt><dd>{g(nd.mjol)}</dd></div>
-                      <div><dt>Vatten</dt><dd>{g(nd.vatten)}</dd></div>
-                      <div><dt>{D.yeastName}</dt><dd>{g(nd.jast)}</dd></div>
-                      <div><dt>Salt</dt><dd>{g(nd.salt)}</dd></div>
-                    </dl>
-                    <button type="button" className="link" onClick={() => setView("deg")}>Så gör ni degen ›</button>
+                    <span className="pzb-l">Så här, en pizza i taget</span>
+                    <ol className="steps pzb-how">
+                      <li>Tryck och dra ut degbollen till en rund botten med rikligt med durumvetemjöl. Låt kanten vara kvar.</li>
+                      <li>Bred ut tomatsåsen, eller ricottan på biancorna, lägg på mozzarella och det som ska in i ugnen.</li>
+                      <li>{OVENS[s.oven].tips[1]}</li>
+                      <li>Lägg på det som ska på efter ugnen. Det står i varje recept.</li>
+                    </ol>
                   </div>
                   <ul className="pzb-list">
                     {chosen.map((x) => <li key={x.r.id}><span className="pzb-n">{x.n}×</span><Link href={`/recept/${x.r.id}`}>{x.r.pizzaNo ? `${x.r.pizzaNo}. ` : ""}{x.r.title}</Link></li>)}
                     {night.free > 0 && <li><span className="pzb-n">{night.free}×</span><span>Egen topping</span></li>}
                   </ul>
-                  <p className="pzb-oven"><b>{OVENS[s.oven].name}:</b> {OVENS[s.oven].tips.join(" ")}</p>
                 </div>
                 <p className="arow"><button className="btn" type="button" onClick={done}>Vi har bakat, töm tavlan</button></p>
                 <p className="hint">Pizzorna räknas som lagade och tavlan blir tom till nästa pizzakväll.</p>
