@@ -189,7 +189,7 @@ for (const s of statements) await sql(s);
 
 // Engångsrättning efter utökad avdelningsindelning (hygienvaror, fler frukter som satsumas, egen avdelning för kryddor).
 {
-  const [done] = await sql(`select 1 from settings where key = 'migr_aisles_v5'`);
+  const [done] = await sql(`select 1 from settings where key = 'migr_aisles_v6'`);
   if (!done) {
     const { aisleFor, aisleMatch } = await import("../lib/aisles.js");
     const items = await sql(`select id, name, aisle from shopping_items where not done and coalesce(pantry, false) = false and aisle <> 'Skafferi'`);
@@ -201,9 +201,9 @@ for (const s of statements) await sql(s);
     const st = await sql(`select id, name, aisle from staples where aisle is not null`);
     for (const x of st) {
       const m = aisleMatch(x.name);
-      if (m === "Hushåll och hygien" || (m === "Kryddor" && x.aisle === "Skafferi och övrigt")) await sql(`update staples set aisle = null where id = $1`, [x.id]);
+      if (m === "Hushåll och hygien" || (m === "Kryddor" && x.aisle === "Skafferi och övrigt") || (x.aisle === "Kryddor" && m !== "Kryddor")) await sql(`update staples set aisle = null where id = $1`, [x.id]);
     }
-    await sql(`insert into settings (key, value) values ('migr_aisles_v5', 'true'::jsonb) on conflict (key) do nothing`);
+    await sql(`insert into settings (key, value) values ('migr_aisles_v6', 'true'::jsonb) on conflict (key) do nothing`);
     console.log(`[migrate] Avdelningar rättade för ${n} varor.`);
   }
 }

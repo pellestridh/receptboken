@@ -14,7 +14,7 @@ export const RELEASES = [
       "Byt namn på ett recept: tryck på Byt namn vid rubriken. Kategorierna ändrar ni med Ändra kategorier under rubriken.",
       "Vinförslagen håller sig till er prisklass, 100–250 kronor flaskan, och bara till Systembolagets fasta sortiment. Ungefärligt pris visas vid vinet. Prisklassen ändrar ni under Inställningar.",
     ],
-    battre: ["Ny avdelning Kryddor i inköpslistan och baslistan: torkade örter, peppar, kanel, kryddblandningar och flingsalt.", "Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
+    battre: ["Ny avdelning Kryddor i inköpslistan och baslistan: torkade örter, peppar, kanel, kryddblandningar och flingsalt.", "Huvudordet avgör avdelningen: choklad med havssalt är choklad, lax i bitar är fisk.", "Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
     rattat: ["Tandkräm och andra hygienvaror hamnar under Hushåll och hygien, även med varumärke i namnet, och egna varor sorteras in under rätt avdelning. Fler frukter och grönsaker känns igen, som satsumas, mandariner, kiwi och sparris.", "Mängd på varor i inköpslistan går att ange och ändra, till exempel för det som kommer från baslistan.", "Byt namn på ett recept direkt vid rubriken.", "Ändra kategorier direkt från receptet, och egenskaper som Bra för gäster går att ändra. Passar ihop med ligger hopfällt längst ner när man ändrar.", "Vinförslag som var för dyra eller hade utgått byts automatiskt mot vin i er prisklass när ni öppnar receptet. Viner ni gett tummen upp står kvar."], rev: 7 },
   { version: "1.7", date: "2026-11-05", title: "Snabbval, nivå och er smakprofil",
     news: [
