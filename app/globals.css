@@ -1237,3 +1237,6 @@ body { overscroll-behavior-y: none; }
 .rename { display: grid; gap: .5rem; margin-bottom: .6rem; }
 .rename .tin { font-family: var(--display); font-size: 1.6rem; }
 @media print { .renamebtn { display: none; } }
+.tags .tagedit { font-size: .85rem; align-self: center; margin-right: .3rem; opacity: .75; }
+@media print { .tagedit { display: none; } }
+#kategorier { scroll-margin-top: 5rem; }

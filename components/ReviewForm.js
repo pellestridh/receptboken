@@ -14,6 +14,13 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
   const [armed, setArmed] = useState(false);
   const [dishes, setDishes] = useState(() => dishesOf(recipe));
   const [hol, setHol] = useState(() => holidaysOf(recipe));
+  const [tags, setTags] = useState(() => (recipe.tags || []).slice());
+  const [newTag, setNewTag] = useState("");
+  const toggleTag = (t) => setTags((cur) => cur.includes(t) ? cur.filter((x) => x !== t) : [...cur, t].slice(0, 5));
+  const addTag = () => { const t = newTag.trim(); if (t) { const T = t[0].toUpperCase() + t.slice(1); if (!tags.includes(T)) setTags([...tags, T].slice(0, 5)); } setNewTag(""); };
+  const tagCount = {};
+  for (const r of recipes) for (const t of r.tags || []) tagCount[t] = (tagCount[t] || 0) + 1;
+  const tagOpts = [...new Set([...tags, ...Object.entries(tagCount).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([t]) => t)])];
   const toggleHol = (k) => setHol((cur) => cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k]);
   const toggleDish = (k) => setDishes((cur) => cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k].slice(-2));
   const opts = (k) => [...new Set([...recipes.map((r) => r[k]), recipe[k]].filter(Boolean))];
@@ -24,6 +31,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
     d.title = m.title.trim() || d.title;
     if (dishes.length) d.dishes = dishes; else delete d.dishes;
     d.holidays = hol;
+    d.tags = tags;
     d.kitchen = m.kitchen.trim(); d.type = m.type.trim(); d.base = m.base.trim();
     if (m.difficulty) d.difficulty = m.difficulty;
     const mn = parseInt(m.minutes, 10); if (mn > 0) d.minutes = mn;
@@ -61,7 +69,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
     <article className="r" style={{ "--rc": accentVar(recipe.accent) }}>
       {bar}
       {dupWarning && <p className="warn">{dupWarning}</p>}
-      <div className="meta-edit">
+      <div className="meta-edit" id="kategorier">
         <label className="fld wide"><span>Rubrik</span><input className="tin" value={m.title} onChange={set("title")} /></label>
         <label className="fld"><span>Kök</span><input className="tin" list="l-kitchen" value={m.kitchen} onChange={set("kitchen")} />{list("l-kitchen", "kitchen")}</label>
         <label className="fld"><span>Del av måltiden</span><input className="tin" list="l-type" value={m.type} onChange={set("type")} />{list("l-type", "type")}</label>
@@ -75,7 +83,13 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
         <div className="fld wide"><span>Högtid (valfritt)</span>
           <div className="frow">{HOLIDAYS.map((x) => <button key={x.key} type="button" className="chip" aria-pressed={hol.includes(x.key)} onClick={() => toggleHol(x.key)}>{x.name}</button>)}</div>
         </div>
+        <div className="fld wide"><span>Egenskaper (valfritt, högst fem)</span>
+          <div className="frow">{tagOpts.map((t) => <button key={t} type="button" className="chip" aria-pressed={tags.includes(t)} onClick={() => toggleTag(t)}>{t}</button>)}
+            <input className="tin" style={{ maxWidth: "12rem" }} value={newTag} onChange={(e) => setNewTag(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }} onBlur={addTag} placeholder="Egen, till exempel Grill" />
+          </div>
+        </div>
         <label className="fld wide"><span>Källa</span><input className="tin" value={m.source} onChange={set("source")} placeholder="Till exempel Köket.se eller en kokbok" /></label>
+        <div className="fld wide"><button className="btn" type="button" disabled={busy} onClick={() => onSave(result())}>{busy ? "Sparar …" : saveLabel}</button></div>
       </div>
       {recipe.image && <div className="rhero"><img src={recipe.image} alt="" referrerPolicy="no-referrer" /></div>}
       <header className="rhead"><h1>{m.title}</h1>{recipe.lede && <p className="lede">{recipe.lede}</p>}</header>

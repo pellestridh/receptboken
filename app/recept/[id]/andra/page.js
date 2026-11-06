@@ -22,6 +22,11 @@ export default function EditRecipe({ params }) {
 
   useEffect(() => { api(`/api/recipes/${id}`).then((d) => { setRecipe(d.recipe); setOriginal(d.recipe); }).catch((e) => setErr(e.message)); }, [id]);
 
+  // Från Ändra kategorier på receptet: gå direkt till fälten.
+  useEffect(() => {
+    if (recipe && window.location.hash === "#kategorier") setTimeout(() => document.getElementById("kategorier")?.scrollIntoView({ block: "start" }), 50);
+  }, [!!recipe]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function revise() {
     if (!ask.trim()) return;
     setBusy(true); setErr("");
@@ -67,18 +72,18 @@ export default function EditRecipe({ params }) {
         </div>
       </div>
 
+      <ReviewForm key={version} recipe={recipe} recipes={recipes || []} onSave={save} onDiscard={() => router.back()} busy={saving} saveLabel="Spara ändringarna" />
+
       {others.length > 0 && (
-        <div className="panel narrow" style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.5rem" }}>Passar ihop med</h2>
+        <details className="panel narrow" style={{ marginTop: "1.5rem" }}>
+          <summary><h2 style={{ fontSize: "1.5rem", display: "inline" }}>Passar ihop med</h2> <span className="muted">{(recipe.pairsWith || []).length ? `${(recipe.pairsWith || []).length} valda` : "tillbehör och rätter som serveras ihop"}</span></summary>
           <div className="frow">
             {others.map((o) => (
               <button key={o.id} type="button" className="chip" aria-pressed={(recipe.pairsWith || []).includes(o.id)} onClick={() => togglePair(o.id)}>{o.title}</button>
             ))}
           </div>
-        </div>
+        </details>
       )}
-
-      <ReviewForm key={version} recipe={recipe} recipes={recipes || []} onSave={save} onDiscard={() => router.back()} busy={saving} saveLabel="Spara ändringarna" />
 
       <div className="foot">
         {armDelete
