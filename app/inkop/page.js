@@ -34,6 +34,17 @@ export default function Shopping() {
     setItems((xs) => xs.map((x) => (x.id === it.id ? { ...x, done } : x)));
     try { await api(`/api/shopping/${it.id}`, { method: "PATCH", json: { done } }); } catch (e) { toast(e.message); load(); }
   }
+  const [editing, setEditing] = useState(null); // { id, text }
+  async function setAmount() {
+    const ed = editing; setEditing(null);
+    if (!ed) return;
+    const it = list.find((x) => x.id === ed.id);
+    if (!it || ed.text.trim() === amtText(it)) return;
+    try {
+      const a = await api(`/api/shopping/${ed.id}`, { method: "PATCH", json: { amount: ed.text } });
+      setItems((xs) => xs.map((x) => (x.id === ed.id ? { ...x, q: a.q, q2: a.q2, unit: a.unit, amt: a.amt } : x)));
+    } catch (e) { toast(e.message); }
+  }
   async function add(e) {
     e.preventDefault();
     if (!custom.trim()) return;
@@ -64,7 +75,7 @@ export default function Shopping() {
       </div>
       {tab === "hemma" ? <Pantry recipes={recipes} /> : tab === "bas" ? <Staples shopping={list} onAdded={load} offers={offers} /> : <>
       <form className="addrow" onSubmit={add}>
-        <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Lägg till en egen vara" autoComplete="off" />
+        <input id="add-in" className="tin" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Vara, till exempel 2 l mjölk" autoComplete="off" />
         <button className="btn" type="submit">Lägg till</button>
       </form>
       {offers.length > 0 && list.some((i) => !i.done && matchOffer(i.name, offers)) && (
@@ -77,11 +88,20 @@ export default function Shopping() {
           <ul className="ing">
             {xs.map((it) => (
               <li className="sitem" key={it.id}>
+                {editing?.id === it.id ? (
+                  <form className="amtedit" onSubmit={(e) => { e.preventDefault(); setAmount(); }}>
+                    <input className="tin" autoFocus value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} onBlur={setAmount} placeholder="2 st, 500 g" aria-label={`Mängd ${it.name}`} />
+                    <span>{it.name}</span>
+                    <button className="btn" type="submit">Klar</button>
+                  </form>
+                ) : (
                 <label>
                   <input type="checkbox" checked={it.done} onChange={(e) => check(it, e.target.checked)} />
-                  <span className="amt">{amtText(it)}</span>
+                  {it.done ? <span className="amt">{amtText(it)}</span>
+                    : <button type="button" className={"amt amtbtn" + (amtText(it) ? "" : " empty")} onClick={(e) => { e.preventDefault(); setEditing({ id: it.id, text: amtText(it) }); }} aria-label={`Ändra mängd för ${it.name}`}>{amtText(it) || "+ antal"}</button>}
                   <span>{it.name}{it.from?.length > 0 && <small>{it.from.join(", ")}</small>}{!it.done && (() => { const o = matchOffer(it.name, offers); return o ? <small className="offtag">{o.price} på {o.store}{o.member ? ` (${o.member})` : ""}</small> : null; })()}</span>
                 </label>
+                )}
               </li>
             ))}
           </ul>

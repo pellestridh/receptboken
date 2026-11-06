@@ -2,13 +2,21 @@ import { hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { ok, fail, body } from "@/lib/http";
 import { onBought, onUnbought } from "@/lib/pantry";
+import { parseAmount } from "@/lib/amount";
 
 export const dynamic = "force-dynamic";
 
 export async function PATCH(req, { params }) {
   try {
     const sql = db();
-    const { done } = await body(req);
+    const b = await body(req);
+    // Ändra mängden på en vara, till exempel "2 st" eller "500 g".
+    if (typeof b.amount === "string") {
+      const a = parseAmount(b.amount);
+      await sql(`update shopping_items set q = $2, q2 = $3, unit = $4, amt = $5 where id = $1 and hh = $6`, [params.id, a.q, a.q2, a.unit || "", a.amt || "", hh()]);
+      return ok({ ok: true, ...a });
+    }
+    const { done } = b;
     const [item] = await sql(
       `update shopping_items set done = $2, done_at = case when $2 then now() else null end where id = $1 and hh = $3 returning id, name, q, unit`,
       [params.id, !!done, hh()]
