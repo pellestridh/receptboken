@@ -29,7 +29,7 @@ export default function ReviewForm({ recipe, recipes = [], onSave, onDiscard, sa
   function result() {
     const d = JSON.parse(JSON.stringify(recipe));
     d.title = m.title.trim() || d.title;
-    if (dishes.length) d.dishes = dishes; else delete d.dishes;
+    d.dishes = dishes;
     d.holidays = hol;
     d.tags = tags;
     d.kitchen = m.kitchen.trim(); d.type = m.type.trim(); d.base = m.base.trim();
