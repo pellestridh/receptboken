@@ -187,6 +187,24 @@ statements.push(
 
 for (const s of statements) await sql(s);
 
+// Engångsrättning: hygienvaror som tandkräm hamnade under Skafferi och övrigt.
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_aisles_v3'`);
+  if (!done) {
+    const { aisleFor, aisleMatch } = await import("../lib/aisles.js");
+    const items = await sql(`select id, name, aisle from shopping_items where not done and coalesce(pantry, false) = false and aisle <> 'Skafferi'`);
+    let n = 0;
+    for (const it of items) {
+      const a = it.aisle === "Egna varor" ? aisleMatch(it.name) : aisleFor(it.name);
+      if (a && a !== it.aisle) { await sql(`update shopping_items set aisle = $2 where id = $1`, [it.id, a]); n++; }
+    }
+    const st = await sql(`select id, name from staples where aisle is not null`);
+    for (const x of st) if (aisleMatch(x.name) === "Hushåll och hygien") await sql(`update staples set aisle = null where id = $1`, [x.id]);
+    await sql(`insert into settings (key, value) values ('migr_aisles_v3', 'true'::jsonb) on conflict (key) do nothing`);
+    console.log(`[migrate] Avdelningar rättade för ${n} varor.`);
+  }
+}
+
 // Engångsrättning: ny avdelningsindelning (mjöl hamnade under bröd och dryck).
 {
   const [done] = await sql(`select 1 from settings where key = 'migr_aisles_v2'`);

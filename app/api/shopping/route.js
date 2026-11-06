@@ -2,6 +2,7 @@ import { hh } from "@/lib/household";
 import { db, rid } from "@/lib/db";
 import { ok, fail, body } from "@/lib/http";
 import { splitAmount } from "@/lib/amount";
+import { aisleMatch } from "@/lib/aisles";
 import { listShopping, addShopping } from "@/lib/shoppingDb";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export async function POST(req) {
       // Mängd kan skrivas först eller sist: "2 l mjölk" eller "mjölk 2 l".
       const a = splitAmount(String(b.custom).slice(0, 140));
       const name = a.name.slice(0, 120);
-      if (name) await db()(`insert into shopping_items (id,name,aisle,hh,q,q2,unit) values ($1,$2,'Egna varor',$3,$4,$5,$6)`, [rid(), name, hh(), a.q, a.q2, a.unit || ""]);
+      if (name) await db()(`insert into shopping_items (id,name,aisle,hh,q,q2,unit) values ($1,$2,$7,$3,$4,$5,$6)`, [rid(), name, hh(), a.q, a.q2, a.unit || "", aisleMatch(name) || "Egna varor"]);
       return ok({ items: await listShopping() });
     }
     const info = {};
