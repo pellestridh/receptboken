@@ -10,11 +10,12 @@ export const RELEASES = [
     nytt: ["Flikrad med ikoner längst ner på telefonen.", "Tips om att lägga appen på hemskärmen, och installera direkt på Android.", "Genvägar från appikonen."],
     newsFixed: [
       "Ange mängd i inköpslistan: tryck på mängden, eller + antal, och skriv till exempel 2 st eller 500 g. Egna varor kan skrivas med mängd direkt, som 2 l mjölk.",
+      "Kryddor har en egen avdelning i inköpslistan, direkt efter Skafferi och övrigt. Färska örter står kvar under Frukt och grönt.",
       "Byt namn på ett recept: tryck på Byt namn vid rubriken. Kategorierna ändrar ni med Ändra kategorier under rubriken.",
       "Vinförslagen håller sig till er prisklass, 100–250 kronor flaskan, och bara till Systembolagets fasta sortiment. Ungefärligt pris visas vid vinet. Prisklassen ändrar ni under Inställningar.",
     ],
-    battre: ["Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
-    rattat: ["Tandkräm och andra hygienvaror hamnar under Hushåll och hygien, även med varumärke i namnet, och egna varor sorteras in under rätt avdelning. Fler frukter och grönsaker känns igen, som satsumas, mandariner, kiwi och sparris.", "Mängd på varor i inköpslistan går att ange och ändra, till exempel för det som kommer från baslistan.", "Byt namn på ett recept direkt vid rubriken.", "Ändra kategorier direkt från receptet, och egenskaper som Bra för gäster går att ändra. Passar ihop med ligger hopfällt längst ner när man ändrar.", "Vinförslag som var för dyra eller hade utgått byts automatiskt mot vin i er prisklass när ni öppnar receptet. Viner ni gett tummen upp står kvar."], rev: 6 },
+    battre: ["Ny avdelning Kryddor i inköpslistan och baslistan: torkade örter, peppar, kanel, kryddblandningar och flingsalt.", "Ingen markering av knappar och menyer när man trycker länge, och ingen studs i sidans kant."],
+    rattat: ["Tandkräm och andra hygienvaror hamnar under Hushåll och hygien, även med varumärke i namnet, och egna varor sorteras in under rätt avdelning. Fler frukter och grönsaker känns igen, som satsumas, mandariner, kiwi och sparris.", "Mängd på varor i inköpslistan går att ange och ändra, till exempel för det som kommer från baslistan.", "Byt namn på ett recept direkt vid rubriken.", "Ändra kategorier direkt från receptet, och egenskaper som Bra för gäster går att ändra. Passar ihop med ligger hopfällt längst ner när man ändrar.", "Vinförslag som var för dyra eller hade utgått byts automatiskt mot vin i er prisklass när ni öppnar receptet. Viner ni gett tummen upp står kvar."], rev: 7 },
   { version: "1.7", date: "2026-11-05", title: "Snabbval, nivå och er smakprofil",
     news: [
       "Snabbval under sökfältet: Middag, Under 30 min, Vegetariskt, Enkelt, Pizza och Bakat.",
