@@ -187,6 +187,17 @@ statements.push(
 
 for (const s of statements) await sql(s);
 
+// Engångsrättning: ny indelning av typ av rätt (stekpanna, ugnsstekt, streetfood). Det som låg under grytor,
+// ugnsrätter eller grillen sorteras om av Claude. Pizzor och recept som någon själv lagt i andra fack rörs inte.
+{
+  const [done] = await sql(`select 1 from settings where key = 'migr_dishes_v2'`);
+  if (!done) {
+    const r = await sql(`update recipes set body = body - 'dishes' where body ? 'dishes' and not (body->'dishes' ? 'pizza') and (body->'dishes' ?| array['gryta','ugn','grill'] or jsonb_array_length(body->'dishes') = 0) returning id`);
+    await sql(`insert into settings (key, value) values ('migr_dishes_v2', 'true'::jsonb) on conflict (key) do nothing`);
+    console.log(`[migrate] ${r.length} recept sorteras om efter typ av rätt.`);
+  }
+}
+
 // Engångsrättning efter utökad avdelningsindelning (hygienvaror, fler frukter som satsumas, egen avdelning för kryddor).
 {
   const [done] = await sql(`select 1 from settings where key = 'migr_aisles_v6'`);
