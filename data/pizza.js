@@ -1,3 +1,5 @@
+const r1 = (x) => Math.round(x * 10) / 10;
+
 // Pelles pizzadegar, samma uträkning som på ettgotland.se.
 // Mjölet är 60 % av degbollens vikt, vattnet 65 % av mjölet och saltet knappt 3 % av mjölet.
 // Jästen skiljer: dagjäst 1,1 % torrjäst, napolitansk cirka 0,215 %.
@@ -49,12 +51,50 @@ export const DOUGHS = {
   },
 };
 
+// Focaccia av den dagjästa pizzadegen. Degen räknas efter formens yta, cirka 0,6 g per cm².
+export const FOCACCIA = {
+  name: "Focaccia", short: "Focaccia", yeast: 0.011, yeastName: "Torrjäst", oil: 0.03, perCm2: 0.6,
+  rise: "Cirka 8 timmar i kylen som en enda deg, sedan 1½–2 timmar i formen i rumstemperatur.",
+  intro: "Pelles dagjästa pizzadeg som focaccia. Görs på morgonen, jäser i formen på eftermiddagen och gräddas till middagen.",
+  hydrations: [[0.65, "Som pizzadegen, 65 %", "Lite fastare och brödlik, som focaccia från Genua."], [0.75, "Luftigare, 75 %", "Mjukare med större bubblor. Degen blir kladdig, men vik-tekniken tar hand om det."]],
+  pans: [{ key: "langpanna", name: "Långpanna", desc: "cirka 30 × 40 cm", cm2: 1200 }, { key: "form", name: "Form 20 × 30 cm", desc: "", cm2: 600 }, { key: "rund", name: "Rund form 24 cm", desc: "", cm2: 450 }],
+  machine: [
+    "Ha vattnet och jästen i köksassistenten och kör tills jästen löst sig.",
+    "Tillsätt hälften av mjölet och jobba ihop det tills mjölet binder vattnet.",
+    "Tillsätt saltet, olivoljan och resten av mjölet och kör på medelhastighet i cirka 10 minuter.",
+  ],
+  hand: [
+    "Rör ut jästen i vattnet i en stor skål.",
+    "Tillsätt hälften av mjölet och rör ihop. Tillsätt saltet, olivoljan och resten av mjölet och arbeta ihop med handen tills inget torrt mjöl finns kvar.",
+    "Låt degen vila 20 minuter under handduk, så att mjölet hinner suga upp vattnet.",
+    "Vik degen: 3–4 omgångar med 15–20 minuters mellanrum. Se Vik-tekniken nedanför.",
+  ],
+  after: [
+    "Olja in en skål eller burk med lock och lägg i degen. Låt jäsa cirka 8 timmar i kylen. Bolla inte, den ska vara en enda deg.",
+    "Ta ut degen en timme innan den ska i formen.",
+    "Häll 3–4 matskedar olivolja per långpanna i formen och lägg i degen. Vänd den så att den blir oljad på båda sidor och dra försiktigt ut den mot kanterna. Drar den ihop sig, låt den vila 15 minuter och dra ut den igen.",
+    "Låt jäsa i formen 1½–2 timmar under handduk, tills degen är pösig och darrar när du skakar formen lite.",
+    "Smörj fingrarna med olja och tryck gropar rakt ner till botten över hela degen.",
+    "Vispa ihop saltlaken och häll över, så samlas den i groparna. Strö över flingsalt och rosmarin, eller det du vill ha på.",
+    "Grädda och lägg den på galler direkt ur formen, annars blir botten mjuk.",
+  ],
+  brine: "Saltlake per långpanna: 2 matskedar vatten, 2 matskedar olivolja och ½ tesked salt.",
+  bake: ["Värm ugnen till 230–250 grader.", "Grädda 20–25 minuter mitt i eller strax under mitten av ugnen, tills ytan är gyllenbrun.", "Ställ gärna formen direkt på pizzastålet, så blir botten krispig."],
+  toppings: ["Rosmarin och flingsalt, det klassiska.", "Körsbärstomater och oliver.", "Tunt skivad rödlök.", "Tunna potatisskivor med rosmarin, som i Apulien."],
+};
+
+export function focacciaFor({ pan = "langpanna", pans = 1, hyd = 0.65 }) {
+  const P = FOCACCIA.pans.find((x) => x.key === pan) || FOCACCIA.pans[0];
+  const deg = P.cm2 * pans * FOCACCIA.perCm2;
+  const mjol = deg / (1 + hyd + 0.02963 + FOCACCIA.yeast + FOCACCIA.oil);
+  return { deg: Math.round(deg), mjol: r1(mjol), vatten: r1(mjol * hyd), jast: r1(mjol * FOCACCIA.yeast), salt: r1(mjol * 0.02963), olja: r1(mjol * FOCACCIA.oil) };
+}
+
 export const TECHNIQUES = [
   { t: "Vik-tekniken", d: "Så knådar man utan maskin. Fukta handen, ta tag i kanten på degen, dra den uppåt så långt den går utan att brista och vik den över mitten. Vrid skålen ett kvarts varv och gör samma sak, fyra gånger runt. Det är en omgång. Låt vila 15–20 minuter mellan omgångarna. Efter tre eller fyra omgångar är degen slät, spänstig och släpper från skålen." },
   { t: "Att bolla degen", d: "Att forma degbitarna till spända bollar. Väg bitarna så att de blir lika stora. Vik kanterna in mot mitten och vänd bollen med skarven nedåt. Kupa handen över den och rulla den mot bänken i små cirklar, så att ytan sträcks och spänns. En väl bollad deg har en slät och spänd yta, håller formen och ger en luftig kant." },
 ];
 
-const r1 = (x) => Math.round(x * 10) / 10;
 // Gram för antal pizzor. Med vanligt vetemjöl till napolitansk dras 10 % av vattnet.
 export function doughFor({ count = 1, weight = 280, kind = "dag", flour = "tipo00" }) {
   const D = DOUGHS[kind] || DOUGHS.dag;

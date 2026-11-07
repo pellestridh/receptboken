@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { api, lsGet, lsSet } from "@/lib/api";
 import { useApp } from "@/components/Providers";
 import Link from "next/link";
-import { DOUGHS, TECHNIQUES, OVENS, READ_MORE, doughFor, sizeFor, toppingItems } from "@/data/pizza";
+import { DOUGHS, FOCACCIA, TECHNIQUES, OVENS, READ_MORE, doughFor, focacciaFor, sizeFor, toppingItems } from "@/data/pizza";
 import { useRecipes } from "@/components/useRecipes";
 import { dishesOf } from "@/lib/dishes";
 
@@ -27,7 +27,7 @@ function Stepper({ label, value, set, step = 1, min = 1, unit }) {
 
 export default function Pizza() {
   const { toast } = useApp();
-  const [s, setS] = useState({ count: 4, weight: 280, kind: "dag", flour: "tipo00", knead: "hand", oven: "ugn" });
+  const [s, setS] = useState({ count: 4, weight: 280, kind: "dag", pizzaKind: "dag", flour: "tipo00", knead: "hand", oven: "ugn", pan: "langpanna", pans: 1, hyd: 0.65 });
   const [view, setView] = useState("deg");
   const [night, setNight] = useState({ free: 0, list: {} });
   const { recipes } = useRecipes();
@@ -44,8 +44,13 @@ export default function Pizza() {
   useEffect(() => { const f = () => setView(new URLSearchParams(window.location.search).get("vy") === "kvall" ? "kvall" : "deg"); window.addEventListener("popstate", f); return () => window.removeEventListener("popstate", f); }, []);
   useEffect(() => { lsSet("rb-pizza", s); }, [s]);
   const set = (k, v) => setS((x) => ({ ...x, [k]: v }));
-  const D = DOUGHS[s.kind];
+  const fo = s.kind === "focaccia";
+  // Pizzakvällen använder alltid en pizzadeg, även när Degen visar focaccia.
+  const ps = fo ? { ...s, kind: DOUGHS[s.pizzaKind] ? s.pizzaKind : "dag" } : s;
+  const PD = DOUGHS[ps.kind];
+  const D = fo ? FOCACCIA : DOUGHS[s.kind];
   const r = doughFor(s);
+  const fr = focacciaFor(s);
   const pizzas = (recipes || []).filter((x) => dishesOf(x).includes("pizza"));
   // Tavlan: pizzorna i den ordning de lades till, så att numren står fast.
   const menu = [...pizzas].sort((a, b) => (a.pizzaNo ?? 999) - (b.pizzaNo ?? 999) || String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
@@ -53,10 +58,10 @@ export default function Pizza() {
   const topsOf = (x) => { const t = String(x.ingredients || "").split(",").map((w) => w.trim()).filter((w) => w && !DOUGHWORDS.test(w)); const u = [...new Set(t.map((w) => w.toLowerCase()))]; const white = /(^|, )ricotta/.test(String(x.ingredients || "").toLowerCase()); const v = u.filter((w) => w !== "ricotta"); const txt = v.join(", "); return white ? `Vit: ${txt}` : (txt ? txt.replace(/^./, (c) => c.toUpperCase()) : "Pelles pålägg"); };
   const chosen = Object.entries(night.list).map(([id, n]) => ({ r: pizzas.find((x) => x.id === id) || (recipes || []).find((x) => x.id === id), n })).filter((x) => x.r && x.n > 0);
   const total = chosen.reduce((a, x) => a + x.n, 0) + (night.free || 0);
-  const nd = doughFor({ ...s, count: Math.max(1, total) });
+  const nd = doughFor({ ...ps, count: Math.max(1, total) });
   const setN = (id, n) => setNight((x) => { const list = { ...x.list }; if (n > 0) list[id] = n; else delete list[id]; return { ...x, list }; });
   const doughItems = (d) => [
-    { name: s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00-mjöl", unit: "g", q: d.mjol, pantry: true, from: "Pizzadeg" },
+    { name: ps.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00-mjöl", unit: "g", q: d.mjol, pantry: true, from: "Pizzadeg" },
     { name: "Torrjäst", unit: "g", q: d.jast, pantry: true, from: "Pizzadeg" },
     { name: "Durumvetemjöl", unit: "", q: null, pantry: true, from: "Pizzadeg" },
   ];
@@ -112,7 +117,7 @@ export default function Pizza() {
       setCart(null);
     } catch (e) { toast(e.message); }
   };
-  useEffect(() => { setCart(null); setAdded(0); }, [total, s.kind, s.weight]);
+  useEffect(() => { setCart(null); setAdded(0); }, [total, ps.kind, s.weight]);
   // Tidsplan bakåt från när ni vill äta.
   const sauceRec = (recipes || []).find((y) => /^tomatsås till pizza/i.test(y.title));
   const redCount = chosen.filter((x) => !/(^|, )ricotta/.test(String(x.r.ingredients || "").toLowerCase())).reduce((a, x) => a + x.n, 0);
@@ -123,11 +128,18 @@ export default function Pizza() {
     const t = (min) => { const d = new Date(at.getTime() - min * 60000); const hm = d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }); return eatDay ? `${wd(d)} ${hm}` : hm; };
     const day = (hours) => wd(new Date(at.getTime() - hours * 3600000));
     const ovenMin = s.oven === "pizzaugn" ? 30 : 45;
-    return s.kind === "napoli"
+    return ps.kind === "napoli"
       ? [["dough", at.getTime() - 48 * 3600000 < Date.now() ? "Hinner inte" : at.getTime() - 72 * 3600000 < Date.now() ? `Senast ${day(48)}` : `${day(72)} eller ${day(48)}`, at.getTime() - 48 * 3600000 < Date.now() ? "Napolitansk deg behöver minst 48 timmar i kylen. Välj en senare dag, eller dagjäst deg." : "Gör degen, 2–3 dygn i kylen."], ["ball", t(240), "Ta ut degen, dela och bolla den. Låt ligga i rumstemperatur 2–4 timmar."], ["sauce", "Under dagen", "Gör tomatsåsen och förbered påläggen."], ["oven", t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], ["bake", t(0), "Baka och ät."]]
       : [["dough", at.getTime() - 9 * 3600000 < Date.now() ? "Nu" : t(10 * 60), at.getTime() - 9 * 3600000 < Date.now() ? "Gör degen så fort som möjligt. Kortare tid i kylen ger en mindre luftig deg." : "Gör degen, senast då. Den ska stå cirka 8 timmar i kylen."], ["ball", t(120), "Ta ut degen, dela och bolla den. Låt vila under handduk cirka 2 timmar, så att degen hinner få rumstemperatur."], ["sauce", "Medan degen vilar", "Gör tomatsåsen och förbered påläggen."], ["oven", t(ovenMin), s.oven === "pizzaugn" ? "Tänd pizzaugnen." : "Värm ugnen med stålet till 300 grader."], ["bake", t(0), "Baka och ät."]];
   })();
-  const toShop = () => api("/api/shopping", { method: "POST", json: { items: doughItems(r) } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
+  const focItems = () => [
+    { name: "Tipo 00-mjöl", unit: "g", q: fr.mjol, pantry: true, from: "Focaccia" },
+    { name: "Torrjäst", unit: "g", q: fr.jast, pantry: true, from: "Focaccia" },
+    { name: "Olivolja", unit: "", q: null, pantry: true, from: "Focaccia" },
+    { name: "Flingsalt", unit: "", q: null, pantry: true, from: "Focaccia" },
+    { name: "Färsk rosmarin", unit: "kruka", q: 1, from: "Focaccia" },
+  ];
+  const toShop = () => api("/api/shopping", { method: "POST", json: { items: fo ? focItems() : doughItems(r) } }).then(() => toast("Mjöl och jäst ligger i inköpslistan")).catch((e) => toast(e.message));
 
   return (
     <div className="narrow pizza">
@@ -222,23 +234,23 @@ export default function Pizza() {
                       {open === k && k === "dough" && (
                         <div className="pzdet">
                           <dl className="pzdl">
-                            <div><dt>{s.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00"}</dt><dd>{g(nd.mjol)}</dd></div>
-                            <div><dt>Vatten{s.kind === "napoli" ? ", kallt" : ""}</dt><dd>{g(nd.vatten)}</dd></div>
-                            <div><dt>{D.yeastName}</dt><dd>{g(nd.jast)}</dd></div>
+                            <div><dt>{ps.kind === "napoli" && s.flour === "vete" ? "Vetemjöl" : "Tipo 00"}</dt><dd>{g(nd.mjol)}</dd></div>
+                            <div><dt>Vatten{ps.kind === "napoli" ? ", kallt" : ""}</dt><dd>{g(nd.vatten)}</dd></div>
+                            <div><dt>{PD.yeastName}</dt><dd>{g(nd.jast)}</dd></div>
                             <div><dt>Salt</dt><dd>{g(nd.salt)}</dd></div>
                           </dl>
                           <div className="boxseg small" role="tablist">{[["hand", "För hand"], ["machine", "Med köksassistent"]].map(([kk, l]) => <button key={kk} type="button" role="tab" aria-selected={s.knead === kk} onClick={() => set("knead", kk)}>{l}</button>)}</div>
-                          <ol className="pzsteps">{[...D[s.knead], D.after[0]].map((x) => <li key={x}>{x.replace("Se Vik-tekniken nedanför.", "Se vik-tekniken nedan.")}</li>)}</ol>
+                          <ol className="pzsteps">{[...PD[s.knead], PD.after[0]].map((x) => <li key={x}>{x.replace("Se Vik-tekniken nedanför.", "Se vik-tekniken nedan.")}</li>)}</ol>
                           {s.knead === "hand" && <p className="hint"><b>{TECHNIQUES[0].t}:</b> {TECHNIQUES[0].d}</p>}
                         </div>
                       )}
-                      {open === k && k === "ball" && <div className="pzdet"><p>{D.after[1]}</p><p className="hint"><b>{TECHNIQUES[1].t}:</b> {TECHNIQUES[1].d}</p></div>}
+                      {open === k && k === "ball" && <div className="pzdet"><p>{PD.after[1]}</p><p className="hint"><b>{TECHNIQUES[1].t}:</b> {TECHNIQUES[1].d}</p></div>}
                       {open === k && k === "sauce" && <div className="pzdet">{sauceRec ? <p>Tomatsås till {redCount} {redCount === 1 ? "pizza" : "pizzor"}: <Link href={`/recept/${sauceRec.id}`}>{sauceRec.title}</Link>. Plocka fram påläggen ur kylen, så att de inte är iskalla.</p> : <p>Plocka fram påläggen ur kylen.</p>}</div>}
                       {open === k && k === "bake" && <div className="pzdet"><p>Se steg 4 nedanför.</p></div>}
                     </div>
                   </li>
                 ))}</ol>
-                <p className="hint">{D.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
+                <p className="hint">{PD.name}, {total} {total === 1 ? "pizza" : "pizzor"} à {s.weight} g, {OVENS[s.oven].name.toLowerCase()}. <button type="button" className="link" onClick={() => setView("deg")}>Ändra degen</button></p>
               </section>
 
               <section className="bsec pzstep">
@@ -266,11 +278,56 @@ export default function Pizza() {
         </>
       ) : (
       <>
-      <p className="lead">Välj deg, antal pizzor och hur mycket varje degboll ska väga, så räknas allt ut. Samma uträkning som på ettgotland.se.</p>
+      <p className="lead">{fo ? "Välj form och hur luftig focaccian ska vara, så räknas degen ut efter formens storlek." : "Välj deg, antal pizzor och hur mycket varje degboll ska väga, så räknas allt ut. Samma uträkning som på ettgotland.se."}</p>
 
-      <div className="boxseg" role="tablist">{Object.entries(DOUGHS).map(([k, d]) => <button key={k} type="button" role="tab" aria-selected={s.kind === k} onClick={() => set("kind", k)}>{d.name}</button>)}</div>
+      <div className="boxseg" role="tablist">{Object.entries(DOUGHS).map(([k, d]) => <button key={k} type="button" role="tab" aria-selected={s.kind === k} onClick={() => setS((x) => ({ ...x, kind: k, pizzaKind: k }))}>{d.name}</button>)}<button type="button" role="tab" aria-selected={fo} onClick={() => set("kind", "focaccia")}>Focaccia</button></div>
       <p className="hint">{D.intro}</p>
 
+      {fo ? (
+      <>
+      <div className="panel festform">
+        <div className="fld wide"><span>Form</span>
+          <div className="frow">{FOCACCIA.pans.map((p) => <button key={p.key} type="button" className="chip" aria-pressed={s.pan === p.key} onClick={() => set("pan", p.key)}>{p.name}{p.desc ? `, ${p.desc}` : ""}</button>)}</div>
+        </div>
+        <Stepper label="Antal formar" value={s.pans} set={(v) => set("pans", v)} />
+        <div className="fld wide"><span>Degen</span>
+          <div className="frow">{FOCACCIA.hydrations.map(([h, l]) => <button key={h} type="button" className="chip" aria-pressed={s.hyd === h} onClick={() => set("hyd", h)}>{l}</button>)}</div>
+          <p className="hint">{FOCACCIA.hydrations.find(([h]) => h === s.hyd)?.[2]}</p>
+        </div>
+      </div>
+
+      <section className="bsec">
+        <h2>Det här behöver du</h2>
+        <div className="doughres">
+          <div><span>Mjöl, Tipo 00</span><b>{g(fr.mjol)}</b></div>
+          <div><span>Vatten</span><b>{g(fr.vatten)}</b></div>
+          <div><span>{FOCACCIA.yeastName}</span><b>{g(fr.jast)}</b></div>
+          <div><span>Salt</span><b>{g(fr.salt)}</b></div>
+          <div><span>Olivolja i degen</span><b>{g(fr.olja)}</b></div>
+        </div>
+        <p className="hint">Cirka {fr.deg} g deg. Jäsning: {FOCACCIA.rise} Till formen: 3–4 matskedar olivolja per långpanna. {FOCACCIA.brine}</p>
+        <p className="arow"><button className="btn ghost" type="button" onClick={toShop}>Lägg det som behövs i inköpslistan</button></p>
+      </section>
+
+      <section className="bsec">
+        <h2>Gör så här</h2>
+        <div className="boxseg small" role="tablist">{[["hand", "För hand"], ["machine", "Med köksassistent"]].map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={s.knead === k} onClick={() => set("knead", k)}>{l}</button>)}</div>
+        <ol className="steps">{[...FOCACCIA[s.knead], ...FOCACCIA.after].map((t) => <li key={t}>{t}</li>)}</ol>
+      </section>
+
+      <section className="bsec">
+        <h2>Gräddning</h2>
+        <ul className="ticks">{FOCACCIA.bake.map((t) => <li key={t}>{t}</li>)}</ul>
+        <h3>Gott på</h3>
+        <ul className="ticks">{FOCACCIA.toppings.map((t) => <li key={t}>{t}</li>)}</ul>
+      </section>
+
+      <section className="bsec">
+        <div className="card2 tech"><h3>{TECHNIQUES[0].t}</h3><p>{TECHNIQUES[0].d}</p></div>
+      </section>
+      </>
+      ) : (
+      <>
       <div className="panel festform">
         <Stepper label="Antal pizzor" value={s.count} set={(v) => set("count", v)} />
         <Stepper label="Gram per degboll" value={s.weight} set={(v) => set("weight", v)} step={10} min={100} />
@@ -316,6 +373,8 @@ export default function Pizza() {
         <h2>Vill du lära dig mer</h2>
         <ul className="readmore">{READ_MORE.map((x) => <li key={x.h}><a href={x.h} target="_blank" rel="noopener noreferrer"><b>{x.t}</b></a><span className="muted">{x.d}</span></li>)}</ul>
       </section>
+      </>
+      )}
       </>
       )}
     </div>
