@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSettings } from "@/components/useSettings";
 import Households from "@/components/Households";
 import Stores from "@/components/Stores";
+import Usage from "@/components/Usage";
 import { useApp } from "@/components/Providers";
 import { getName, setName } from "@/lib/api";
 
@@ -79,6 +80,7 @@ export default function Settings() {
         </p>
         <p className="hint">Viner och öl ni gillar lägger ni in under Dryck, i Våra viner och Våra öl.</p>
       </div>
+      <Usage />
       <div className="panel">
         <h2 style={{ fontSize: "1.4rem" }}>Om Receptboken</h2>
         <p className="hint">Version {CURRENT.version}, uppdaterad {dateSv(CURRENT.date)}. Vad som är nytt och vad som har rättats i varje version.</p>

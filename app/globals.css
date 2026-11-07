@@ -1247,3 +1247,7 @@ body { overscroll-behavior-y: none; }
 .sitem .amtedit { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) auto; gap: .6rem; align-items: center; padding: .4rem 0; border-bottom: 1px dashed var(--line); }
 .sitem .amtedit .tin { width: 100%; height: auto; transform: none; padding: .4rem .5rem; font-size: 1rem; }
 .sitem .amtedit .btn { padding: .4rem .8rem; }
+table.usage { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+table.usage th { text-align: left; font-weight: 600; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+table.usage th, table.usage td { padding: .35rem .3rem; border-bottom: 1px solid var(--line); }
+table.usage td:nth-child(n+2), table.usage th:nth-child(n+2) { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }

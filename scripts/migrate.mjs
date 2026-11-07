@@ -187,6 +187,11 @@ statements.push(
 
 for (const s of statements) await sql(s);
 
+// Förbrukning av Claude per funktion, och en kontrollsumma för erbjudandesidorna så att oförändrade sidor inte läses om.
+await sql(`create table if not exists claude_usage (id bigserial primary key, at timestamptz not null default now(), feature text, model text, hh text, input_tokens int, output_tokens int, cache_read int default 0, cache_write int default 0)`);
+await sql(`create index if not exists claude_usage_at on claude_usage (at)`);
+await sql(`alter table store_offers add column if not exists hash text`);
+
 // Engångsrättning: ny indelning av typ av rätt (stekpanna, ugnsstekt, streetfood). Det som låg under grytor,
 // ugnsrätter eller grillen sorteras om av Claude. Pizzor och recept som någon själv lagt i andra fack rörs inte.
 {
