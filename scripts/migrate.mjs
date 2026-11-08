@@ -294,6 +294,18 @@ await sql(`alter table store_offers add column if not exists hash text`);
   }
 }
 
+// Recept som Claude lagt in på begäran. Varje recept läggs in en gång och kommer inte tillbaka om det tas bort.
+{
+  const { ADDED_RECIPES } = await import("../data/addedRecipes.js");
+  for (const r of ADDED_RECIPES) {
+    const [have] = await sql(`select 1 from recipes where id = $1`, [r.id]);
+    if (have) continue;
+    await sql(`insert into recipes (id,title,kitchen,type,base,minutes,servings,accent,source_name,source_url,body,hh) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,null,$10,'hem') on conflict (id) do nothing`,
+      [r.id, r.title, r.kitchen, r.type, r.base, r.minutes, r.servings, r.accent, r.source?.name || null, JSON.stringify(r)]);
+    console.log(`[migrate] La in receptet ${r.title}.`);
+  }
+}
+
 const [{ count }] = await sql(`select count(*)::int as count from recipes`);
 if (count === 0) {
   const seed = JSON.parse(readFileSync(new URL("../data/seed.json", import.meta.url), "utf8"));
