@@ -46,8 +46,11 @@ export const QUICK = {
 };
 export const QUICK_LABEL = [["middag", "Middag"], ["snabbt", "Under 30 min"], ["veg", "Vegetariskt"], ["enkelt", "Enkelt"], ["pizza", "Pizza"], ["bakat", "Bakat och dessert"]];
 
+// Sökning utan accenter, så att "entrecote" hittar "entrecôte" och "creme" hittar "crème". Å, ä och ö behålls.
+const fold = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u0303\u0327]/g, "").normalize("NFC");
+
 export function filterRecipes(list, f, q) {
-  q = (q || "").trim().toLowerCase();
+  const words = fold(q).split(/\s+/).filter(Boolean);
   return list.filter((r) => {
     if (f.kitchen && r.kitchen !== f.kitchen) return false;
     if (f.type && r.type !== f.type) return false;
@@ -55,9 +58,10 @@ export function filterRecipes(list, f, q) {
     if (f.time && timeBucket(r) !== f.time) return false;
     if (f.level && (r.difficulty || "medel") !== f.level) return false;
     if (f.quick && !QUICK[f.quick]?.(r)) return false;
-    if (q) {
-      const hay = `${r.title} ${r.short} ${(r.tags || []).join(" ")} ${r.ingredients} ${r.kitchen} ${r.base}`.toLowerCase();
-      if (!hay.includes(q)) return false;
+    if (words.length) {
+      // Alla ord ska finnas någonstans, i valfri ordning: "entrecote smör" hittar receptet.
+      const hay = fold(`${r.title} ${r.short} ${(r.tags || []).join(" ")} ${r.ingredients} ${r.kitchen} ${r.base}`);
+      if (!words.every((w) => hay.includes(w))) return false;
     }
     return true;
   });
