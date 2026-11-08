@@ -28,6 +28,8 @@ export default function RecipePage({ params }) {
   const [serv, setServ] = useState(null);
   const [showDrinks, setShowDrinks] = useState(false);
   const [naming, setNaming] = useState(null);
+  const [cooking, setCooking] = useState(false);
+  const [undo, setUndo] = useState(null);
   const [note, setNote] = useState("");
   const [wake, setWake] = useState(null);
   const wantWake = useRef(false);
@@ -83,6 +85,17 @@ export default function RecipePage({ params }) {
     try { wantWake.current = true; const l = await navigator.wakeLock.request("screen"); setWake(l); }
     catch { toast("Skärmen kunde inte hållas tänd just nu"); }
   }
+
+  // Lagad idag eller en annan dag, med ångra.
+  const daysAgo = (d) => { const x = new Date(Date.now() - d * 864e5); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`; };
+  async function markCooked(date) {
+    const prev = data?.notes?.lastCooked || null;
+    setCooking(false);
+    await notesAction({ action: "cooked", date });
+    const label = date === daysAgo(0) ? "idag" : date === daysAgo(1) ? "igår" : date === daysAgo(2) ? "i förrgår" : dateSv(date);
+    setUndo({ prev, label });
+  }
+  async function undoCooked() { const u = undo; setUndo(null); await notesAction({ action: "uncooked", prev: u.prev }); }
 
   async function rename(e) {
     e.preventDefault();
@@ -155,8 +168,17 @@ export default function RecipePage({ params }) {
           </div>
           <div className="arow">
             <span className="muted">{n.lastCooked ? `Senast lagad ${dateSv(n.lastCooked)}${n.timesCooked > 1 ? ` · lagad ${n.timesCooked} gånger` : ""}` : "Inte lagad än"}</span>
-            <button className="btn ghost" type="button" onClick={() => notesAction({ action: "cooked" })}>Vi lagade den idag</button>
+            {cooking ? null : <button className="btn ghost" type="button" onClick={() => setCooking(true)}>Vi lagade den</button>}
           </div>
+          {cooking && (
+            <div className="cookwhen">
+              <span className="muted">När?</span>
+              {[0, 1, 2].map((d) => <button key={d} type="button" className="chip" onClick={() => markCooked(daysAgo(d))}>{["Idag", "Igår", "I förrgår"][d]}</button>)}
+              <label className="chip cookdate">Annan dag<input type="date" max={daysAgo(0)} onChange={(e) => e.target.value && markCooked(e.target.value)} /></label>
+              <button className="link" type="button" onClick={() => setCooking(false)}>Avbryt</button>
+            </div>
+          )}
+          {undo && <p className="hint">Markerad som lagad {undo.label}. <button className="link" type="button" onClick={undoCooked}>Ångra</button></p>}
           {n.entries.length > 0 && (
             <ul className="nlist">
               {n.entries.map((e) => (

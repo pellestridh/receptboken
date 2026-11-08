@@ -16,9 +16,18 @@ export async function POST(req, { params }) {
       const v = Math.max(0, Math.min(5, Math.round(Number(b.rating) || 0)));
       await sql(`update notes set rating = $2 where recipe_id = $1`, [id, v]);
     } else if (b.action === "cooked") {
-      await sql(`update notes set times_cooked = times_cooked + 1, last_cooked = now() where recipe_id = $1`, [id]);
+      // Ett datum bakåt i tiden går att ange, till exempel igår. Senast lagad flyttas bara framåt.
+      let when = new Date();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(String(b.date || ""))) {
+        const d = new Date(`${b.date}T18:00:00+01:00`);
+        if (!isNaN(d) && d <= when && when - d < 400 * 864e5) when = d;
+      }
+      await sql(`update notes set times_cooked = times_cooked + 1, last_cooked = greatest(coalesce(last_cooked, $2), $2) where recipe_id = $1`, [id, when.toISOString()]);
     } else if (b.action === "uncooked") {
-      await sql(`update notes set times_cooked = greatest(times_cooked - 1, 0) where recipe_id = $1`, [id]);
+      // Ångra: räkna ner och lägg tillbaka det tidigare datumet om det skickas med.
+      const prev = b.prev === null ? null : b.prev && !isNaN(new Date(b.prev)) ? new Date(b.prev).toISOString() : undefined;
+      if (prev !== undefined) await sql(`update notes set times_cooked = greatest(times_cooked - 1, 0), last_cooked = $2 where recipe_id = $1`, [id, prev]);
+      else await sql(`update notes set times_cooked = greatest(times_cooked - 1, 0) where recipe_id = $1`, [id]);
     } else if (b.action === "entry") {
       const text = String(b.text || "").trim().slice(0, 4000);
       if (!text) throw new Error("Anteckningen är tom.");
